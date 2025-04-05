@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserInDatabase } from '@/firebase/firestoreFunctions';
 import { app } from '@/firebase/firebaseConfig';
 import Link from 'next/link';
 
@@ -29,6 +30,7 @@ export default function SignUpPage() {
 
     try {
       await createUserWithEmailAndPassword(auth, email, password);
+      await createUserInDatabase(auth.currentUser.uid, email);
       router.push('/');
     } catch (error) {
       setError(error.message);
