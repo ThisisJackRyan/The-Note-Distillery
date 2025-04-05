@@ -9,7 +9,7 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
             <Link href="/" className="text-xl font-bold text-gray-900 dark:text-white">
-              Note Distillery
+              The Note Distillery
             </Link>
           </div>
           <div className="hidden md:block">
