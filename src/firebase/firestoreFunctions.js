@@ -1,4 +1,3 @@
-import { collection, addDoc, setDoc, doc } from "firebase/firestore"; 
 import { db, app } from "./firebaseConfig"; // Adjust the import path as necessary
 import { getAuth } from "firebase/auth";
 import { collection, addDoc, setDoc, doc, query, where, getDocs } from "firebase/firestore";
