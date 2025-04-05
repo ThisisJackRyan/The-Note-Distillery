@@ -2,6 +2,7 @@
 
 export default function NoteContent({ note }) {
   if (!note) {
+    console.log("");
     return (
       <div className="text-center py-12">
         <p className="text-gray-500 dark:text-gray-400">
@@ -28,26 +29,36 @@ export default function NoteContent({ note }) {
       <div className="mb-6">
         <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Tags</h3>
         <div className="flex flex-wrap gap-2">
-          {note.tags && note.tags.map((tag, index) => (
+          {note.tags && note.tags.map((tag, index) => {
+            if (index == 0 && tag.trim() === "") return (
+              <div key={index}>
+                <p className="text-gray-500 dark:text-gray-400 text-sm">No tags</p>
+              </div>
+            );
+            return(
             <span 
               key={index} 
               className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-md text-sm"
             >
               {tag}
             </span>
-          ))}
+            )
+          })}
         </div>
       </div>
       
       <div className="mb-6">
         <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Sources</h3>
-        <ul className="list-disc pl-5">
-          {note.sources && note.sources.map((source, index) => (
-            <li key={index} className="text-gray-700 dark:text-gray-300">{source}</li>
-          ))}
-        </ul>
-      </div>
-      
+          {(note.source && note.source.trim() === "") ?(
+            <div>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">No sources</p>
+            </div>
+          ):
+            (
+            <div className="text-gray-500 dark:text-gray-400 text-sm">{note.source}</div>
+          )}
+
+        </div>
       <div>
         <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Content</h3>
         <div className="prose dark:prose-invert max-w-none text-gray-900 dark:text-white">

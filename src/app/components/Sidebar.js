@@ -2,10 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronRight, faChevronDown, faFolder, faFile } from '@fortawesome/free-solid-svg-icons';
+import { faChevronRight, faChevronDown, faFolder, faFile, faFolderPlus, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { collection, getDocs, query } from 'firebase/firestore';
 import { db } from '../../firebase/firebaseConfig';
 import { useAuth } from '../context/AuthContext';
+import NewFolderModal from './newFolderModal';
+import NewNoteModal from './newNoteModal';
+import { deleteFolder, deleteNote } from '@/firebase/firestoreFunctions';
 
 export default function Sidebar({ 
   isCollapsed, 
@@ -18,7 +21,9 @@ export default function Sidebar({
   const [folders, setFolders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [debugInfo, setDebugInfo] = useState('');
+  const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
+  const [isNewNoteModalOpen, setIsNewNoteModalOpen] = useState(false);
+  const [deleteConfirmation, setDeleteConfirmation] = useState({ isOpen: false, type: null, id: null, folderId: null });
   const { user } = useAuth();
 
   // Fetch folders and notes from Firebase
@@ -26,28 +31,16 @@ export default function Sidebar({
     const fetchFolders = async () => {
       try {
         setLoading(true);
-        setDebugInfo('Starting to fetch folders...');
         
         if (!user) {
           console.log("No user is signed in");
-          setDebugInfo('No user is signed in');
           setLoading(false);
           return;
         }
         
-        setDebugInfo(`User signed in with ID: ${user.uid}`);
-        
-        // Query the users collection directly
-        const usersCollection = collection(db, "users");
-        const userDoc = await getDocs(query(usersCollection));
-        
-        setDebugInfo(prev => `${prev}\nFound ${userDoc.docs.length} users in collection`);
-        
         // Query folders for the current user
         const foldersQuery = query(collection(db, "users", user.uid, "folders"));
         const foldersSnapshot = await getDocs(foldersQuery);
-        
-        setDebugInfo(prev => `${prev}\nFound ${foldersSnapshot.docs.length} folders for user`);
         
         const foldersData = [];
         
@@ -58,13 +51,9 @@ export default function Sidebar({
             notes: []
           };
           
-          setDebugInfo(prev => `${prev}\nProcessing folder: ${folder.name} (${folder.id})`);
-          
           // Fetch notes for this folder
           const notesQuery = query(collection(db, "users", user.uid, "folders", folderDoc.id, "notes"));
           const notesSnapshot = await getDocs(notesQuery);
-          
-          setDebugInfo(prev => `${prev}\nFound ${notesSnapshot.docs.length} notes in folder ${folder.name}`);
           
           folder.notes = notesSnapshot.docs.map(noteDoc => ({
             id: noteDoc.id,
@@ -76,11 +65,9 @@ export default function Sidebar({
         
         setFolders(foldersData);
         setLoading(false);
-        setDebugInfo(prev => `${prev}\nFinished loading ${foldersData.length} folders with their notes`);
       } catch (error) {
         console.error("Error fetching folders:", error);
         setError(`Failed to load folders: ${error.message}`);
-        setDebugInfo(prev => `${prev}\nError: ${error.message}`);
         setLoading(false);
       }
     };
@@ -98,16 +85,92 @@ export default function Sidebar({
     onNoteSelect(note);
   };
 
+  const handleNewFolder = (newFolderName) => {
+    const tempId = `temp-${Date.now()}`;
+    const newFolder = {
+      id: tempId,
+      name: newFolderName,
+      notes: []
+    };
+    setFolders(prevFolders => [...prevFolders, newFolder]);
+  };
+
+  const handleNewNote = (newNote) => {
+    setFolders(prevFolders => 
+      prevFolders.map(folder => {
+        if (folder.id === selectedFolder) {
+          return {
+            ...folder,
+            notes: [...folder.notes, newNote]
+          };
+        }
+        return folder;
+      })
+    );
+  };
+
+  const handleAddNoteClick = (e) => {
+    e.stopPropagation(); // Prevent folder selection
+    if (selectedFolder) {
+      setIsNewNoteModalOpen(true);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      if (deleteConfirmation.type === 'folder') {
+        await deleteFolder(deleteConfirmation.id);
+        setFolders(prevFolders => prevFolders.filter(folder => folder.id !== deleteConfirmation.id));
+        if (selectedFolder === deleteConfirmation.id) {
+          onFolderSelect(null);
+          onNoteSelect(null); // Clear selected note when folder is deleted
+        }
+      } else if (deleteConfirmation.type === 'note') {
+        await deleteNote(deleteConfirmation.folderId, deleteConfirmation.id);
+        setFolders(prevFolders => 
+          prevFolders.map(folder => {
+            if (folder.id === deleteConfirmation.folderId) {
+              return {
+                ...folder,
+                notes: folder.notes.filter(note => note.id !== deleteConfirmation.id)
+              };
+            }
+            return folder;
+          })
+        );
+        if (selectedNote === deleteConfirmation.id) {
+          onNoteSelect(null);
+        }
+      }
+      setDeleteConfirmation({ isOpen: false, type: null, id: null, folderId: null });
+    } catch (err) {
+      console.error('Error deleting:', err);
+      setError('Failed to delete. Please try again.');
+    }
+  };
+
+  const handleDeleteClick = (e, type, id, folderId = null) => {
+    e.stopPropagation();
+    setDeleteConfirmation({ isOpen: true, type, id, folderId });
+  };
+
   return (
     <div className={`${isCollapsed ? 'w-16' : 'w-64'} transition-all duration-300 bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden`}>
       <div className="p-4 flex justify-between items-center border-b border-gray-200 dark:border-gray-700">
         <h2 className={`font-semibold ${isCollapsed ? 'hidden' : 'block'} text-gray-900 dark:text-white`}>Folders</h2>
-        <button 
-          onClick={onToggleCollapse}
-          className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-        >
-          {isCollapsed ? '→' : '←'}
-        </button>
+        <div className='flex gap-4 items-center'>
+          <FontAwesomeIcon 
+            icon={faFolderPlus} 
+            className='text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 cursor-pointer' 
+            onClick={() => setIsNewFolderModalOpen(true)} 
+          />
+          <button 
+            onClick={onToggleCollapse}
+            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+          >
+            {isCollapsed ? '→' : '←'}
+          </button>
+        </div>
       </div>
       
       <div className="p-2 overflow-y-auto max-h-[calc(100vh-300px)]">
@@ -118,39 +181,49 @@ export default function Sidebar({
         ) : error ? (
           <div className="text-center py-4">
             <p className="text-red-500 dark:text-red-400">{error}</p>
-            <div className="mt-2 text-xs text-gray-500 dark:text-gray-400 whitespace-pre-wrap">
-              {debugInfo}
-            </div>
           </div>
         ) : folders.length === 0 ? (
           <div className="text-center py-4">
             <p className="text-gray-500 dark:text-gray-400">No folders found</p>
-            <div className="mt-2 text-xs text-gray-500 dark:text-gray-400 whitespace-pre-wrap">
-              {debugInfo}
-            </div>
           </div>
         ) : (
           <ul className="space-y-1">
             {folders.map((folder) => (
               <li key={folder.id}>
                 <div 
-                  className={`flex items-center p-2 rounded-md cursor-pointer ${
+                  className={`flex justify-between items-center p-2 rounded-md cursor-pointer ${
                     selectedFolder === folder.id 
                       ? 'bg-blue-100 dark:bg-blue-900' 
                       : 'hover:bg-gray-100 dark:hover:bg-gray-700'
                   }`}
                   onClick={() => handleFolderClick(folder)}
                 >
-                  <FontAwesomeIcon 
-                    icon={selectedFolder === folder.id ? faChevronDown : faChevronRight} 
-                    className="mr-2 text-gray-500 dark:text-gray-400 w-4 h-4" 
-                  />
-                  <FontAwesomeIcon 
-                    icon={faFolder} 
-                    className="mr-2 text-yellow-500 w-4 h-4" 
-                  />
-                  {!isCollapsed && (
-                    <span className="truncate text-gray-900 dark:text-white">{folder.name}</span>
+                  <div className='flex'>
+                    <FontAwesomeIcon 
+                      icon={selectedFolder === folder.id ? faChevronDown : faChevronRight} 
+                      className="mr-2 text-gray-500 dark:text-gray-400 w-4 h-4" 
+                    />
+                    <FontAwesomeIcon 
+                      icon={faFolder} 
+                      className="mr-2 text-yellow-500 w-4 h-4" 
+                    />
+                    {!isCollapsed && (
+                      <span className="truncate text-gray-900 dark:text-white">{folder.name}</span>
+                    )}
+                  </div>
+                  {selectedFolder === folder.id && (
+                    <div className="flex items-center gap-2">
+                      <FontAwesomeIcon 
+                        icon={faPlus} 
+                        className="text-gray-500 dark:text-gray-400 w-4 h-4 cursor-pointer hover:text-gray-700 dark:hover:text-gray-200"
+                        onClick={handleAddNoteClick}
+                      />
+                      <FontAwesomeIcon 
+                        icon={faTrash} 
+                        className="text-gray-500 dark:text-gray-400 w-4 h-4 cursor-pointer hover:text-red-500 dark:hover:text-red-400"
+                        onClick={(e) => handleDeleteClick(e, 'folder', folder.id)}
+                      />
+                    </div>
                   )}
                 </div>
                 
@@ -159,18 +232,25 @@ export default function Sidebar({
                     {folder.notes.map((note) => (
                       <li 
                         key={note.id}
-                        className={`flex items-center p-2 rounded-md cursor-pointer ${
+                        className={`flex items-center justify-between p-2 rounded-md cursor-pointer ${
                           selectedNote === note.id 
                             ? 'bg-blue-100 dark:bg-blue-900' 
                             : 'hover:bg-gray-100 dark:hover:bg-gray-700'
                         }`}
                         onClick={() => handleNoteClick(note)}
                       >
+                        <div className="flex items-center">
+                          <FontAwesomeIcon 
+                            icon={faFile} 
+                            className="mr-2 text-blue-500 w-4 h-4" 
+                          />
+                          <span className="truncate text-gray-900 dark:text-white">{note.name}</span>
+                        </div>
                         <FontAwesomeIcon 
-                          icon={faFile} 
-                          className="mr-2 text-blue-500 w-4 h-4" 
+                          icon={faTrash} 
+                          className="text-gray-500 dark:text-gray-400 w-4 h-4 cursor-pointer hover:text-red-500 dark:hover:text-red-400"
+                          onClick={(e) => handleDeleteClick(e, 'note', note.id, folder.id)}
                         />
-                        <span className="truncate text-gray-900 dark:text-white">{note.name}</span>
                       </li>
                     ))}
                   </ul>
@@ -180,6 +260,47 @@ export default function Sidebar({
           </ul>
         )}
       </div>
+
+      <NewFolderModal 
+        isOpen={isNewFolderModalOpen} 
+        onClose={() => setIsNewFolderModalOpen(false)}
+        onFolderCreated={handleNewFolder}
+      />
+
+      <NewNoteModal 
+        isOpen={isNewNoteModalOpen} 
+        onClose={() => setIsNewNoteModalOpen(false)}
+        onNoteCreated={handleNewNote}
+        selectedFolder={folders.find(f => f.id === selectedFolder)}
+      />
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirmation.isOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-96">
+            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
+              Confirm Delete
+            </h2>
+            <p className="text-gray-700 dark:text-gray-300 mb-6">
+              Are you sure you want to delete this {deleteConfirmation.type}? This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => setDeleteConfirmation({ isOpen: false, type: null, id: null, folderId: null })}
+                className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 } 

@@ -24,19 +24,30 @@ export default function Zone() {
 
   // Handle folder selection
   const handleFolderSelect = (folder) => {
-    if (selectedFolder === folder.id) {
+    if (folder === null) {
       setSelectedFolder(null);
+      setSelectedNote(null);
+      setNoteContent(null);
     } else {
-      setSelectedFolder(folder.id);
+      if (selectedFolder === folder.id) {
+        setSelectedFolder(null);
+      } else {
+        setSelectedFolder(folder.id);
+      }
+      setSelectedNote(null);
+      setNoteContent(null);
     }
-    setSelectedNote(null);
-    setNoteContent(null);
   };
 
   // Handle note selection
   const handleNoteSelect = (note) => {
-    setSelectedNote(note.id);
-    setNoteContent(note);
+    if (note === null) {
+      setSelectedNote(null);
+      setNoteContent(null);
+    } else {
+      setSelectedNote(note.id);
+      setNoteContent(note);
+    }
   };
 
   // Toggle sidebar collapse

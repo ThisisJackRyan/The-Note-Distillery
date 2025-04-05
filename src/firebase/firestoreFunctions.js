@@ -1,6 +1,6 @@
 import { db, app } from "./firebaseConfig"; // Adjust the import path as necessary
 import { getAuth } from "firebase/auth";
-import { collection, addDoc, setDoc, doc, query, where, getDocs } from "firebase/firestore";
+import { collection, addDoc, setDoc, doc, query, where, getDocs, deleteDoc } from "firebase/firestore";
 
 
 const getUserID = () => {
@@ -16,7 +16,12 @@ const getUserID = () => {
 
 const makeNewFolder = async (folderName) => {
     try {
-        await addDoc(collection(db, "users", getUserID, "folders"), {
+        const userId = getUserID();
+        if (!userId) {
+            console.error("No user is signed in");
+            return;
+        }
+        await addDoc(collection(db, "users", userId, "folders"), {
             name: folderName,
         });
         console.log("Document written");
@@ -85,4 +90,47 @@ const addNewNote = async (folderName, noteName, source, tags, summary, text) => 
     }
 }
 
-export { makeNewFolder, createUserInDatabase, addNewNote };
+const deleteFolder = async (folderId) => {
+    try {
+        const userId = getUserID();
+        if (!userId) {
+            console.error("No user is signed in");
+            return;
+        }
+
+        // First, delete all notes in the folder
+        const notesQuery = query(collection(db, "users", userId, "folders", folderId, "notes"));
+        const notesSnapshot = await getDocs(notesQuery);
+        
+        // Delete each note
+        const deletePromises = notesSnapshot.docs.map(noteDoc => 
+            deleteDoc(doc(db, "users", userId, "folders", folderId, "notes", noteDoc.id))
+        );
+        await Promise.all(deletePromises);
+
+        // Then delete the folder itself
+        await deleteDoc(doc(db, "users", userId, "folders", folderId));
+        console.log("Folder and its notes deleted successfully");
+    } catch (e) {
+        console.error("Error deleting folder: ", e);
+        throw e;
+    }
+}
+
+const deleteNote = async (folderId, noteId) => {
+    try {
+        const userId = getUserID();
+        if (!userId) {
+            console.error("No user is signed in");
+            return;
+        }
+
+        await deleteDoc(doc(db, "users", userId, "folders", folderId, "notes", noteId));
+        console.log("Note deleted successfully");
+    } catch (e) {
+        console.error("Error deleting note: ", e);
+        throw e;
+    }
+}
+
+export { makeNewFolder, createUserInDatabase, addNewNote, deleteFolder, deleteNote };
