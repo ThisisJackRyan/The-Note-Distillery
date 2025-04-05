@@ -85,17 +85,19 @@ export default function Zone() {
 
         <div className="flex flex-col md:flex-row gap-6">
           {/* Sidebar */}
-          <Sidebar 
-            isCollapsed={isSidebarCollapsed}
-            onToggleCollapse={toggleSidebar}
-            onFolderSelect={handleFolderSelect}
-            onNoteSelect={handleNoteSelect}
-            selectedFolder={selectedFolder}
-            selectedNote={selectedNote}
-          />
+          <div className="md:w-64">
+            <Sidebar
+              isCollapsed={isSidebarCollapsed}
+              onToggleCollapse={toggleSidebar}
+              onFolderSelect={handleFolderSelect}
+              onNoteSelect={handleNoteSelect}
+              selectedFolder={selectedFolder}
+              selectedNote={selectedNote}
+            />
+          </div>
 
           {/* Content area */}
-          <div className="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <div className={`flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 ${isSidebarCollapsed ? 'md:ml-0' : 'md:ml-6'}`}>
             <NoteContent note={noteContent} />
           </div>
         </div>

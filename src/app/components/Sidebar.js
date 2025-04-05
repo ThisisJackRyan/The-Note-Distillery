@@ -155,7 +155,7 @@ export default function Sidebar({
   };
 
   return (
-    <div className={`${isCollapsed ? 'w-16' : 'w-64'} transition-all duration-300 bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden`}>
+    <div className={`${isCollapsed ? 'w-16' : 'w-full md:w-64 '} transition-all duration-300 bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden`}>
       <div className="p-4 flex justify-between items-center border-b border-gray-200 dark:border-gray-700">
         <h2 className={`font-semibold ${isCollapsed ? 'hidden' : 'block'} text-gray-900 dark:text-white`}>Folders</h2>
         <div className='flex gap-4 items-center'>
