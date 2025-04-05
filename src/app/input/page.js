@@ -29,7 +29,7 @@ export default function ScannerPage() {
     }
 
     return (
-        <div className="flex flex-col justify-around md:justify-center items-center h-screen dark:bg-gray-900 text-white ">
+        <div className="flex flex-col justify-around md:justify-center items-center dark:bg-gray-900 text-white h-full">
             <div className="text-3xl font-bold">
                 Upload Image Files:
             </div>
