@@ -29,12 +29,12 @@ export default function ScannerPage() {
     }
 
     return (
-        <div className="flex flex-col justify-center items-center h-screen dark:bg-gray-900 text-white ">
+        <div className="flex flex-col justify-around md:justify-center items-center h-screen dark:bg-gray-900 text-white ">
             <div className="text-3xl font-bold">
                 Upload Image Files:
             </div>
                
-            <div className=" flex items-center justify-center border-2 text-4xl w-sm h-24 md:w-3xl  md:h-96 border-dashed border-gray-500 rounded-lg p-4 mt-8 cursor-pointer"
+            <div className=" flex items-center justify-center border-2 text-4xl w-xs h-24 md:w-3xl  md:h-96 border-dashed border-gray-500 rounded-lg p-4 mt-8 cursor-pointer"
                 onClick={handleClick}
             >
                 <FontAwesomeIcon icon={faCloudArrowUp} />
