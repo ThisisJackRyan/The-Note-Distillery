@@ -1,6 +1,6 @@
 "use client";
 
-import { textFromImage } from "./calls";
+import { textFromImage } from "../calls";
 
 export default function ScannerPage() {
     const handleFileChange = (event) => {
