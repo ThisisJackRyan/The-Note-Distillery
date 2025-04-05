@@ -61,7 +61,7 @@ const getFolderIdByName = async (folderName) => {
     }
 }
 
-const addNewNote = async (folderName, noteName, sources, tags, summary, text) => {
+const addNewNote = async (folderName, noteName, source, tags, summary, text) => {
     try {
         const userId = getUserID();
         if (!userId) return;
@@ -75,7 +75,7 @@ const addNewNote = async (folderName, noteName, sources, tags, summary, text) =>
         await addDoc(collection(db, "users", userId, "folders", folderId, "notes"), {
             name: noteName,
             dateCreated: new Date().toISOString(),
-            sources: sources,
+            source: source,
             tags: tags,
             summary: summary,
             text: text
