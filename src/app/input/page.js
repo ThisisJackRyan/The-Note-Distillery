@@ -2,15 +2,17 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons'
 import { useRef } from "react";
-import { textFromImage } from "../calls";
+import {detectText, cleanParsedText, processImgFileInput, fetchImgBuffer} from '../scripts/gemini'
+
+const exampleImgPath = "./src/app/data/test-jps/IMG_8140.jpg"
 
 export default function ScannerPage() {
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
             try {
-              console.log("Processing Image")
-              textFromImage(file)
+                console.log("File: (clientside)" + file)
+                detectText(file)
             } catch(err) {
               console.log(err)
             }
@@ -47,7 +49,42 @@ export default function ScannerPage() {
                     onChange={handleFileChange}
                     accept=".jpg,.jpeg,.png,.pdf"
                 />
-            
+                
+            <button onClick={() => detectText(exampleImgPath)}>Test text parse from set image filepath</button>
+
+            <style jsx>{`
+                .file-upload {
+                    margin-bottom: 20px;
+                }
+                .fileInput {
+                    display: inline-block;
+                    padding: 10px 20px;
+                    font-size: 16px;
+                    color: white;
+                    background-color: #007bff;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                }
+                .fileInput::-webkit-file-upload-button {
+                    visibility: hidden;
+                }
+                .fileInput::before {
+                    content: 'Upload File';
+                    display: inline-block;
+                    background-color: #007bff;
+                    color: white;
+                    padding: 10px 20px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                }
+                .fileInput:hover::before {
+                    background-color: #0056b3;
+                }
+                button {
+                    border: 2px solid black;
+                }
+            `}</style>
         </div>
     );
 }
