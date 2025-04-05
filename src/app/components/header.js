@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faXmark, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { app } from '@/firebase/firebaseConfig';
 import { useRouter } from 'next/navigation';
@@ -75,7 +75,13 @@ export default function Header() {
                     className="flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                   >
                     Profile
-                    <FontAwesomeIcon icon={faUser} className="h-4 w-4 ml-1" />
+                  </Link>
+                  <Link
+                    href="/zone"
+                    className="block bg-blue-600 text-white px-4 py-2 rounded-md text-base font-medium hover:bg-blue-700"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    The Zone
                   </Link>
                 </>
               ) : (
@@ -151,7 +157,13 @@ export default function Header() {
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         Profile
-                        <FontAwesomeIcon icon={faUser} className="h-4 ml-2" />
+                      </Link>
+                      <Link
+                        href="/zone"
+                        className="block bg-blue-600 text-white px-4 py-2 rounded-md text-base font-medium hover:bg-blue-700"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        The Zone
                       </Link>
                     </>
                   ) : (
