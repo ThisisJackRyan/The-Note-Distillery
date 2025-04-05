@@ -1,5 +1,7 @@
 "use client";
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons'
+import { useRef } from "react";
 import { textFromImage } from "../calls";
 
 export default function ScannerPage() {
@@ -17,65 +19,35 @@ export default function ScannerPage() {
         }
     };
 
+    const fileInputRef = useRef(null);
+
+    const handleClick = () => {
+        const fileInput = document.querySelector('input[type="file"]');
+        if (fileInput) {
+            fileInput.click();
+        }
+    }
+
     return (
-        <div>
-            <h1>Scanner Page</h1>
-            <p>Welcome to the Scanner Page!</p>
-
-            <div className="file-upload">
-                <label>
-                    Upload Image Files:
-                    <input
-                        type="file"
-                        className="fileInput"
-                        onChange={handleFileChange}
-                        accept=".jpg,.jpeg,.png,.pdf"
-                    />
-                </label>
+        <div className="flex flex-col justify-center items-center h-screen dark:bg-gray-900 text-white">
+            <div className="text-3xl font-bold">
+                Upload Image Files:
             </div>
-
-            <div className="file-upload">
-                <label>
-                    Upload Text File:
-                    <input
-                        type="file"
-                        className="fileInput"
-                        onChange={handleFileChange}
-                        accept=".txt"
-                    />
-                </label>
+               
+            <div className=" flex items-center justify-center border-2 text-4xl w-3xl h-96 border-dashed border-gray-500 rounded-lg p-4 mt-8 cursor-pointer"
+                onClick={handleClick}
+            >
+                <FontAwesomeIcon icon={faCloudArrowUp} />
+               
             </div>
-
-            <style jsx>{`
-                .file-upload {
-                    margin-bottom: 20px;
-                }
-                .fileInput {
-                    display: inline-block;
-                    padding: 10px 20px;
-                    font-size: 16px;
-                    color: white;
-                    background-color: #007bff;
-                    border: none;
-                    border-radius: 4px;
-                    cursor: pointer;
-                }
-                .fileInput::-webkit-file-upload-button {
-                    visibility: hidden;
-                }
-                .fileInput::before {
-                    content: 'Upload File';
-                    display: inline-block;
-                    background-color: #007bff;
-                    color: white;
-                    padding: 10px 20px;
-                    border-radius: 4px;
-                    cursor: pointer;
-                }
-                .fileInput:hover::before {
-                    background-color: #0056b3;
-                }
-            `}</style>
+            <input
+                    type="file"
+                    ref={fileInputRef}
+                    className="hidden"
+                    onChange={handleFileChange}
+                    accept=".jpg,.jpeg,.png,.pdf"
+                />
+            
         </div>
     );
 }

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { app } from '@/firebase/firebaseConfig';
 import Link from 'next/link';
-import PageLayout from '@/app/components/PageLayout';
+
 
 export default function SignUpPage() {
   const [email, setEmail] = useState('');
@@ -38,7 +38,6 @@ export default function SignUpPage() {
   };
 
   return (
-    <PageLayout>
       <div className="flex items-center justify-center min-h-screen bg-white dark:bg-gray-900">
         <div className="max-w-md w-full space-y-8 p-8">
           <div>
@@ -124,6 +123,6 @@ export default function SignUpPage() {
           </div>
         </div>
       </div>
-    </PageLayout>
+
   );
 } 
