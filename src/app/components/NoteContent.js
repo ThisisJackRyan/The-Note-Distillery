@@ -13,7 +13,7 @@ export default function NoteContent({ note }) {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4">{note.name}</h2>
+      <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">{note.name}</h2>
       <div className="mb-4">
         <p className="text-sm text-gray-500 dark:text-gray-400">
           Created: {new Date(note.dateCreated).toLocaleDateString()}
@@ -21,12 +21,12 @@ export default function NoteContent({ note }) {
       </div>
       
       <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-2">Summary</h3>
+        <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Summary</h3>
         <p className="text-gray-700 dark:text-gray-300">{note.summary}</p>
       </div>
       
       <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-2">Tags</h3>
+        <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Tags</h3>
         <div className="flex flex-wrap gap-2">
           {note.tags && note.tags.map((tag, index) => (
             <span 
@@ -40,7 +40,7 @@ export default function NoteContent({ note }) {
       </div>
       
       <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-2">Sources</h3>
+        <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Sources</h3>
         <ul className="list-disc pl-5">
           {note.sources && note.sources.map((source, index) => (
             <li key={index} className="text-gray-700 dark:text-gray-300">{source}</li>
@@ -49,8 +49,8 @@ export default function NoteContent({ note }) {
       </div>
       
       <div>
-        <h3 className="text-lg font-semibold mb-2">Content</h3>
-        <div className="prose dark:prose-invert max-w-none">
+        <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Content</h3>
+        <div className="prose dark:prose-invert max-w-none text-gray-900 dark:text-white">
           {note.text}
         </div>
       </div>

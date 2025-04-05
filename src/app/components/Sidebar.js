@@ -101,7 +101,7 @@ export default function Sidebar({
   return (
     <div className={`${isCollapsed ? 'w-16' : 'w-64'} transition-all duration-300 bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden`}>
       <div className="p-4 flex justify-between items-center border-b border-gray-200 dark:border-gray-700">
-        <h2 className={`font-semibold ${isCollapsed ? 'hidden' : 'block'}`}>Folders</h2>
+        <h2 className={`font-semibold ${isCollapsed ? 'hidden' : 'block'} text-gray-900 dark:text-white`}>Folders</h2>
         <button 
           onClick={onToggleCollapse}
           className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
@@ -150,7 +150,7 @@ export default function Sidebar({
                     className="mr-2 text-yellow-500 w-4 h-4" 
                   />
                   {!isCollapsed && (
-                    <span className="truncate">{folder.name}</span>
+                    <span className="truncate text-gray-900 dark:text-white">{folder.name}</span>
                   )}
                 </div>
                 
@@ -170,7 +170,7 @@ export default function Sidebar({
                           icon={faFile} 
                           className="mr-2 text-blue-500 w-4 h-4" 
                         />
-                        <span className="truncate">{note.name}</span>
+                        <span className="truncate text-gray-900 dark:text-white">{note.name}</span>
                       </li>
                     ))}
                   </ul>
