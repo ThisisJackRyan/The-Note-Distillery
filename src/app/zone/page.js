@@ -58,7 +58,7 @@ export default function Zone() {
   // Show loading state while checking authentication
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className=" bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <p className="text-gray-500 dark:text-gray-400">Loading...</p>
         </div>
@@ -72,7 +72,7 @@ export default function Zone() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="h-full bg-gray-50 dark:bg-gray-900 mt-12">
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white sm:text-5xl md:text-6xl">
@@ -95,6 +95,8 @@ export default function Zone() {
               selectedNote={selectedNote}
             />
           </div>
+
+          <hr className='text-gray-700 block md:hidden' />
 
           {/* Content area */}
           <div className={`flex-1 bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 ${isSidebarCollapsed ? 'md:ml-0' : 'md:ml-6'}`}>
