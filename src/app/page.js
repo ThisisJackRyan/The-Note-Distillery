@@ -47,7 +47,7 @@ export default function Home() {
               if (parallaxSection) {
                 parallaxSection.style.backgroundImage = isSmallDevice
                   ? "url('/pexels-rdne-5759789.jpg')"
-                  : "url('/pexels-vanessa-garcia-6326185.jpg')";
+                  : "url('/pexels-vanessa-garcia-6326185.jpg')", parallaxSection.style.backgroundSize = "100% auto", parallaxSection.style.backgroundRepeat = "no-repeat", parallaxSection.style.backgroundPosition = "top center";
               }
             };
         
