@@ -57,7 +57,7 @@ export default function Home() {
             return () => {
               window.removeEventListener('resize', updateBackgroundImage); // Cleanup
             };
-          }, [])};</div>
+          }, [])}</div>
         <div
           className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 text-center md:text-left dark:text-white" // Adjusted py-20 to py-10 to reduce spacing
           style={{ marginBottom: "20vh", marginTop: "10vh"}} // Set bottom margin to 20% of the user's machine height
