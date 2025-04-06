@@ -7,6 +7,11 @@ import { faBars, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { app } from '@/firebase/firebaseConfig';
 import { useRouter } from 'next/navigation';
+import Head from 'next/head';
+
+<Head>
+  <link rel="icon" href="/Website-Favicon-White.svg" />
+</Head>
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -31,6 +36,8 @@ export default function Header() {
     }
   };
 
+
+
   return (
     <header className="fixed z-100 w-full h-18 bg-white dark:bg-gray-900">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -47,7 +54,7 @@ export default function Header() {
           <div className="hidden md:block">
             <div className="ml-10 flex items-center space-x-4">
               <Link
-                href="upload"
+                href={user ? "/upload" : "/login"}
                 className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
                 Upload
@@ -132,7 +139,7 @@ export default function Header() {
 
                 <div className="flex-1 px-4 py-6 space-y-4">
                   <Link
-                    href="input"
+                    href={user ? "/upload" : "/login"}
                     className="block text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-base font-medium"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
