@@ -19,14 +19,16 @@ const makeNewFolder = async (folderName) => {
         const userId = getUserID();
         if (!userId) {
             console.error("No user is signed in");
-            return;
+            return null;
         }
-        await addDoc(collection(db, "users", userId, "folders"), {
+        const docRef = await addDoc(collection(db, "users", userId, "folders"), {
             name: folderName,
         });
         console.log("Document written");
+        return docRef.id;
     } catch (e) {
         console.error("Error adding document: ", e);
+        return null;
     }
 }
 
@@ -65,14 +67,13 @@ const getFolderIdByName = async (folderName) => {
     }
 }
 
-const addNewNote = async (folderName, noteName, source, tags, summary, text) => {
+const addNewNote = async (folderId, noteName, source, tags, summary, text) => {
     try {
         const userId = getUserID();
         if (!userId) return;
         
-        const folderId = await getFolderIdByName(folderName);
         if (!folderId) {
-            console.error("Folder not found");
+            console.error("Folder ID not provided");
             return;
         }
         
@@ -133,6 +134,32 @@ const deleteNote = async (folderId, noteId) => {
     }
 }
 
+const getAllFolders = async () => {
+    try {
+        const userId = getUserID();
+        if (!userId) {
+            console.error("No user is signed in");
+            return [];
+        }
+
+        const foldersQuery = query(collection(db, "users", userId, "folders"));
+        const querySnapshot = await getDocs(foldersQuery);
+        
+        const folders = [];
+        querySnapshot.forEach((doc) => {
+            folders.push({
+                id: doc.id,
+                ...doc.data()
+            });
+        });
+        
+        return folders;
+    } catch (e) {
+        console.error("Error getting folders: ", e);
+        return [];
+    }
+}
+
 const updateFolderName = async (folderId, newName) => {
     try {
         const userId = getUserID();
@@ -187,4 +214,4 @@ const updateNote = async (folderId, noteId, updatedNote) => {
     }
 };
 
-export { makeNewFolder, createUserInDatabase, addNewNote, deleteFolder, deleteNote, updateFolderName, updateNoteName, updateNote };
+export { makeNewFolder, createUserInDatabase, addNewNote, deleteFolder, deleteNote, updateFolderName, updateNoteName, updateNote, getAllFolders };

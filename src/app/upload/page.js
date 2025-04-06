@@ -4,15 +4,18 @@ import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons'
 import { useRef, useState } from "react";
 import { detectText, cleanParsedText } from '../scripts/gemini'
 import { saveNoteAsText } from '../scripts/noteManager'
+import NewFolderModal from '../components/newFolderModal'
 import { useAuth } from '../context/AuthContext'
+import AttachToFolder from '../components/attachToFolder';
 
 export default function ScannerPage() {
-    const [isProcessing, setIsProcessing] = useState(false);
+const [isProcessing, setIsProcessing] = useState(false);
     const [extractedText, setExtractedText] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const fileInputRef = useRef(null);
     const { user } = useAuth();
+    const [showModal, setShowModal] = useState(false);
 
     // Convert File to base64
     const fileToBase64 = (file) => {
@@ -45,8 +48,14 @@ export default function ScannerPage() {
             // Clean the extracted text
             const cleanedText = await cleanParsedText(rawText);
             
+            if (cleanedText) {
+                setShowModal(true);
+                setExtractedText(cleanedText);
+            }
             // Display the extracted text
-            setExtractedText(cleanedText);
+            
+            
+
             
             // If user is logged in, offer to save as note
             if (user) {
@@ -62,36 +71,36 @@ export default function ScannerPage() {
         }
     };
 
-    const handleSaveAsNote = async () => {
-        if (!user) {
-            setError('You must be logged in to save notes');
-            return;
-        }
+    // const handleSaveAsNote = async () => {
+    //     if (!user) {
+    //         setError('You must be logged in to save notes');
+    //         return;
+    //     }
 
-        if (!extractedText) {
-            setError('No text to save');
-            return;
-        }
+    //     if (!extractedText) {
+    //         setError('No text to save');
+    //         return;
+    //     }
 
-        try {
-            setIsProcessing(true);
-            setError('');
+    //     try {
+    //         setIsProcessing(true);
+    //         setError('');
             
-            // Generate a title from the first line or use a default
-            const title = extractedText.split('\n')[0].substring(0, 50) || 'Extracted Note';
+    //         // Generate a title from the first line or use a default
+    //         const title = extractedText.split('\n')[0].substring(0, 50) || 'Extracted Note';
             
-            // Save the note
-            await saveNoteAsText(user.uid, extractedText, title);
+    //         // Save the note
+    //         // await saveNoteAsText(user.uid, extractedText, title);
             
-            setSuccess('Note saved successfully!');
-            setExtractedText(''); // Clear the extracted text after saving
-        } catch (err) {
-            console.error(err);
-            setError('Error saving note: ' + (err.message || 'Unknown error'));
-        } finally {
-            setIsProcessing(false);
-        }
-    };
+    //         setSuccess('Note saved successfully!');
+    //         setExtractedText(''); // Clear the extracted text after saving
+    //     } catch (err) {
+    //         console.error(err);
+    //         setError('Error saving note: ' + (err.message || 'Unknown error'));
+    //     } finally {
+    //         setIsProcessing(false);
+    //     }
+    // };
 
     const handleClick = () => {
         if (fileInputRef.current) {
@@ -137,7 +146,12 @@ export default function ScannerPage() {
                 </div>
             )}
             
-            {extractedText && (
+            {
+                showModal && <AttachToFolder extractedText={extractedText} />
+            }
+            
+
+            {/* {extractedText && (
                 <div className="mt-6 w-full max-w-3xl">
                     <h3 className="text-xl font-semibold mb-2">Extracted Text:</h3>
                     <div className="bg-gray-800 p-4 rounded-lg max-h-96 overflow-y-auto whitespace-pre-wrap">
@@ -154,41 +168,7 @@ export default function ScannerPage() {
                         </button>
                     )}
                 </div>
-            )}
-
-            <style jsx>{`
-                .file-upload {
-                    margin-bottom: 20px;
-                }
-                .fileInput {
-                    display: inline-block;
-                    padding: 10px 20px;
-                    font-size: 16px;
-                    color: white;
-                    background-color: #007bff;
-                    border: none;
-                    border-radius: 4px;
-                    cursor: pointer;
-                }
-                .fileInput::-webkit-file-upload-button {
-                    visibility: hidden;
-                }
-                .fileInput::before {
-                    content: 'Upload File';
-                    display: inline-block;
-                    background-color: #007bff;
-                    color: white;
-                    padding: 10px 20px;
-                    border-radius: 4px;
-                    cursor: pointer;
-                }
-                .fileInput:hover::before {
-                    background-color: #0056b3;
-                }
-                button {
-                    border: 2px solid black;
-                }
-            `}</style>
+            )} */}
         </div>
     );
 }

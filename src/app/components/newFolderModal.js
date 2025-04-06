@@ -15,11 +15,14 @@ export default function NewFolderModal({ isOpen, onClose, onFolderCreated }) {
     }
 
     try {
-      // Update UI immediately
-      onFolderCreated(folderName);
+      // First create the folder in Firebase
+      const folderId = await makeNewFolder(folderName);
+      if (!folderId) {
+        throw new Error('Failed to create folder');
+      }
       
-      // Then try to save to Firebase
-      await makeNewFolder(folderName);
+      // Pass both the name and ID to the parent
+      onFolderCreated(folderName, folderId);
       
       setFolderName('');
       onClose();

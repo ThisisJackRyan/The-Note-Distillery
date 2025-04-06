@@ -4,7 +4,6 @@ import NoteAIAgent from './NoteAIAgent';
 
 export default function NoteContent({ note }) {
   if (!note) {
-    console.log("");
     return (
       <div className="text-center py-12">
         <p className="text-gray-500 dark:text-gray-400">
