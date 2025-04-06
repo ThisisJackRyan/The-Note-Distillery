@@ -97,7 +97,7 @@ export default function Zone() {
           </div>
 
           {/* Content area */}
-          <div className={`flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 ${isSidebarCollapsed ? 'md:ml-0' : 'md:ml-6'}`}>
+          <div className={`flex-1 bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 ${isSidebarCollapsed ? 'md:ml-0' : 'md:ml-6'}`}>
             <NoteContent note={noteContent} />
           </div>
         </div>

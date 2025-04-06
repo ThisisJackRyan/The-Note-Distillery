@@ -62,7 +62,7 @@ const ProfilePage = () => {
                         </p>
                     </div>
 
-                    <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+                    <div className="bg-white dark:bg-gray-900 shadow rounded-lg p-6">
                         <div className="border-b border-gray-200 dark:border-gray-700 pb-4 mb-4">
                             <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Profile Information</h2>
                         </div>

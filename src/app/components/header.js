@@ -7,11 +7,7 @@ import { faBars, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { app } from '@/firebase/firebaseConfig';
 import { useRouter } from 'next/navigation';
-import Head from 'next/head';
 
-<Head>
-  <link rel="icon" href="/Website-Favicon-White.svg" />
-</Head>
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -36,10 +32,8 @@ export default function Header() {
     }
   };
 
-
-
   return (
-    <header className="fixed z-100 w-full h-18 bg-white dark:bg-gray-900">
+    <header className="fixed z-40 w-full h-18 bg-white dark:bg-gray-900">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20"> {/* Adjusted height to match header */}
           <div className="flex items-center">
@@ -114,7 +108,7 @@ export default function Header() {
           <div className="fixed inset-0 z-50 md:hidden">
             {/* Backdrop */}
             <div
-              className="fixed inset-0 bg-gray-500 bg-opacity-50"
+              className="fixed inset-0 bg-opacity-50"
               onClick={() => setIsMobileMenuOpen(false)}
             ></div>
 

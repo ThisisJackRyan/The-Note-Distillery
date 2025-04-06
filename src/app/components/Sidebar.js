@@ -320,7 +320,7 @@ export default function Sidebar({
   };
 
   return (
-    <div className="w-full md:w-64 bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-visible">
+    <div className="w-full md:w-64 bg-white dark:bg-gray-900 rounded-lg shadow-md overflow-visible">
       <div className="p-4 flex justify-between items-center border-b border-gray-200 dark:border-gray-700">
         <h2 className="font-semibold text-gray-900 dark:text-white">
           Folders
@@ -392,7 +392,7 @@ export default function Sidebar({
                         onClick={(e) => toggleMenu(e, `folder-${folder.id}`)}
                       />
                       {openMenuId === `folder-${folder.id}` && (
-                        <div className="fixed w-32 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-[100]"
+                        <div className="fixed w-32 bg-white dark:bg-gray-900 rounded-md shadow-lg py-1 z-[100]"
                              style={{
                                top: `${menuPosition.top}px`,
                                left: `${menuPosition.left}px`
@@ -456,7 +456,7 @@ export default function Sidebar({
                             onClick={(e) => toggleMenu(e, `note-${note.id}`)}
                           />
                           {openMenuId === `note-${note.id}` && (
-                            <div className="fixed w-32 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-[100]"
+                            <div className="fixed w-32 bg-white dark:bg-gray-900 rounded-md shadow-lg py-1 z-[100]"
                                  style={{
                                    top: `${menuPosition.top}px`,
                                    left: `${menuPosition.left}px`
@@ -528,7 +528,7 @@ export default function Sidebar({
       {/* Delete Confirmation Modal */}
       {deleteConfirmation.isOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-96">
+          <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-xl w-96">
             <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
               Confirm Delete
             </h2>

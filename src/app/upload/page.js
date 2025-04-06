@@ -3,8 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons'
 import { useRef, useState } from "react";
 import { detectText, cleanParsedText } from '../scripts/gemini'
-import { saveNoteAsText } from '../scripts/noteManager'
-import NewFolderModal from '../components/newFolderModal'
 import { useAuth } from '../context/AuthContext'
 import AttachToFolder from '../components/attachToFolder';
 
@@ -154,7 +152,7 @@ const [isProcessing, setIsProcessing] = useState(false);
             {/* {extractedText && (
                 <div className="mt-6 w-full max-w-3xl">
                     <h3 className="text-xl font-semibold mb-2">Extracted Text:</h3>
-                    <div className="bg-gray-800 p-4 rounded-lg max-h-96 overflow-y-auto whitespace-pre-wrap">
+                    <div className="bg-gray-900 p-4 rounded-lg max-h-96 overflow-y-auto whitespace-pre-wrap">
                         {extractedText}
                     </div>
                     
