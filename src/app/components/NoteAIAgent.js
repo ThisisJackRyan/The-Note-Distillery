@@ -11,6 +11,7 @@ export default function NoteAIAgent({ note }) {
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const [activeOperation, setActiveOperation] = useState('question'); // 'question', 'flashcards', or 'quiz'
 
   const handleAskQuestion = async (question) => {
     return await answerQuestion(note, question);
@@ -22,6 +23,7 @@ export default function NoteAIAgent({ note }) {
     setIsLoading(true);
     setError(null);
     setCurrentCardIndex(0);
+    setActiveOperation('flashcards');
     
     try {
       const flashcards = await generateFlashcards(note);
@@ -44,6 +46,7 @@ export default function NoteAIAgent({ note }) {
     setIsLoading(true);
     setError(null);
     setCurrentCardIndex(0);
+    setActiveOperation('quiz');
     
     try {
       const quiz = await generateQuiz(note);
@@ -72,6 +75,13 @@ export default function NoteAIAgent({ note }) {
     }
   };
 
+  const resetOperation = () => {
+    setResponse(null);
+    setError(null);
+    setCurrentCardIndex(0);
+    setActiveOperation('question');
+  };
+
   return (
     <div className="mt-6 p-4 border-2 border-indigo-200 dark:border-indigo-800 rounded-lg bg-white dark:bg-gray-900 shadow-sm">
       <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">AI Assistant</h3>
@@ -80,7 +90,9 @@ export default function NoteAIAgent({ note }) {
         <button
           onClick={handleGenerateFlashcards}
           disabled={isLoading || !note}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+          className={`px-4 py-2 rounded hover:bg-blue-600 disabled:opacity-50 ${
+            activeOperation === 'flashcards' ? 'bg-blue-500 text-white' : 'bg-blue-500 text-white'
+          }`}
         >
           Generate Flashcards
         </button>
@@ -88,13 +100,23 @@ export default function NoteAIAgent({ note }) {
         <button
           onClick={startQuiz}
           disabled={isLoading || !note}
-          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50"
+          className={`px-4 py-2 rounded hover:bg-green-600 disabled:opacity-50 ${
+            activeOperation === 'quiz' ? 'bg-green-500 text-white' : 'bg-green-500 text-white'
+          }`}
         >
           Start Quiz
         </button>
-      </div>
 
-      <QuestionForm note={note} onAskQuestion={handleAskQuestion} />
+        <button
+          onClick={resetOperation}
+          disabled={isLoading || !note}
+          className={`px-4 py-2 rounded hover:bg-purple-600 disabled:opacity-50 ${
+            activeOperation === 'question' ? 'bg-purple-500 text-white' : 'bg-purple-500 text-white'
+          }`}
+        >
+          Ask Question
+        </button>
+      </div>
 
       {isLoading && (
         <div className="text-center py-4">
@@ -108,19 +130,25 @@ export default function NoteAIAgent({ note }) {
         </div>
       )}
 
-      {response && (
+      {activeOperation === 'question' && (
+        <QuestionForm note={note} onAskQuestion={handleAskQuestion} />
+      )}
+
+      {activeOperation === 'flashcards' && response && (
         <div className="mt-4">
-          {response[0]?.options ? (
-            <Quiz questions={response} />
-          ) : (
-            <Flashcard 
-              card={response[currentCardIndex]} 
-              index={currentCardIndex} 
-              totalCards={response.length}
-              onPrev={prevCard}
-              onNext={nextCard}
-            />
-          )}
+          <Flashcard 
+            card={response[currentCardIndex]} 
+            index={currentCardIndex} 
+            totalCards={response.length}
+            onPrev={prevCard}
+            onNext={nextCard}
+          />
+        </div>
+      )}
+
+      {activeOperation === 'quiz' && response && (
+        <div className="mt-4">
+          <Quiz questions={response} />
         </div>
       )}
     </div>
