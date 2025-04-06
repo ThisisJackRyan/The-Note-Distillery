@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 
 class AIService {
   constructor() {
-    this.genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
+    this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
   }
 
   cleanAndParseJSON(text) {
