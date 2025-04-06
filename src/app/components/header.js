@@ -32,28 +32,18 @@ export default function Header() {
   };
 
   return (
-    <header className="w-full h-16 bg-white dark:bg-gray-900">
+    <header className="fixed z-100 w-full h-18 bg-white dark:bg-gray-900">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex-shrink-0">
+        <div className="flex justify-between items-center h-20"> {/* Adjusted height to match header */}
+          <div className="flex items-center">
             <Link href="/" className="text-xl font-bold text-gray-900 dark:text-white">
-              The Note Distillery
+              <img
+                src="/High-Resolution-Logo-White-on-Transparent-Background (1).svg" // Update the path to point to the public directory
+                alt="Logo"
+                className="h-28 w-28 mr-6 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.9)] transition-all duration-300 ease-in-out rounded-full"
+              />
             </Link>
           </div>
-
-          {/* Mobile menu button */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-2xl text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
-            >
-              {isMobileMenuOpen == false ? (
-                <FontAwesomeIcon icon={faBars} className="h-6 w-6" />
-              ) : null}
-            </button>
-          </div>
-
-          {/* Desktop menu */}
           <div className="hidden md:block">
             <div className="ml-10 flex items-center space-x-4">
               <Link
@@ -102,23 +92,31 @@ export default function Header() {
               )}
             </div>
           </div>
+          <div className="md:hidden">
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+            >
+              <FontAwesomeIcon icon={isMobileMenuOpen ? faXmark : faBars} className="h-6 w-6 text-2xl" />
+            </button>
+          </div>
         </div>
 
         {/* Mobile menu */}
         {isMobileMenuOpen && (
           <div className="fixed inset-0 z-50 md:hidden">
             {/* Backdrop */}
-            <div 
-              className="fixed inset-0"
+            <div
+              className="fixed inset-0 bg-gray-500 bg-opacity-50"
               onClick={() => setIsMobileMenuOpen(false)}
-            />
-            
+            ></div>
+
             {/* Mobile menu panel */}
             <div className="fixed inset-y-0 right-0 w-full bg-white dark:bg-gray-900 shadow-xl">
               <div className="flex flex-col h-full">
                 <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-700">
-                  <Link 
-                    href="/" 
+                  <Link
+                    href="/"
                     className="text-xl font-bold text-gray-900 dark:text-white"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
@@ -131,7 +129,7 @@ export default function Header() {
                     <FontAwesomeIcon icon={faXmark} className="h-6 w-6 text-2xl" />
                   </button>
                 </div>
-                
+
                 <div className="flex-1 px-4 py-6 space-y-4">
                   <Link
                     href="input"
