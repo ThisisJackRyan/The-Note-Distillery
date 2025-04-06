@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Flashcard from './Flashcard';
 import Quiz from './Quiz';
 import QuestionForm from './QuestionForm';
-import { aiService } from '../services/AIService';
+import { answerQuestion, generateFlashcards, generateQuiz } from '../services/AIService';
 
 export default function NoteAIAgent({ note }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -13,10 +13,10 @@ export default function NoteAIAgent({ note }) {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
 
   const handleAskQuestion = async (question) => {
-    return await aiService.answerQuestion(note, question);
+    return await answerQuestion(note, question);
   };
 
-  const generateFlashcards = async () => {
+  const handleGenerateFlashcards = async () => {
     if (!note) return;
     
     setIsLoading(true);
@@ -24,7 +24,7 @@ export default function NoteAIAgent({ note }) {
     setCurrentCardIndex(0);
     
     try {
-      const flashcards = await aiService.generateFlashcards(note);
+      const flashcards = await generateFlashcards(note);
       if (flashcards && Array.isArray(flashcards)) {
         setResponse(flashcards);
       } else {
@@ -46,7 +46,7 @@ export default function NoteAIAgent({ note }) {
     setCurrentCardIndex(0);
     
     try {
-      const quiz = await aiService.generateQuiz(note);
+      const quiz = await generateQuiz(note);
       if (quiz && Array.isArray(quiz)) {
         setResponse(quiz);
       } else {
@@ -78,7 +78,7 @@ export default function NoteAIAgent({ note }) {
       
       <div className="flex gap-4 mb-4">
         <button
-          onClick={generateFlashcards}
+          onClick={handleGenerateFlashcards}
           disabled={isLoading || !note}
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
         >
