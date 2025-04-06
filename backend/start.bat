@@ -1,0 +1,3 @@
+@echo off
+echo Starting VertexAI backend service...
+npm run dev 

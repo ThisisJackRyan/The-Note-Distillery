@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { generateEmbedding, semanticSearch, addNoteToPinecone } from '../../../pinecone/pineconeFunctions';
+import { semanticSearch, addNoteToPinecone } from '../../../pinecone/pineconeFunctions';
 
-// POST /api/pinecone/embed
+// POST /api/pinecone
 export async function POST(request) {
   try {
     const { action, data } = await request.json();
@@ -11,13 +11,6 @@ export async function POST(request) {
     }
     
     switch (action) {
-      case 'generateEmbedding':
-        if (!data.text) {
-          return NextResponse.json({ error: 'Text is required for embedding generation' }, { status: 400 });
-        }
-        const embedding = await generateEmbedding(data.text);
-        return NextResponse.json({ embedding });
-        
       case 'addNoteToPinecone':
         if (!data.noteId || !data.embedding || !data.userId || !data.folderId) {
           return NextResponse.json({ error: 'Missing required parameters for adding note to Pinecone' }, { status: 400 });

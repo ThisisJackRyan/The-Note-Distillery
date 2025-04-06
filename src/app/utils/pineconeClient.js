@@ -1,22 +1,21 @@
 /**
- * Client-side utility for interacting with the Pinecone API
+ * Client-side utility for interacting with the Pinecone API and VertexAI backend
  */
 
+const VERTEX_AI_BACKEND_URL = process.env.NEXT_PUBLIC_VERTEX_AI_BACKEND_URL || 'http://localhost:3001';
+
 /**
- * Generate an embedding for the given text
+ * Generate an embedding for the given text using the VertexAI backend
  * @param {string} text - The text to generate an embedding for
  * @returns {Promise<Array<number>>} - The embedding vector
  */
 export async function generateEmbedding(text) {
-  const response = await fetch('/api/pinecone', {
+  const response = await fetch(`${VERTEX_AI_BACKEND_URL}/api/embed`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      action: 'generateEmbedding',
-      data: { text },
-    }),
+    body: JSON.stringify({ text }),
   });
 
   if (!response.ok) {

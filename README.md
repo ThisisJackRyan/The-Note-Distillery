@@ -34,3 +34,51 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Using the VertexAI Backend Service
+
+To avoid issues with Node.js modules in the Next.js application, we've created a separate backend service for VertexAI operations.
+
+### Setup
+
+1. Navigate to the `backend` directory:
+   ```
+   cd backend
+   ```
+
+2. Install dependencies:
+   ```
+   npm install
+   ```
+   Or on Windows:
+   ```
+   install.bat
+   ```
+
+3. Configure environment variables:
+   - Edit the `.env` file in the `backend` directory
+   - Update the values with your Google Cloud project details
+
+4. Start the backend service:
+   ```
+   npm run dev
+   ```
+   Or on Windows:
+   ```
+   start.bat
+   ```
+
+5. The backend service will run on port 3001 by default.
+
+### API Endpoints
+
+- **Generate Embedding**: `POST http://localhost:3001/api/embed`
+  - Body: `{ "text": "Text to generate embedding for" }`
+  - Response: `{ "embedding": [0.1, 0.2, ...] }`
+
+- **Health Check**: `GET http://localhost:3001/health`
+  - Response: `{ "status": "ok" }`
+
+### Integration with Next.js
+
+The Next.js application is configured to use the backend service for embedding generation. The `pineconeClient.js` utility has been updated to call the backend service for embedding generation.

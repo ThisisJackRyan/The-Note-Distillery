@@ -1,22 +1,10 @@
 import { db } from '../../firebase/firebaseConfig';
 import { index } from './pineconeConfig'; // Adjust the import path as necessary
-//import { VertexAI } from '@google-cloud/aiplatform';
 
-const { VertexAI } = require('@google-cloud/aiplatform');
-
-const vertexAI = new VertexAI({
-    projectId: process.env.GOOGLE_PROJECT_ID,
-    location: process.env.GOOGLE_LOCATION || 'us-central1',
-  });
-  
-const textEmbeddingModel = vertexAI.getTextEmbeddingModel('text-embedding-005');
-
+// Note: The generateEmbedding function has been moved to the backend service
+// This function is kept for reference but should not be used directly
 const generateEmbedding = async (text) => {
-    const [response] = await textEmbeddingModel.predict({
-        instances: [{ content: text }],
-    });
-    
-    return response.predictions[0].values;
+    throw new Error('This function should not be used directly. Use the backend service instead.');
 }
 
 const addNoteToPinecone = async (noteId, embedding, userId, folderId) => {
@@ -37,8 +25,9 @@ const addNoteToPinecone = async (noteId, embedding, userId, folderId) => {
 }
 
 const semanticSearch = async (query, userId, topK = 5) => {
-
-    const queryVector = await generateEmbedding(query);
+    // This function now expects the query to already be an embedding
+    // The conversion from text to embedding should be done using the backend service
+    const queryVector = query;
 
     const searchResult = await index.query({
         vector: queryVector,
@@ -63,6 +52,7 @@ const semanticSearch = async (query, userId, topK = 5) => {
     }
       */
 
+      const noteDocs = [];
       for (const noteId of noteIds) {
         const noteDoc = await db.collection('users').doc(userId).collection('folder').doc(noteId.folderId).collection('notes').doc(noteId.id).get();
         if (noteDoc.exists) {
@@ -71,7 +61,6 @@ const semanticSearch = async (query, userId, topK = 5) => {
       }
 
     return noteDocs.map(doc => ({ id: doc.id, ...doc.data() }));
-
 }   
 
 export { generateEmbedding, semanticSearch, addNoteToPinecone };
