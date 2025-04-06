@@ -1,11 +1,12 @@
+'use client';
+import { useEffect } from 'react';
 
 export default function Home() {
   return (
     <div className="h-full bg-gray-50 dark:bg-gray-900">
-      /* Adjusted py-16 to py-20 */
         <div className="text-center dark:text-white mb-8">
           <h1 className="text-5xl font-bold text-gray-900 dark:text-white sm:text-6xl md:text-7xl mt-20 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.9)] transition-all duration-300 ease-in-out rounded-full">
-            Welcome to Note Distillery
+            Welcome to the Note Distillery
           </h1>
         </div>
         <div
@@ -37,8 +38,26 @@ export default function Home() {
           <h2 className="text-4xl text-white dark:bg-gray-900 bg-opacity-50 px-4 py-2 rounded">
             Organize With Ease
           </h2>
-        </div>
         
+         {
+          useEffect(() => {
+            const updateBackgroundImage = () => {
+              const isSmallDevice = window.innerWidth <= 768; // Small breakpoint
+              const parallaxSection = document.querySelector('.relative.bg-fixed');
+              if (parallaxSection) {
+                parallaxSection.style.backgroundImage = isSmallDevice
+                  ? "url('/pexels-rdne-5759789.jpg')"
+                  : "url('/pexels-vanessa-garcia-6326185.jpg')";
+              }
+            };
+        
+            updateBackgroundImage(); // Initial check
+            window.addEventListener('resize', updateBackgroundImage); // Update on resize
+        
+            return () => {
+              window.removeEventListener('resize', updateBackgroundImage); // Cleanup
+            };
+          }, [])};</div>
         <div
           className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 text-center md:text-left dark:text-white" // Adjusted py-20 to py-10 to reduce spacing
           style={{ marginBottom: "20vh", marginTop: "10vh"}} // Set bottom margin to 20% of the user's machine height
