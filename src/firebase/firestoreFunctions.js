@@ -1,7 +1,8 @@
-import { db, app } from "./firebaseConfig"; // Adjust the import path as necessary
+import { db, app, vertexAI, model } from "./firebaseConfig"; // Adjust the import path as necessary
 import { getAuth } from "firebase/auth";
 import { collection, addDoc, setDoc, doc, query, where, getDocs, deleteDoc } from "firebase/firestore";
-
+import {pc} from "@/app/pinecone/pineconeConfig"; // Adjust the import path as necessary
+import { generateEmbedding, addNoteToPinecone } from "@/app/pinecone/pineconeFunctions";
 
 const getUserID = () => {
     const auth = getAuth(app);
@@ -76,7 +77,7 @@ const addNewNote = async (folderName, noteName, source, tags, summary, text) => 
             return;
         }
         
-        await addDoc(collection(db, "users", userId, "folders", folderId, "notes"), {
+        const noteRef = await addDoc(collection(db, "users", userId, "folders", folderId, "notes"), {
             name: noteName,
             dateCreated: new Date().toISOString(),
             source: source,
@@ -84,7 +85,13 @@ const addNewNote = async (folderName, noteName, source, tags, summary, text) => 
             summary: summary,
             text: text
         });
-        console.log("Document written");
+        console.log("Document written in Firebase");
+
+        const embedding = generateEmbedding(text);
+
+        addNoteToPinecone(noteRef.id, embedding, userId, folderId);
+        
+
     } catch (e) {
         console.error("Error adding document: ", e);
     }
