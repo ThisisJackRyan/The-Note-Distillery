@@ -86,7 +86,7 @@ export default function NoteAIAgent({ note }) {
     <div className="mt-6 p-4 border-2 border-indigo-200 dark:border-indigo-800 rounded-lg bg-white dark:bg-gray-900 shadow-sm">
       <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">AI Assistant</h3>
       
-      <div className="flex gap-4 mb-4">
+      <div className="flex flex-col sm:flex-row gap-4 mb-4">
         <button
           onClick={handleGenerateFlashcards}
           disabled={isLoading || !note}
@@ -130,11 +130,11 @@ export default function NoteAIAgent({ note }) {
         </div>
       )}
 
-      {activeOperation === 'question' && (
+      {isLoading == false &&activeOperation === 'question' && (
         <QuestionForm note={note} onAskQuestion={handleAskQuestion} />
       )}
 
-      {activeOperation === 'flashcards' && response && (
+      {isLoading == false && activeOperation === 'flashcards' && response && (
         <div className="mt-4">
           <Flashcard 
             card={response[currentCardIndex]} 
@@ -146,7 +146,7 @@ export default function NoteAIAgent({ note }) {
         </div>
       )}
 
-      {activeOperation === 'quiz' && response && (
+      {isLoading == false && activeOperation === 'quiz' && response && (
         <div className="mt-4">
           <Quiz questions={response} />
         </div>

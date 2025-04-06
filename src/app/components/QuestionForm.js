@@ -37,7 +37,7 @@ export default function QuestionForm({ note, onAskQuestion }) {
             value={userQuestion}
             onChange={(e) => setUserQuestion(e.target.value)}
             placeholder="Ask a question about the note..."
-            className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            className="flex-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             disabled={isLoading || !note}
           />
           <button
