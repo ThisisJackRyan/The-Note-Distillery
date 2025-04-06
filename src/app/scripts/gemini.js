@@ -5,38 +5,6 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 // Initialize the Gemini API with the API key
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-//const ai = new GoogleGenAI({ apiKey: key });
-
-async function detectLabels() {
-    console.log("pulling labels from test image")
-
-    // Imports the Google Cloud client library
-    const vision = require('@google-cloud/vision');
-  
-    // Creates a client
-    const client = new vision.ImageAnnotatorClient();
-  
-    // Performs label detection on the image file
-    const [result] = await client.labelDetection(exampleImgPath);
-    const labels = result.labelAnnotations;
-    console.log('Labels:');
-    labels.forEach(label => console.log(label.description));
-}
-
-// export async function fetchImgBuffer(imgFile){
-//     console.log("Reading image buffer...");
-//     console.log("File: (serverside)" + imgFile)
-//     const fs = require('fs');
-//     try {
-//         const buffer = await fs.readFile(imgFile);
-//         console.log("Image buffer successfully read.");
-//         return buffer;
-//     } catch (error) {
-//         console.error("Error reading image file:", error);
-//         throw error;
-//     }
-// }
-
 /**
  * Extracts text from an image using Gemini API
  * @param {File|Buffer|string} imgData - The image file, buffer, or base64 string
@@ -81,7 +49,7 @@ export async function detectText(imgData) {
 
     // Generate content with the image
     const result = await model.generateContent([
-      "Extract and return ONLY the text from this image. Do not include any explanations or additional text.",
+      "Extract and return ONLY the text from this image. Insert line breaks where you feel necessary, like after headings or paragraphs that you find. Do not include any explanations or additional text.",
       imagePart
     ]);
 
@@ -105,7 +73,7 @@ export async function cleanParsedText(imgText) {
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite" });
     
-    const prompt = `Clean and organize the following text, keeping only English characters and proper formatting. Remove any noise or artifacts from OCR. Return only the cleaned text without any explanations:\n\n${imgText}`;
+    const prompt = `Clean and organize the following text, keeping only English characters and proper formatting if text notes are recognized. Connect broken parts of the sentences to make contexual and grammatical sense. If math or scientific equations, format as best you can in characters. Remove any noise or artifacts from OCR EXCEPT LINE BREAKS. Return only the cleaned text without any explanations:\n\n${imgText}`;
     
     const result = await model.generateContent(prompt);
     const response = await result.response;
@@ -119,14 +87,20 @@ export async function cleanParsedText(imgText) {
   }
 }
 
-async function saveFileLocally(file, filePath) {
-    const fs = require('fs');
-
+export async function generateSummary(imgText) {
     try {
-        await fs.promises.writeFile(filePath, file);
-        console.log(`File saved successfully at ${filePath}`);
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite" });
+      
+      const prompt = `Generate a summary of the following text. Your summary should be between 1 and 5 sentences, whichever encapsulates the idea of the note better. Only use the most important parts, while trying to also keep the whole idea of the note. If it is a short note, keep it short if there is no need for it to be long.\n\n${imgText}`;
+      
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const summarizedText = response.text();
+      
+      console.log('Text summary successful');
+      return summarizedText;
     } catch (error) {
-        console.error('Error saving file locally:', error);
-        throw error;
+      console.error('Error during generating summary:', error);
+      throw error;
     }
-}
+  }

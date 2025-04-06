@@ -2,13 +2,14 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons'
 import { useRef, useState } from "react";
-import { detectText, cleanParsedText } from '../scripts/gemini'
+import { detectText, cleanParsedText, generateSummary } from '../scripts/gemini'
 import { useAuth } from '../context/AuthContext'
 import AttachToFolder from '../components/attachToFolder';
 
 export default function ScannerPage() {
 const [isProcessing, setIsProcessing] = useState(false);
     const [extractedText, setExtractedText] = useState('');
+    const [summarizedText, setSummarizedText] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const fileInputRef = useRef(null);
@@ -45,10 +46,13 @@ const [isProcessing, setIsProcessing] = useState(false);
             
             // Clean the extracted text
             const cleanedText = await cleanParsedText(rawText);
+
+            const summary = await generateSummary(cleanedText);
             
             if (cleanedText) {
                 setShowModal(true);
                 setExtractedText(cleanedText);
+                setSummarizedText(summary);
             }
             // Display the extracted text
             
@@ -145,7 +149,7 @@ const [isProcessing, setIsProcessing] = useState(false);
             )}
             
             {
-                showModal && <AttachToFolder extractedText={extractedText} />
+                showModal && <AttachToFolder extractedText={extractedText} summarizedText={summarizedText} />
             }
             
 

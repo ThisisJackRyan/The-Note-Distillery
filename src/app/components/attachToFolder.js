@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { getAllFolders } from '../../firebase/firestoreFunctions'
+import { getAllFolders,  } from '../../firebase/firestoreFunctions'
 import NewFolderModal from './newFolderModal';
 import NewNoteModal from './newNoteModal';
 
-const AttachToFolder = ({extractedText}) => {
+const AttachToFolder = ({extractedText, summarizedText}) => {
     const [folders, setFolders] = useState([]);
     const [selectedFolder, setSelectedFolder] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -95,7 +95,7 @@ const AttachToFolder = ({extractedText}) => {
                 onNoteCreated={handleNewNote}
                 selectedFolder={selectedFolder}
                 extractedText={extractedText}
-                summary=""
+                generatedSummary={summarizedText}
             />
         </div>
     );
