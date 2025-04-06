@@ -1,5 +1,7 @@
 'use client';
 
+import NoteAIAgent from './NoteAIAgent';
+
 export default function NoteContent({ note }) {
   if (!note) {
     console.log("");
@@ -59,12 +61,14 @@ export default function NoteContent({ note }) {
           )}
 
         </div>
-      <div>
+      <div className="mb-6">
         <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Content</h3>
         <div className="prose dark:prose-invert max-w-none text-gray-900 dark:text-white">
           {note.text}
         </div>
       </div>
+
+      <NoteAIAgent note={note} />
     </div>
   );
 } 

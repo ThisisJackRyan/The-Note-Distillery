@@ -1,6 +1,6 @@
 import { db, app } from "./firebaseConfig"; // Adjust the import path as necessary
 import { getAuth } from "firebase/auth";
-import { collection, addDoc, setDoc, doc, query, where, getDocs, deleteDoc } from "firebase/firestore";
+import { collection, addDoc, setDoc, doc, query, where, getDocs, deleteDoc, updateDoc } from "firebase/firestore";
 
 
 const getUserID = () => {
@@ -133,4 +133,58 @@ const deleteNote = async (folderId, noteId) => {
     }
 }
 
-export { makeNewFolder, createUserInDatabase, addNewNote, deleteFolder, deleteNote };
+const updateFolderName = async (folderId, newName) => {
+    try {
+        const userId = getUserID();
+        if (!userId) {
+            console.error("No user is signed in");
+            return;
+        }
+        await updateDoc(doc(db, "users", userId, "folders", folderId), {
+            name: newName
+        });
+        console.log("Folder name updated");
+    } catch (e) {
+        console.error("Error updating folder name: ", e);
+        throw e;
+    }
+};
+
+const updateNoteName = async (folderId, noteId, newName) => {
+    try {
+        const userId = getUserID();
+        if (!userId) {
+            console.error("No user is signed in");
+            return;
+        }
+        await updateDoc(doc(db, "users", userId, "folders", folderId, "notes", noteId), {
+            name: newName
+        });
+        console.log("Note name updated");
+    } catch (e) {
+        console.error("Error updating note name: ", e);
+        throw e;
+    }
+};
+
+const updateNote = async (folderId, noteId, updatedNote) => {
+    try {
+        const userId = getUserID();
+        if (!userId) {
+            console.error("No user is signed in");
+            return;
+        }
+        await updateDoc(doc(db, "users", userId, "folders", folderId, "notes", noteId), {
+            name: updatedNote.name,
+            text: updatedNote.text,
+            tags: updatedNote.tags,
+            dateModified: updatedNote.dateModified
+        });
+        console.log("Note updated successfully");
+    } catch (e) {
+        console.error("Error updating note: ", e);
+        throw e;
+    }
+};
+
+export { makeNewFolder, createUserInDatabase, addNewNote, deleteFolder, deleteNote, updateFolderName, updateNoteName, updateNote };
