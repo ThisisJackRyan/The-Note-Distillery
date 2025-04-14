@@ -59,11 +59,11 @@ export default function NewNoteModal({ isOpen, onClose, onNoteCreated, selectedF
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="h-full w-full flex flex-col justify-center items-center sm:h-auto bg-white dark:bg-gray-900 p-6 sm:rounded-lg shadow-xl sm:w-96 sm:max-h-[90vh] overflow-y-auto">
+    <div className="fixed dark:bg-gray-900 inset-0 bg-opacity-50 flex items-center justify-center z-50">
+      <div className="h-full w-full flex flex-col justify-center items-center sm:h-auto  p-6 sm:rounded-lg shadow-xl overflow-y-auto">
         <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Create New Note</h2>
         
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 w-3/4">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Note Name <span className="text-red-500">*</span>
