@@ -155,18 +155,18 @@ export default function Sidebar({
   };
 
   return (
-    <div className={`${isCollapsed ? 'w-16' : 'w-full md:w-64 '} transition-all duration-300 bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden`}>
-      <div className="p-4 flex justify-between items-center border-b border-gray-200 dark:border-gray-700">
-        <h2 className={`font-semibold ${isCollapsed ? 'hidden' : 'block'} text-gray-900 dark:text-white`}>Folders</h2>
+    <div className={`${isCollapsed ? 'w-16' : 'w-full md:w-64 '} transition-all duration-300 bg-gray-800 rounded-lg shadow-md overflow-hidden`}>
+      <div className="p-4 flex justify-between items-center border-b border-gray-700">
+        <h2 className={`font-semibold ${isCollapsed ? 'hidden' : 'block'} text-white`}>Folders</h2>
         <div className='flex gap-4 items-center'>
           <FontAwesomeIcon 
             icon={faFolderPlus} 
-            className='text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 cursor-pointer' 
+            className=' text-gray-400 hover:text-gray-200 cursor-pointer' 
             onClick={() => setIsNewFolderModalOpen(true)} 
           />
           <button 
             onClick={onToggleCollapse}
-            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            className=" text-gray-400 hover:text-gray-200"
           >
             {isCollapsed ? '→' : '←'}
           </button>
@@ -176,15 +176,15 @@ export default function Sidebar({
       <div className="p-2 overflow-y-auto max-h-[calc(100vh-300px)]">
         {loading ? (
           <div className="text-center py-4">
-            <p className="text-gray-500 dark:text-gray-400">Loading folders...</p>
+            <p className="text-gray-400">Loading folders...</p>
           </div>
         ) : error ? (
           <div className="text-center py-4">
-            <p className="text-red-500 dark:text-red-400">{error}</p>
+            <p className="text-red-400">{error}</p>
           </div>
         ) : folders.length === 0 ? (
           <div className="text-center py-4">
-            <p className="text-gray-500 dark:text-gray-400">No folders found</p>
+            <p className="text-gray-400">No folders found</p>
           </div>
         ) : (
           <ul className="space-y-1">
@@ -193,34 +193,34 @@ export default function Sidebar({
                 <div 
                   className={`flex justify-between items-center p-2 rounded-md cursor-pointer ${
                     selectedFolder === folder.id 
-                      ? 'bg-blue-100 dark:bg-blue-900' 
-                      : 'hover:bg-gray-100 dark:hover:bg-gray-700'
+                      ? 'bg-blue-900' 
+                      : 'hover:bg-gray-700'
                   }`}
                   onClick={() => handleFolderClick(folder)}
                 >
                   <div className='flex'>
                     <FontAwesomeIcon 
                       icon={selectedFolder === folder.id ? faChevronDown : faChevronRight} 
-                      className="mr-2 text-gray-500 dark:text-gray-400 w-4 h-4" 
+                      className="mr-2 text-gray-400 w-4 h-4" 
                     />
                     <FontAwesomeIcon 
                       icon={faFolder} 
                       className="mr-2 text-yellow-500 w-4 h-4" 
                     />
                     {!isCollapsed && (
-                      <span className="truncate text-gray-900 dark:text-white">{folder.name}</span>
+                      <span className="truncate text-white">{folder.name}</span>
                     )}
                   </div>
                   {selectedFolder === folder.id && (
                     <div className="flex items-center gap-2">
                       <FontAwesomeIcon 
                         icon={faPlus} 
-                        className="text-gray-500 dark:text-gray-400 w-4 h-4 cursor-pointer hover:text-gray-700 dark:hover:text-gray-200"
+                        className="text-gray-400 w-4 h-4 cursor-pointer hover:text-gray-200"
                         onClick={handleAddNoteClick}
                       />
                       <FontAwesomeIcon 
                         icon={faTrash} 
-                        className="text-gray-500 dark:text-gray-400 w-4 h-4 cursor-pointer hover:text-red-500 dark:hover:text-red-400"
+                        className="text-gray-400 w-4 h-4 cursor-pointer hover:text-red-400"
                         onClick={(e) => handleDeleteClick(e, 'folder', folder.id)}
                       />
                     </div>
@@ -234,8 +234,8 @@ export default function Sidebar({
                         key={note.id}
                         className={`flex items-center justify-between p-2 rounded-md cursor-pointer ${
                           selectedNote === note.id 
-                            ? 'bg-blue-100 dark:bg-blue-900' 
-                            : 'hover:bg-gray-100 dark:hover:bg-gray-700'
+                            ? 'bg-blue-900' 
+                            : 'hover:bg-gray-700'
                         }`}
                         onClick={() => handleNoteClick(note)}
                       >
@@ -244,11 +244,11 @@ export default function Sidebar({
                             icon={faFile} 
                             className="mr-2 text-blue-500 w-4 h-4" 
                           />
-                          <span className="truncate text-gray-900 dark:text-white">{note.name}</span>
+                          <span className="truncate text-white">{note.name}</span>
                         </div>
                         <FontAwesomeIcon 
                           icon={faTrash} 
-                          className="text-gray-500 dark:text-gray-400 w-4 h-4 cursor-pointer hover:text-red-500 dark:hover:text-red-400"
+                          className="text-gray-400 w-4 h-4 cursor-pointer hover:text-red-400"
                           onClick={(e) => handleDeleteClick(e, 'note', note.id, folder.id)}
                         />
                       </li>
@@ -277,17 +277,17 @@ export default function Sidebar({
       {/* Delete Confirmation Modal */}
       {deleteConfirmation.isOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-xl w-96">
-            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
+          <div className="bg-gray-900 p-6 rounded-lg shadow-xl w-96">
+            <h2 className="text-xl font-semibold mb-4 text-white">
               Confirm Delete
             </h2>
-            <p className="text-gray-700 dark:text-gray-300 mb-6">
+            <p className="text-gray-300 mb-6">
               Are you sure you want to delete this {deleteConfirmation.type}? This action cannot be undone.
             </p>
             <div className="flex justify-end gap-4">
               <button
                 onClick={() => setDeleteConfirmation({ isOpen: false, type: null, id: null, folderId: null })}
-                className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
+                className="px-4 py-2 text-gray-300 hover:bg-gray-700 rounded-md"
               >
                 Cancel
               </button>

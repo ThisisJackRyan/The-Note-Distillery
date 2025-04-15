@@ -111,7 +111,7 @@ const [isProcessing, setIsProcessing] = useState(false);
     }
 
     return (
-        <div className="flex flex-col justify-around md:justify-center items-center dark:bg-gray-900 text-white h-full p-4">
+        <div className="flex flex-col justify-around md:justify-center items-center bg-gray-900 text-white h-full p-4">
             <div className="text-3xl font-bold mb-4">
                 Upload Image Files:
             </div>

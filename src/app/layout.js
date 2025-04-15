@@ -20,9 +20,9 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="dark dark:bg-gray-900 h-full">
+    <html lang="en" className="bg-gray-900 h-full">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-white h-full flex flex-col`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-900 text-white h-full flex flex-col`}
       >
         <AuthProvider>
           <Header />

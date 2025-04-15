@@ -47,28 +47,28 @@ const ProfilePage = () => {
     }
 
     return (
-        <div className="h-full mt-12 bg-gray-50 dark:bg-gray-900">
+        <div className="h-full mt-12 bg-gray-900">
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="max-w-3xl mx-auto">
                     <div className="text-center mb-8">
-                        <div className="mx-auto h-24 w-24 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center mb-4">
-                            <FontAwesomeIcon icon={faUser} className="h-12 w-12 text-gray-500 dark:text-gray-400" />
+                        <div className="mx-auto h-24 w-24 rounded-full bg-gray-700 flex items-center justify-center mb-4">
+                            <FontAwesomeIcon icon={faUser} className="h-12 w-12 text-gray-400" />
                         </div>
-                        <h1 className="text-4xl font-bold text-gray-900 dark:text-white sm:text-5xl">
+                        <h1 className="text-4xl font-bold text-white sm:text-5xl">
                             {user.displayName || 'Your Profile'}
                         </h1>
-                        <p className="mt-3 text-lg text-gray-500 dark:text-gray-400">
+                        <p className="mt-3 text-lg text-gray-400">
                             {user.email}
                         </p>
                     </div>
 
-                    <div className="bg-white dark:bg-gray-900 shadow rounded-lg p-6">
-                        <div className="border-b border-gray-200 dark:border-gray-700 pb-4 mb-4">
-                            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Profile Information</h2>
+                    <div className="bg-gray-900 shadow rounded-lg p-6">
+                        <div className="border-b border-gray-700 pb-4 mb-4">
+                            <h2 className="text-xl font-semibold text-white">Profile Information</h2>
                         </div>
 
                         {error && (
-                            <div className="mb-4 text-red-500 dark:text-red-400 text-sm">
+                            <div className="mb-4 text-red-400 text-sm">
                                 {error}
                             </div>
                         )}
@@ -76,7 +76,7 @@ const ProfilePage = () => {
                         <form onSubmit={handleUpdateProfile}>
                             <div className="space-y-4">
                                 <div>
-                                    <label htmlFor="displayName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    <label htmlFor="displayName" className="block text-sm font-medium text-gray-300">
                                         Display Name
                                     </label>
                                     <div className="mt-1">
@@ -86,26 +86,26 @@ const ProfilePage = () => {
                                                 id="displayName"
                                                 value={displayName}
                                                 onChange={(e) => setDisplayName(e.target.value)}
-                                                className="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:text-white sm:text-sm"
+                                                className="block w-full rounded-md border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-700 text-white sm:text-sm"
                                             />
                                         ) : (
-                                            <p className="text-gray-900 dark:text-white">{displayName || 'Not set'}</p>
+                                            <p className="text-white">{displayName || 'Not set'}</p>
                                         )}
                                     </div>
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    <label className="block text-sm font-medium text-gray-300">
                                         Email
                                     </label>
-                                    <p className="mt-1 text-gray-900 dark:text-white">{user.email}</p>
+                                    <p className="mt-1  text-white">{user.email}</p>
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    <label className="block text-sm font-medium text-gray-300">
                                         Account Created
                                     </label>
-                                    <p className="mt-1 text-gray-900 dark:text-white">
+                                    <p className="mt-1 text-white">
                                         {new Date(user.metadata.creationTime).toLocaleDateString()}
                                     </p>
                                 </div>
@@ -117,7 +117,7 @@ const ProfilePage = () => {
                                         <button
                                             type="button"
                                             onClick={() => setIsEditing(false)}
-                                            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                            className="px-4 py-2 border border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                                         >
                                             Cancel
                                         </button>

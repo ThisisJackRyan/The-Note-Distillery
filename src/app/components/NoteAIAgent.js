@@ -83,8 +83,8 @@ export default function NoteAIAgent({ note }) {
   };
 
   return (
-    <div className="mt-6 p-4 border-2 border-indigo-200 dark:border-indigo-800 rounded-lg bg-white dark:bg-gray-900 shadow-sm">
-      <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">AI Assistant</h3>
+    <div className="mt-6 p-4 border-2 border-indigo-800 rounded-lg bg-gray-900 shadow-sm">
+      <h3 className="text-lg font-semibold mb-4 text-white">AI Assistant</h3>
       
       <div className="flex flex-col sm:flex-row gap-4 mb-4">
         <button
@@ -120,12 +120,12 @@ export default function NoteAIAgent({ note }) {
 
       {isLoading && (
         <div className="text-center py-4">
-          <p className="text-gray-500 dark:text-gray-400">Generating content...</p>
+          <p className="text-gray-400">Generating content...</p>
         </div>
       )}
 
       {error && (
-        <div className="text-red-500 dark:text-red-400 mb-4">
+        <div className="text-red-400 mb-4">
           {error}
         </div>
       )}

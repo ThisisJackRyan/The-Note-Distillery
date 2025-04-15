@@ -33,11 +33,11 @@ export default function Header() {
   };
 
   return (
-    <header className="fixed z-40 w-full h-fit bg-white dark:bg-gray-900">
+    <header className="fixed z-40 w-full h-fit bg-gray-900">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20"> {/* Adjusted height to match header */}
           <div className="flex items-center">
-            <Link href="/" className="text-xl font-bold text-gray-900 dark:text-white">
+            <Link href="/" className="text-xl font-bold text-white">
               <img
                 src="/High-Resolution-Logo-White-on-Transparent-Background (1).svg" // Update the path to point to the public directory
                 alt="Logo"
@@ -49,7 +49,7 @@ export default function Header() {
             <div className="ml-10 flex items-center space-x-4">
               <Link
                 href={user ? "/upload" : "/login"}
-                className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                className=" text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
                 Upload
               </Link>
@@ -57,13 +57,13 @@ export default function Header() {
                 <>
                   <button
                     onClick={handleLogout}
-                    className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    className=" text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                   >
                     Logout
                   </button>
                   <Link
                     href="/profile"
-                    className="flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    className="flex items-center text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                   >
                     Profile
                   </Link>
@@ -79,7 +79,7 @@ export default function Header() {
                 <>
                   <Link
                     href="/login"
-                    className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    className=" text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                   >
                     Login
                   </Link>
@@ -96,7 +96,7 @@ export default function Header() {
           <div className="md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+              className="text-gray-300 hover:text-white"
             >
               <FontAwesomeIcon icon={isMobileMenuOpen ? faXmark : faBars} className="h-6 w-6 text-2xl" />
             </button>
@@ -113,19 +113,19 @@ export default function Header() {
             ></div>
 
             {/* Mobile menu panel */}
-            <div className="fixed inset-y-0 right-0 w-full bg-white dark:bg-gray-900 shadow-xl">
+            <div className="fixed inset-y-0 right-0 w-full bg-gray-900 shadow-xl">
               <div className="flex flex-col h-full">
-                <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-700">
+                <div className="flex items-center justify-between px-4 py-4 border-b border-gray-700">
                   <Link
                     href="/"
-                    className="text-xl font-bold text-gray-900 dark:text-white"
+                    className="text-xl font-bold text-white"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     The Note Distillery
                   </Link>
                   <button
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                    className=" text-gray-300 hover:text-white"
                   >
                     <FontAwesomeIcon icon={faXmark} className="h-6 w-6 text-2xl" />
                   </button>
@@ -134,7 +134,7 @@ export default function Header() {
                 <div className="flex-1 px-4 py-6 space-y-4">
                   <Link
                     href={user ? "/upload" : "/login"}
-                    className="block text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-base font-medium"
+                    className="block text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-medium"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Upload
@@ -146,13 +146,13 @@ export default function Header() {
                           handleLogout();
                           setIsMobileMenuOpen(false);
                         }}
-                        className="block w-full text-left text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-base font-medium"
+                        className="block w-full text-left text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-medium"
                       >
                         Logout
                       </button>
                       <Link
                         href="/profile"
-                        className="flex items-center text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-base font-medium"
+                        className="flex items-center text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-medium"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         Profile
@@ -169,7 +169,7 @@ export default function Header() {
                     <>
                       <Link
                         href="/login"
-                        className="block text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-base font-medium"
+                        className="block text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-medium"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         Login

@@ -36,11 +36,11 @@ export default function NewFolderModal({ isOpen, onClose, onFolderCreated }) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="h-full w-full flex flex-col justify-center items-center sm:h-auto bg-white dark:bg-gray-900 p-6 sm:rounded-lg shadow-xl sm:w-96">
-        <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Create New Folder</h2>
+      <div className="h-full w-full flex flex-col justify-center items-center sm:h-auto bg-gray-900 p-6 sm:rounded-lg shadow-xl sm:w-96">
+        <h2 className="text-xl font-semibold mb-4 text-white">Create New Folder</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm font-medium text-gray-300 mb-1">
               Folder Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -52,7 +52,7 @@ export default function NewFolderModal({ isOpen, onClose, onFolderCreated }) {
               }}
               placeholder="Enter folder name"
               required
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              className="w-full px-3 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 text-white"
             />
             {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
           </div>
@@ -61,7 +61,7 @@ export default function NewFolderModal({ isOpen, onClose, onFolderCreated }) {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
+              className="px-4 py-2 text-gray-300 hover:bg-gray-700 rounded-md"
             >
               Cancel
             </button>

@@ -37,12 +37,12 @@ const AttachToFolder = ({extractedText, summarizedText}) => {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="h-full w-full flex flex-col justify-center items-center sm:h-auto bg-white dark:bg-gray-900 p-6 sm:rounded-lg shadow-xl sm:w-96">
-                <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Attach to Folder</h2>
+            <div className="h-full w-full flex flex-col justify-center items-center sm:h-auto bg-gray-900 p-6 sm:rounded-lg shadow-xl sm:w-96">
+                <h2 className="text-xl font-semibold mb-4 text-white">Attach to Folder</h2>
                 
                 <div className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        <label className="block text-sm font-medium text-gray-300 mb-1">
                             Select Folder <span className="text-red-500">*</span>
                         </label>
                         <select 
@@ -51,7 +51,7 @@ const AttachToFolder = ({extractedText, summarizedText}) => {
                                 const folder = folders.find(f => f.id === e.target.value);
                                 setSelectedFolder(folder);
                             }}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                            className="w-full px-3 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 text-white"
                         >
                             <option value="">Select a folder</option>
                             {folders.map((folder) => (
@@ -65,7 +65,7 @@ const AttachToFolder = ({extractedText, summarizedText}) => {
                     <div className="flex justify-end gap-4">
                         <button 
                             onClick={() => setShowModal(true)}
-                            className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
+                            className="px-4 py-2 text-gray-300 hover:bg-gray-700 rounded-md"
                         >
                             Create New Folder
                         </button>

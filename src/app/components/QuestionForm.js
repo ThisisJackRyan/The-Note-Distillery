@@ -37,7 +37,7 @@ export default function QuestionForm({ note, onAskQuestion }) {
             value={userQuestion}
             onChange={(e) => setUserQuestion(e.target.value)}
             placeholder="Ask a question about the note..."
-            className="flex-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            className="flex-1 w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 border-gray-600 text-white"
             disabled={isLoading || !note}
           />
           <button
@@ -52,20 +52,20 @@ export default function QuestionForm({ note, onAskQuestion }) {
 
       {isLoading && (
         <div className="text-center py-4">
-          <p className="text-gray-500 dark:text-gray-400">Generating answer...</p>
+          <p className="text-gray-400">Generating answer...</p>
         </div>
       )}
 
       {error && (
-        <div className="text-red-500 dark:text-red-400 mb-4">
+        <div className="text-red-400 mb-4">
           {error}
         </div>
       )}
 
       {response && (
-        <div className="mb-4 p-4 border rounded-lg bg-gray-50 dark:bg-gray-700">
-          <h4 className="font-semibold mb-2 text-gray-900 dark:text-white">Answer</h4>
-          <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{response}</p>
+        <div className="mb-4 p-4 border rounded-lg  bg-gray-700">
+          <h4 className="font-semibold mb-2 text-white">Answer</h4>
+          <p className="text-gray-300 whitespace-pre-wrap">{response}</p>
         </div>
       )}
     </div>

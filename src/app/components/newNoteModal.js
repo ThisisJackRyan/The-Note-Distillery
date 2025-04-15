@@ -59,13 +59,13 @@ export default function NewNoteModal({ isOpen, onClose, onNoteCreated, selectedF
   if (!isOpen) return null;
 
   return (
-    <div className="fixed dark:bg-gray-900 inset-0 bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed bg-gray-900 inset-0 bg-opacity-50 flex items-center justify-center z-50">
       <div className="h-full w-full flex flex-col justify-center items-center sm:h-auto  p-6 sm:rounded-lg shadow-xl overflow-y-auto">
-        <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Create New Note</h2>
+        <h2 className="text-xl font-semibold mb-4 text-white">Create New Note</h2>
         
         <form onSubmit={handleSubmit} className="space-y-4 w-3/4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm font-medium text-gray-300 mb-1">
               Note Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -77,25 +77,25 @@ export default function NewNoteModal({ isOpen, onClose, onNoteCreated, selectedF
               }}
               placeholder="Enter note name"
               required
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              className="w-full px-3 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 text-white"
             />
           </div>
           {
             summary &&
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label className="block text-sm font-medium text-gray-300 mb-1">
                 AI Summary
               </label>
               <textarea
                 value={summary}
                 onChange={(e) => setSummary(e.target.value)}
                 rows="5"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 text-white"
               />
             </div>
           }
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm font-medium text-gray-300 mb-1">
               Actual Text Uploaded <span className="text-red-500">*</span>
             </label>
             <textarea
@@ -104,11 +104,11 @@ export default function NewNoteModal({ isOpen, onClose, onNoteCreated, selectedF
               placeholder="Enter note text"
               rows="5"
               required
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              className="w-full px-3 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 text-white"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm font-medium text-gray-300 mb-1">
               Tags (comma separated)
             </label>
             <input
@@ -116,7 +116,7 @@ export default function NewNoteModal({ isOpen, onClose, onNoteCreated, selectedF
               value={tags}
               onChange={(e) => setTags(e.target.value)}
               placeholder="Enter tags (optional)"
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              className="w-full px-3 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 text-white"
             />
           </div>
 
@@ -126,7 +126,7 @@ export default function NewNoteModal({ isOpen, onClose, onNoteCreated, selectedF
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
+              className="px-4 py-2 text-gray-300 hover:bg-gray-700 rounded-md"
             >
               Cancel
             </button>

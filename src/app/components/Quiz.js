@@ -24,9 +24,9 @@ export default function Quiz({ questions }) {
   return (
     <div>
       {questions.map((item, index) => (
-        <div key={index} className="mb-4 p-4 border rounded-lg bg-gray-50 dark:bg-gray-700">
-          <h4 className="font-semibold mb-2 text-gray-900 dark:text-white">Question {index + 1}</h4>
-          <p className="text-gray-700 dark:text-gray-300 mb-2">{item.question}</p>
+        <div key={index} className="mb-4 p-4 border rounded-lg  bg-gray-700">
+          <h4 className="font-semibold mb-2 text-white">Question {index + 1}</h4>
+          <p className=" text-gray-300 mb-2">{item.question}</p>
           
           <div className="ml-4 space-y-2">
             {item.options.map((option, optIndex) => (
@@ -34,14 +34,14 @@ export default function Quiz({ questions }) {
                 key={optIndex}
                 className={`p-2 rounded cursor-pointer transition-colors ${
                   selectedAnswers[index] === optIndex
-                    ? 'bg-blue-100 dark:bg-blue-900'
-                    : 'hover:bg-gray-100 dark:hover:bg-gray-600'
+                    ? 'bg-blue-900'
+                    : 'hover:bg-gray-600'
                 }`}
                 onClick={() => handleAnswerSelect(index, optIndex)}
               >
-                <p className={`text-gray-600 dark:text-gray-400 ${
+                <p className={`text-gray-400 ${
                   revealedAnswers.includes(index) && optIndex === item.correctAnswer
-                    ? 'font-bold text-green-600 dark:text-green-400'
+                    ? 'font-bold text-green-400'
                     : ''
                 }`}>
                   {String.fromCharCode(65 + optIndex)}. {option}
@@ -50,7 +50,7 @@ export default function Quiz({ questions }) {
             ))}
             <button
               onClick={() => toggleAnswerReveal(index)}
-              className="mt-2 px-3 py-1 text-sm bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-300 dark:hover:bg-gray-500"
+              className="mt-2 px-3 py-1 text-sm bg-gray-600 text-gray-300 rounded hover:bg-gray-500"
             >
               {revealedAnswers.includes(index) ? 'Hide Answer' : 'Show Answer'}
             </button>
