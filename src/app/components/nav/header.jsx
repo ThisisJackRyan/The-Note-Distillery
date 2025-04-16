@@ -1,15 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { faBars, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { useState } from 'react';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { getAuth, signOut } from 'firebase/auth';
 import { useAuthUser } from '@/firebase/firebaseFunctions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { app } from '@/firebase/firebaseConfig';
 import { useRouter } from 'next/navigation';
 import MobileHeader from './mobileHeader';
-import ClosingX from './closingX';
 
 
 export default function Header() {
@@ -92,7 +91,7 @@ export default function Header() {
             <FontAwesomeIcon icon={faBars} className="h-6 w-6 text-2xl"  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}/>
           </div>
         </div>
-        
+
         {isMobileMenuOpen && <MobileHeader setIsMobileMenuOpen={setIsMobileMenuOpen} handleLogout={handleLogout}/>}
         
       </nav>

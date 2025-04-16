@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useAuthUser } from '@/firebase/firebaseFunctions';
-import ClosingX from './closingX';
+import ClosingX from '../icons/closingX';
 
 
 const MobileHeader = ({setIsMobileMenuOpen, handleLogout}) => {
