@@ -51,3 +51,14 @@ body {
 .flipped .rotate-y-0 {
   transform: rotateY(180deg);
 }
+
+textarea {
+  overflow: hidden;     /* hides scrollbar */
+  overflow-y: scroll;   /* allows vertical scrolling, but hides scrollbar */
+  scrollbar-width: none; /* for Firefox */
+}
+
+/* For WebKit browsers (Chrome, Safari, Edge) */
+textarea::-webkit-scrollbar {
+  display: none;
+}

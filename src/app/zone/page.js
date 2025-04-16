@@ -99,7 +99,7 @@ export default function Zone() {
           <hr className='text-gray-700 block md:hidden' />
 
           {/* Content area */}
-          <div className={`flex-1 bg-gray-900 rounded-lg shadow-md p-6 ${isSidebarCollapsed ? 'md:ml-0' : 'md:ml-6'}`}>
+          <div className={`flex-1 bg-gray-800 rounded-lg shadow-md p-6 ${isSidebarCollapsed ? 'md:ml-0' : 'md:ml-6'}`}>
             <NoteContent note={noteContent} />
           </div>
         </div>

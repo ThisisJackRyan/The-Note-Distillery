@@ -27,8 +27,8 @@ const AttachToFolder = ({extractedText, summarizedText}) => {
         };
         setFolders(prevFolders => [...prevFolders, newFolder]);
         setSelectedFolder(newFolder);
-        setShowNextModal(true);
         setShowModal(false);
+        setShowNextModal(true);
     };
 
     const handleNewNote = (newNote) => {
