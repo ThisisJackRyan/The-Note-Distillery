@@ -73,37 +73,6 @@ const [isProcessing, setIsProcessing] = useState(false);
         }
     };
 
-    // const handleSaveAsNote = async () => {
-    //     if (!user) {
-    //         setError('You must be logged in to save notes');
-    //         return;
-    //     }
-
-    //     if (!extractedText) {
-    //         setError('No text to save');
-    //         return;
-    //     }
-
-    //     try {
-    //         setIsProcessing(true);
-    //         setError('');
-            
-    //         // Generate a title from the first line or use a default
-    //         const title = extractedText.split('\n')[0].substring(0, 50) || 'Extracted Note';
-            
-    //         // Save the note
-    //         // await saveNoteAsText(user.uid, extractedText, title);
-            
-    //         setSuccess('Note saved successfully!');
-    //         setExtractedText(''); // Clear the extracted text after saving
-    //     } catch (err) {
-    //         console.error(err);
-    //         setError('Error saving note: ' + (err.message || 'Unknown error'));
-    //     } finally {
-    //         setIsProcessing(false);
-    //     }
-    // };
-
     const handleClick = () => {
         if (fileInputRef.current) {
             fileInputRef.current.click();

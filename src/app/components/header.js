@@ -2,26 +2,22 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { useAuthUser } from '@/firebase/firebaseFunctions';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { app } from '@/firebase/firebaseConfig';
 import { useRouter } from 'next/navigation';
+import MobileHeader from './mobileHeader';
+import ClosingX from './closingX';
 
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [user, setUser] = useState(null);
+
   const router = useRouter();
   const auth = getAuth(app);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-    });
-
-    return () => unsubscribe();
-  }, [auth]);
+  const user = useAuthUser();
 
   const handleLogout = async () => {
     try {
@@ -34,8 +30,8 @@ export default function Header() {
 
   return (
     <header className="fixed z-40 w-full h-fit bg-gray-900">
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20"> {/* Adjusted height to match header */}
+      <nav className="max-w-7xl mx-auto px-4 lg:px-8">
+        <div className="flex justify-between items-center h-20">
           <div className="flex items-center">
             <Link href="/" className="text-xl font-bold text-white">
               <img
@@ -49,7 +45,7 @@ export default function Header() {
             <div className="ml-10 flex items-center space-x-4">
               <Link
                 href={user ? "/upload" : "/login"}
-                className=" text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                className=" text-gray-300 hover:text-white px-3 py-2 text-sm font-medium"
               >
                 Upload
               </Link>
@@ -57,20 +53,19 @@ export default function Header() {
                 <>
                   <button
                     onClick={handleLogout}
-                    className=" text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    className=" text-gray-300 hover:text-white px-3 py-2 text-sm font-medium"
                   >
                     Logout
                   </button>
                   <Link
                     href="/profile"
-                    className="flex items-center text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    className="flex items-center text-gray-300 hover:text-white px-3 py-2 text-sm font-medium"
                   >
                     Profile
                   </Link>
                   <Link
                     href="/zone"
                     className="block bg-blue-600 text-white px-4 py-2 rounded-md text-base font-medium hover:bg-blue-700"
-                    onClick={() => setIsMobileMenuOpen(false)}
                   >
                     The Zone
                   </Link>
@@ -79,7 +74,7 @@ export default function Header() {
                 <>
                   <Link
                     href="/login"
-                    className=" text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    className=" text-gray-300 hover:text-white px-3 py-2 text-sm font-medium"
                   >
                     Login
                   </Link>
@@ -94,100 +89,12 @@ export default function Header() {
             </div>
           </div>
           <div className="md:hidden">
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-gray-300 hover:text-white"
-            >
-              <FontAwesomeIcon icon={isMobileMenuOpen ? faXmark : faBars} className="h-6 w-6 text-2xl" />
-            </button>
+            <FontAwesomeIcon icon={faBars} className="h-6 w-6 text-2xl"  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}/>
           </div>
         </div>
-
-        {/* Mobile menu */}
-        {isMobileMenuOpen && (
-          <div className="fixed inset-0 z-50 md:hidden">
-            {/* Backdrop */}
-            <div
-              className="fixed inset-0 bg-opacity-50"
-              onClick={() => setIsMobileMenuOpen(false)}
-            ></div>
-
-            {/* Mobile menu panel */}
-            <div className="fixed inset-y-0 right-0 w-full bg-gray-900 shadow-xl">
-              <div className="flex flex-col h-full">
-                <div className="flex items-center justify-between px-4 py-4 border-b border-gray-700">
-                  <Link
-                    href="/"
-                    className="text-xl font-bold text-white"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    The Note Distillery
-                  </Link>
-                  <button
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className=" text-gray-300 hover:text-white"
-                  >
-                    <FontAwesomeIcon icon={faXmark} className="h-6 w-6 text-2xl" />
-                  </button>
-                </div>
-
-                <div className="flex-1 px-4 py-6 space-y-4">
-                  <Link
-                    href={user ? "/upload" : "/login"}
-                    className="block text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-medium"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Upload
-                  </Link>
-                  {user ? (
-                    <>
-                      <button
-                        onClick={() => {
-                          handleLogout();
-                          setIsMobileMenuOpen(false);
-                        }}
-                        className="block w-full text-left text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-medium"
-                      >
-                        Logout
-                      </button>
-                      <Link
-                        href="/profile"
-                        className="flex items-center text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-medium"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        Profile
-                      </Link>
-                      <Link
-                        href="/zone"
-                        className="block bg-blue-600 text-white px-4 py-2 rounded-md text-base font-medium hover:bg-blue-700"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        The Zone
-                      </Link>
-                    </>
-                  ) : (
-                    <>
-                      <Link
-                        href="/login"
-                        className="block text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-medium"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        Login
-                      </Link>
-                      <Link
-                        href="/signup"
-                        className="block bg-blue-600 text-white px-4 py-2 rounded-md text-base font-medium hover:bg-blue-700"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        Sign Up
-                      </Link>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+        
+        {isMobileMenuOpen && <MobileHeader setIsMobileMenuOpen={setIsMobileMenuOpen} handleLogout={handleLogout}/>}
+        
       </nav>
     </header>
   );
