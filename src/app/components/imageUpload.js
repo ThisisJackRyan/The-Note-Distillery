@@ -7,7 +7,7 @@ import { useRef, useState } from "react";
 import { sampleText, sampleSummary } from '../scripts/sampleText'
 
 
-export default function imageUpload({setNoteContent, setSummarizedText, contentUploaded}, ){
+export default function imageUpload({setNoteContent, setSummarizedText, setContentUploaded}, ){
     const [extractedText, setExtractedText] = useState('');
     const [isProcessing, setIsProcessing] = useState(false);
     const [error, setError] = useState('');
@@ -61,7 +61,7 @@ export default function imageUpload({setNoteContent, setSummarizedText, contentU
                 // parent fields V
                 setNoteContent(extractedText);
                 setSummarizedText(summary);
-                contentUploaded.current = true;
+                setContentUploaded(true);
             }
             
             // If user is logged in, offer to save as note

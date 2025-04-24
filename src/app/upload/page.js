@@ -12,16 +12,16 @@ export default function ScannerPage() {
     const [summarizedText, setSummarizedText] = useState('')
     const [showAddNote, setShowAddNote] = useState(false)
     const [showAttachNote, setShowAttachNote] = useState(false)
-    const contentUploaded = useRef(false)
+    const [contentUploaded, setContentUploaded] = useState(false)
     // const [showEditNote, setShowEditNote] = useState('');
     // const [showAttachFolder, setShowAttachFolder] = useState('');
     
     useEffect(() => {
-        if(contentUploaded.current) setShowAddNote(true)
+        if(contentUploaded) setShowAddNote(true)
     }, [contentUploaded])
 
     useEffect(() => {
-        if(!showAddNote && contentUploaded.current) setShowAttachNote(true)
+        if(!showAddNote && contentUploaded) setShowAttachNote(true)
     }, [showAddNote])
 
     return (
@@ -30,14 +30,14 @@ export default function ScannerPage() {
         <ImageUpload
             setNoteContent={setNoteContent}
             setSummarizedText={setSummarizedText}
-            contentUploaded={contentUploaded}
+            setContentUploaded={setContentUploaded}
         />
 
         {showAddNote && createPortal(
             <Modal
                 content={
-                    //<div className="text-black">New Note Div</div>
-                    <NewNote/>
+                    <div className="text-black">New Note Div</div>
+                    //<NewNote/>
                 }
                 onClose={() => setShowAddNote(false)}
             />,
@@ -47,8 +47,8 @@ export default function ScannerPage() {
         {showAttachNote && createPortal(
             <Modal
                 content={
-                    //<div className="text-black">Attach Note Div</div>
-                    <AttachNote/>
+                    <div className="text-black">Attach Note Div</div>
+                    //<AttachNote/>
                 }
                 onClose={() => setShowAttachNote(false)}
             />,
