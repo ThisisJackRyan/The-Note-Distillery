@@ -1,26 +1,59 @@
 "use client";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons'
-import { useState } from "react";
-import { detectText, cleanParsedText } from '../scripts/imgProcessing'
-import { generateAISummary } from '../scripts/prompts'
-import { useAuth } from '../context/AuthContext'
+import { useState, useRef, useEffect } from "react";
+import { createPortal } from 'react-dom';
 import ImageUpload from '../components/imageUpload'
-import AttachToFolder from '../components/attachToFolder';
+import Modal from '../components/modal'
+import AttachNote from '../components/attachToFolder';
 import NewFolderModal from '../components/newFolderModal';
-import NewNoteModal from '../components/newNoteModal';
+import NewNote from '../components/newNoteModal';
 
 export default function ScannerPage() {
     const [noteContent, setNoteContent] = useState('')
-    const [summarizedText, setSummarizedText] = useState('');
+    const [summarizedText, setSummarizedText] = useState('')
+    const [showAddNote, setShowAddNote] = useState(false)
+    const [showAttachNote, setShowAttachNote] = useState(false)
+    const contentUploaded = useRef(false)
     // const [showEditNote, setShowEditNote] = useState('');
     // const [showAttachFolder, setShowAttachFolder] = useState('');
     
+    useEffect(() => {
+        if(contentUploaded) setShowAddNote(true)
+    }, [contentUploaded])
+
+    useEffect(() => {
+        if(!showAddNote && contentUploaded) setShowAttachNote(true)
+    }, [showAddNote])
+
     return (
+        <>
+
         <ImageUpload
             setNoteContent={setNoteContent}
             setSummarizedText={setSummarizedText}
+            contentUploaded={contentUploaded}
         />
+
+        {showAddNote && createPortal(
+            <Modal
+                content={
+                    <NewNote/>
+                }
+                onClose={() => setShowAddNote(false)}
+            />,
+            document.body
+        )}
+
+        {showAttachNote && createPortal(
+            <Modal
+                content={
+                    <AttachNote/>
+                }
+                onClose={() => setShowAttachNote(false)}
+            />,
+            document.body
+        )}
+
+        </>
     );
     
 

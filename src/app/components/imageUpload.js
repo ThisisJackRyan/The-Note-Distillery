@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext'
 import { useRef, useState } from "react";
 
 
-export default function imageUpload({setNoteContent, setSummarizedText}, ){
+export default function imageUpload({setNoteContent, setSummarizedText, contentUploaded}, ){
     const [extractedText, setExtractedText] = useState('');
     const [isProcessing, setIsProcessing] = useState(false);
     const [error, setError] = useState('');
@@ -50,12 +50,12 @@ export default function imageUpload({setNoteContent, setSummarizedText}, ){
             const summary = await generateAISummary(cleanedText);
             
             if (cleanedText) {
-                setShowModal(true);
                 setExtractedText(cleanedText);
                 
                 // parent fields V
                 setNoteContent(extractedText);
                 setSummarizedText(summary);
+                contentUploaded.current = true;
             }
             
             // If user is logged in, offer to save as note
