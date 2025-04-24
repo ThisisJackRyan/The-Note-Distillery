@@ -14,6 +14,7 @@ export async function generateAISummary(imgText) {
       
       const prompt = `Generate a summary of the following text. Your summary should be between 1 and 5 sentences, whichever encapsulates the idea of the note better. Only use the most important parts, while trying to also keep the whole idea of the note. If it is a short note, keep it short if there is no need for it to be long.\n\n${imgText}`;
       
+      // TO-DO Fix issue
       const result = await model.generateContent(prompt);
       const response = await result.response;
       const summarizedText = response.text();

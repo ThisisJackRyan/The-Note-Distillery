@@ -4,6 +4,7 @@ import { detectText, cleanParsedText } from '../scripts/imgProcessing'
 import { generateAISummary } from '../scripts/prompts'
 import { useAuth } from '../context/AuthContext'
 import { useRef, useState } from "react";
+import { sampleText, sampleSummary } from '../scripts/sampleText'
 
 
 export default function imageUpload({setNoteContent, setSummarizedText, contentUploaded}, ){
@@ -43,11 +44,16 @@ export default function imageUpload({setNoteContent, setSummarizedText, contentU
 
             const base64Data = await fileToBase64(file);
             
-            const rawText = await detectText(base64Data);
-            
-            const cleanedText = await cleanParsedText(rawText);
+            const cleanedText = sampleText
 
-            const summary = await generateAISummary(cleanedText);
+            const summary = sampleSummary
+
+            // actual code below
+            // const rawText = await detectText(base64Data);
+            
+            // const cleanedText = await cleanParsedText(rawText);
+
+            // const summary = await generateAISummary(cleanedText);
             
             if (cleanedText) {
                 setExtractedText(cleanedText);

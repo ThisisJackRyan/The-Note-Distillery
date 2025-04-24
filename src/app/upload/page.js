@@ -17,11 +17,11 @@ export default function ScannerPage() {
     // const [showAttachFolder, setShowAttachFolder] = useState('');
     
     useEffect(() => {
-        if(contentUploaded) setShowAddNote(true)
+        if(contentUploaded.current) setShowAddNote(true)
     }, [contentUploaded])
 
     useEffect(() => {
-        if(!showAddNote && contentUploaded) setShowAttachNote(true)
+        if(!showAddNote && contentUploaded.current) setShowAttachNote(true)
     }, [showAddNote])
 
     return (
@@ -36,6 +36,7 @@ export default function ScannerPage() {
         {showAddNote && createPortal(
             <Modal
                 content={
+                    //<div className="text-black">New Note Div</div>
                     <NewNote/>
                 }
                 onClose={() => setShowAddNote(false)}
@@ -46,6 +47,7 @@ export default function ScannerPage() {
         {showAttachNote && createPortal(
             <Modal
                 content={
+                    //<div className="text-black">Attach Note Div</div>
                     <AttachNote/>
                 }
                 onClose={() => setShowAttachNote(false)}
