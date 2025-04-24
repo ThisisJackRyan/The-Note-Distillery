@@ -36,8 +36,8 @@ export default function ScannerPage() {
         {showAddNote && createPortal(
             <Modal
                 content={
-                    <div className="text-black">New Note Div</div>
-                    //<NewNote/>
+                    //<div className="text-black">New Note Div</div>
+                    <NewNote/>
                 }
                 onClose={() => setShowAddNote(false)}
             />,

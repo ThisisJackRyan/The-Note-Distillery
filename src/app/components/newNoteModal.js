@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { addNewNote } from '@/firebase/firestoreFunctions';
 
-export default function NewNoteModal({ isOpen, onClose, onNoteCreated, selectedFolder, extractedText='', generatedSummary=''}) {
+export default function NewNoteModal({ onClose, onNoteCreated, selectedFolder, extractedText='', generatedSummary=''}) {
   const [noteName, setNoteName] = useState('');
   const [tags, setTags] = useState('');
   const [text, setText] = useState(extractedText);
@@ -56,10 +56,8 @@ export default function NewNoteModal({ isOpen, onClose, onNoteCreated, selectedF
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed bg-gray-900 inset-0 bg-opacity-50 flex items-center justify-center z-50">
+    <div className="inset-0 bg-opacity-50 flex items-center justify-center z-50">
       <div className="h-full w-full flex flex-col justify-center items-center sm:h-auto  p-6 sm:rounded-lg shadow-xl overflow-y-auto">
         <h2 className="text-xl font-semibold mb-4 text-white">Create New Note</h2>
         
@@ -122,7 +120,7 @@ export default function NewNoteModal({ isOpen, onClose, onNoteCreated, selectedF
 
           {error && <p className="text-red-500 text-sm">{error}</p>}
           
-          <div className="flex justify-end gap-4">
+          {/* <div className="flex justify-end gap-4">
             <button
               type="button"
               onClick={onClose}
@@ -136,7 +134,7 @@ export default function NewNoteModal({ isOpen, onClose, onNoteCreated, selectedF
             >
               Create
             </button>
-          </div>
+          </div> */}
         </form>
       </div>
     </div>
