@@ -7,6 +7,7 @@
 import { useState } from 'react';
 import { addNewNote } from '@/firebase/firestoreFunctions';
 import Modal from './modal'
+import imageUpload from './fileUploader';
 
 export default function NewNoteModal({ onNoteCreated, initialContent='', initialSummary=''}) {
   const [title, setTitle] = useState('');
@@ -27,17 +28,12 @@ export default function NewNoteModal({ onNoteCreated, initialContent='', initial
       return;
     }
 
-    if (!selectedFolder) {
-      setError('Please select a folder first');
-      return;
-    }
-
     try {
       // Create a temporary note object
       const newNote = {
         id: `temp-${Date.now()}`,
         name: title,
-        source: extractedText ? 'Image Upload' : 'Manual Entry',
+        source: imageUpload,
         tags: tags.split(',').map(tag => tag.trim()),
         summary: summary,
         content: content,
@@ -56,7 +52,6 @@ export default function NewNoteModal({ onNoteCreated, initialContent='', initial
       setTitle('');
       setTags('');
       setContent('');
-      onClose();
     } catch (err) {
       setError('Failed to create note. Please try again.');
       console.error('Error creating note:', err);
@@ -67,7 +62,7 @@ export default function NewNoteModal({ onNoteCreated, initialContent='', initial
     <Modal
     content={
 
-    <div className="inset-0 bg-opacity-50 flex items-center justify-center z-50">
+    <div className="inset-0 bg-opacity-50 flex items-center justify-center">
       <div className="h-full w-full flex flex-col justify-center items-center sm:h-auto  p-6 sm:rounded-lg shadow-xl overflow-y-auto">
         <h2 className="text-xl font-semibold mb-4 text-white">Create New Note</h2>
         
@@ -92,7 +87,7 @@ export default function NewNoteModal({ onNoteCreated, initialContent='', initial
             summary &&
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-1">
-                AI Summary
+                Summary
               </label>
               <textarea
                 value={summary}
@@ -104,7 +99,7 @@ export default function NewNoteModal({ onNoteCreated, initialContent='', initial
           }
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">
-              Actual Text Uploaded <span className="text-red-500">*</span>
+              Note Content <span className="text-red-500">*</span>
             </label>
             <textarea
               value={content}

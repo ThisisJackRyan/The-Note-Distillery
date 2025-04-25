@@ -7,7 +7,6 @@ import { useRef, useState } from "react";
 import { sampleText, sampleSummary } from '../scripts/sampleText'
 
 export default function imageUpload({onContentUploaded}, ){
-    const [extractedText, setExtractedText] = useState('');
     const [isProcessing, setIsProcessing] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
@@ -55,10 +54,7 @@ export default function imageUpload({onContentUploaded}, ){
             // const summary = await generateAISummary(cleanedText);
             
             if (cleanedText) {
-                setExtractedText(cleanedText);
-                
-                // parent fields V
-                onContentUploaded(extractedText, summary)
+                onContentUploaded(cleanedText, summary)
             }
             
             // If user is logged in, offer to save as note

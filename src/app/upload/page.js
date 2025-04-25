@@ -8,7 +8,7 @@ import { useState, useRef, useEffect } from "react";
 import { createPortal } from 'react-dom';
 import ImageUpload from '../components/fileUploader'
 import Modal from '../components/modal'
-import AttachNote from '../components/folderSelector';
+import FolderSelector from '../components/folderSelector';
 import NewFolderModal from '../components/folderModifier';
 import NewNote from '../components/noteModifier';
 
@@ -19,7 +19,7 @@ export default function ScannerPage() {
 
     const [showCreateNote, setShowCreateNote] = useState(false)
     const [showCreateFolder, setShowCreateFolder] = useState(false)
-    const [showAttachNote, setShowAttachNote] = useState(false)
+    const [showFolderSelector, setShowFolderSelector] = useState(false)
 
     const handleContentUploaded = ((extractedContent, aiSummary) => {
         setExtractedContent(extractedContent)
@@ -30,14 +30,27 @@ export default function ScannerPage() {
     const handleNoteCreated = ((newNote) => {
         setNewNoteObject(newNote)
         setShowCreateNote(false)
-        setShowAttachNote(true)
+        setShowFolderSelector(true)
     })
 
-    const handleNoteCancelled = ((newNote) => {
-        setShowCreateNote(false)
-        setShowAttachNote(false)
-        setShowCreateFolder(false)
+    const handleFolderSelected = ((folder) => {
+        
     })
+
+    const handleNewFolderSelected = (() => {
+
+    })
+
+    // const handleNewNote = (newNote) => {
+    //     router.push('/zone/');
+    // };
+
+    // const handleNoteCancelled = (() => {
+    //     console.log("Cancelling...")
+    //     setShowCreateNote(false)
+    //     setShowFolderSelector(false)
+    //     setShowCreateFolder(false)
+    // })
 
     return (
         <>
@@ -56,18 +69,26 @@ export default function ScannerPage() {
                         initialSummary={aiSummary}
                     />
                 }
-                onClose={handleNoteCancelled}
+                onClose={() => {
+                    console.log("Closing...")
+                    setShowCreateNote(false)
+                }}
             />,
             document.body
         )}
 
-        {showAttachNote && createPortal(
+        {showFolderSelector && createPortal(
             <Modal
                 content={
-                    <div className="text-black">Attach Note Div</div>
-                    //<AttachNote/>
+                    <FolderSelector
+                        folderSelected={handleFolderSelected}
+                        newFolderSelected={handleNewFolderSelected}
+                    />
                 }
-                onClose={() => setShowAttachNote(false)}
+                onClose={() => {
+                    console.log("Closing...")
+                    setShowFolderSelector(false)
+                }}
             />,
             document.body
         )}

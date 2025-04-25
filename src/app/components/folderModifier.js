@@ -32,6 +32,17 @@ export default function NewFolderModal({ isOpen, onClose, onFolderCreated }) {
     }
   };
 
+  const handleNewFolder = (newFolderName, folderId) => {
+    const newFolder = {
+        id: folderId,
+        name: newFolderName,
+        notes: []
+    };
+    setFolders(prevFolders => [...prevFolders, newFolder]);
+    setSelectedFolder(newFolder);
+    
+};
+
   if (!isOpen) return null;
 
   return (
