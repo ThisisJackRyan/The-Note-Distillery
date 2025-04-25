@@ -76,6 +76,15 @@ const addNewNote = async (folderId, noteName, source, tags, summary, text) => {
             console.error("Folder ID not provided");
             return;
         }
+
+        console.log("Note details:", {
+            folderId: folderId,
+            name: noteName,
+            source: source,
+            tags: tags,
+            summary: summary,
+            text: text
+        });
         
         await addDoc(collection(db, "users", userId, "folders", folderId, "notes"), {
             name: noteName,

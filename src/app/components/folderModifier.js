@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { makeNewFolder } from '@/firebase/firestoreFunctions';
 
-export default function NewFolderModal({ isOpen, onClose, onFolderCreated }) {
+export default function NewFolderModal({ folderCreated }) {
   const [folderName, setFolderName] = useState('');
   const [error, setError] = useState('');
 
@@ -20,33 +20,24 @@ export default function NewFolderModal({ isOpen, onClose, onFolderCreated }) {
       if (!folderId) {
         throw new Error('Failed to create folder');
       }
+
+      const folder = {
+        id: folderId,
+        name: folderName
+      }
       
       // Pass both the name and ID to the parent
-      onFolderCreated(folderName, folderId);
+      folderCreated(folder);
       
       setFolderName('');
-      onClose();
     } catch (err) {
       setError('Failed to create folder. Please try again.');
       console.error('Error creating folder:', err);
     }
   };
 
-  const handleNewFolder = (newFolderName, folderId) => {
-    const newFolder = {
-        id: folderId,
-        name: newFolderName,
-        notes: []
-    };
-    setFolders(prevFolders => [...prevFolders, newFolder]);
-    setSelectedFolder(newFolder);
-    
-};
-
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="inset-0 flex items-center justify-center">
       <div className="h-full w-full flex flex-col justify-center items-center sm:h-auto bg-gray-900 p-6 sm:rounded-lg shadow-xl sm:w-96">
         <h2 className="text-xl font-semibold mb-4 text-white">Create New Folder</h2>
         <form onSubmit={handleSubmit}>
@@ -69,13 +60,6 @@ export default function NewFolderModal({ isOpen, onClose, onFolderCreated }) {
           </div>
           
           <div className="flex justify-end gap-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-gray-300 hover:bg-gray-700 rounded-md"
-            >
-              Cancel
-            </button>
             <button
               type="submit"
               className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"

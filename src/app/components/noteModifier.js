@@ -33,7 +33,7 @@ export default function NewNoteModal({ onNoteCreated, initialContent='', initial
       const newNote = {
         id: `temp-${Date.now()}`,
         name: title,
-        source: imageUpload,
+        source: "Image Upload",
         tags: tags.split(',').map(tag => tag.trim()),
         summary: summary,
         content: content,

@@ -9,8 +9,9 @@ import { createPortal } from 'react-dom';
 import ImageUpload from '../components/fileUploader'
 import Modal from '../components/modal'
 import FolderSelector from '../components/folderSelector';
-import NewFolderModal from '../components/folderModifier';
+import FolderCreator from '../components/folderModifier';
 import NewNote from '../components/noteModifier';
+import { addNewNote } from '@/firebase/firestoreFunctions';
 
 export default function ScannerPage() {
     const [extractedContent, setExtractedContent] = useState('')
@@ -18,7 +19,7 @@ export default function ScannerPage() {
     const [newNoteObject, setNewNoteObject] = useState(null)
 
     const [showCreateNote, setShowCreateNote] = useState(false)
-    const [showCreateFolder, setShowCreateFolder] = useState(false)
+    const [showFolderCreator, setShowFolderCreator] = useState(false)
     const [showFolderSelector, setShowFolderSelector] = useState(false)
 
     const handleContentUploaded = ((extractedContent, aiSummary) => {
@@ -34,23 +35,28 @@ export default function ScannerPage() {
     })
 
     const handleFolderSelected = ((folder) => {
-        
+        setShowFolderSelector(false)
+        addNewNote(folder.id, newNoteObject.name, newNoteObject.source, newNoteObject.tags, newNoteObject.summary, newNoteObject.content)
+        router.push('/zone/');
     })
 
     const handleNewFolderSelected = (() => {
-
+        setShowFolderSelector(false)
+        setShowFolderCreator(true)
     })
 
-    // const handleNewNote = (newNote) => {
-    //     router.push('/zone/');
-    // };
+    const handleFolderCreated = ((folder) => {
+        setShowFolderCreator(false)
+        addNewNote(folder.id, newNoteObject.name, newNoteObject.source, newNoteObject.tags, newNoteObject.summary, newNoteObject.content)
+        router.push('/zone/');
+    })
 
-    // const handleNoteCancelled = (() => {
-    //     console.log("Cancelling...")
-    //     setShowCreateNote(false)
-    //     setShowFolderSelector(false)
-    //     setShowCreateFolder(false)
-    // })
+    const handleClose = (() => {
+        console.log("Cancelling...")
+        setShowCreateNote(false)
+        setShowFolderSelector(false)
+        setShowFolderCreator(false)
+    })
 
     return (
         <>
@@ -69,10 +75,7 @@ export default function ScannerPage() {
                         initialSummary={aiSummary}
                     />
                 }
-                onClose={() => {
-                    console.log("Closing...")
-                    setShowCreateNote(false)
-                }}
+                onClose={handleClose}
             />,
             document.body
         )}
@@ -85,10 +88,19 @@ export default function ScannerPage() {
                         newFolderSelected={handleNewFolderSelected}
                     />
                 }
-                onClose={() => {
-                    console.log("Closing...")
-                    setShowFolderSelector(false)
-                }}
+                onClose={handleClose}
+            />,
+            document.body
+        )}
+
+        {showFolderCreator && createPortal(
+            <Modal
+                content={
+                    <FolderCreator
+                        folderCreated={handleFolderCreated}
+                    />
+                }
+                onClose={handleClose}
             />,
             document.body
         )}
