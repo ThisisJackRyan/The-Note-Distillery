@@ -6,8 +6,8 @@ import { faChevronRight, faChevronDown, faFolder, faFile, faFolderPlus, faPlus, 
 import { collection, getDocs, query } from 'firebase/firestore';
 import { db } from '../../firebase/firebaseConfig';
 import { useAuth } from '../context/AuthContext';
-import NewFolderModal from './newFolderModal';
-import NewNoteModal from './newNoteModal';
+import NewFolderModal from './folderModifier';
+import NewNoteModal from './noteModifier';
 import { deleteFolder, deleteNote } from '@/firebase/firestoreFunctions';
 
 export default function Sidebar({ 

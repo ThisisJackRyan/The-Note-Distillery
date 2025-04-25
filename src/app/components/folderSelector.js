@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { getAllFolders,  } from '../../firebase/firestoreFunctions'
-import NewFolderModal from './newFolderModal';
-import NewNoteModal from './newNoteModal';
+import NewFolderModal from './folderModifier';
+import NewNoteModal from './noteModifier';
 
 const AttachToFolder = ({extractedText, summarizedText}) => {
     const [folders, setFolders] = useState([]);

@@ -10,7 +10,11 @@ export default function Modal({ content, onClose }) {
                         ✖
                     </button>
                 </div>
-                <div className="p-2">{content}</div>
+                <div 
+                    className="p-2"
+                >
+                    {content}
+                </div>
             </div>
         </div>
     )

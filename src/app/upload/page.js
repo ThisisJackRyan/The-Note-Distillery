@@ -1,45 +1,62 @@
+/**
+ * Page currently manages the uploading of a single file at a time, as well as the creation of a blank note.
+ * It should eventually support batch uploads of notes, but right now it's tightly coupled to the single upload implementation.
+ */
+
 "use client";
 import { useState, useRef, useEffect } from "react";
 import { createPortal } from 'react-dom';
-import ImageUpload from '../components/imageUpload'
+import ImageUpload from '../components/fileUploader'
 import Modal from '../components/modal'
-import AttachNote from '../components/attachToFolder';
-import NewFolderModal from '../components/newFolderModal';
-import NewNote from '../components/newNoteModal';
+import AttachNote from '../components/folderSelector';
+import NewFolderModal from '../components/folderModifier';
+import NewNote from '../components/noteModifier';
 
 export default function ScannerPage() {
-    const [noteContent, setNoteContent] = useState('')
-    const [summarizedText, setSummarizedText] = useState('')
-    const [showAddNote, setShowAddNote] = useState(false)
-    const [showAttachNote, setShowAttachNote] = useState(false)
-    const [contentUploaded, setContentUploaded] = useState(false)
-    // const [showEditNote, setShowEditNote] = useState('');
-    // const [showAttachFolder, setShowAttachFolder] = useState('');
-    
-    useEffect(() => {
-        if(contentUploaded) setShowAddNote(true)
-    }, [contentUploaded])
+    const [extractedContent, setExtractedContent] = useState('')
+    const [aiSummary, setAISummary] = useState('')
+    const [newNoteObject, setNewNoteObject] = useState(null)
 
-    useEffect(() => {
-        if(!showAddNote && contentUploaded) setShowAttachNote(true)
-    }, [showAddNote])
+    const [showCreateNote, setShowCreateNote] = useState(false)
+    const [showCreateFolder, setShowCreateFolder] = useState(false)
+    const [showAttachNote, setShowAttachNote] = useState(false)
+
+    const handleContentUploaded = ((extractedContent, aiSummary) => {
+        setExtractedContent(extractedContent)
+        setAISummary(aiSummary)
+        setShowCreateNote(true)
+    })
+
+    const handleNoteCreated = ((newNote) => {
+        setNewNoteObject(newNote)
+        setShowCreateNote(false)
+        setShowAttachNote(true)
+    })
+
+    const handleNoteCancelled = ((newNote) => {
+        setShowCreateNote(false)
+        setShowAttachNote(false)
+        setShowCreateFolder(false)
+    })
 
     return (
         <>
-
+        
         <ImageUpload
-            setNoteContent={setNoteContent}
-            setSummarizedText={setSummarizedText}
-            setContentUploaded={setContentUploaded}
+            onContentUploaded={handleContentUploaded}
         />
 
-        {showAddNote && createPortal(
+        {showCreateNote && createPortal(
             <Modal
                 content={
                     //<div className="text-black">New Note Div</div>
-                    <NewNote/>
+                    <NewNote
+                        onNoteCreated={handleNoteCreated}
+                        initialContent={extractedContent}
+                        initialSummary={aiSummary}
+                    />
                 }
-                onClose={() => setShowAddNote(false)}
+                onClose={handleNoteCancelled}
             />,
             document.body
         )}
@@ -100,10 +117,10 @@ export default function ScannerPage() {
         //             onNoteCreated={handleNewNote}
         //             selectedFolder={selectedFolder}
         //             extractedText={extractedText}
-        //             generatedSummary={summarizedText}
+        //             generatedSummary={aiSummary}
         //         />
 
-        //         <AttachToFolder extractedText={extractedText} summarizedText={summarizedText} />
+        //         <AttachToFolder extractedText={extractedText} aiSummary={aiSummary} />
         //     } 
         //    },
             

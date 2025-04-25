@@ -1,23 +1,28 @@
+/**
+ * Serves as the interface for editing notes, as well as creating new notes
+ */
+
 'use client';
 
 import { useState } from 'react';
 import { addNewNote } from '@/firebase/firestoreFunctions';
+import Modal from './modal'
 
-export default function NewNoteModal({ onClose, onNoteCreated, selectedFolder, extractedText='', generatedSummary=''}) {
-  const [noteName, setNoteName] = useState('');
+export default function NewNoteModal({ onNoteCreated, initialContent='', initialSummary=''}) {
+  const [title, setTitle] = useState('');
   const [tags, setTags] = useState('');
-  const [text, setText] = useState(extractedText);
-  const [summary, setSummary] = useState(generatedSummary);
+  const [content, setContent] = useState(initialContent);
+  const [summary, setSummary] = useState(initialSummary);
   const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!noteName.trim()) {
+    if (!title.trim()) {
       setError('Note name cannot be empty');
       return;
     }
 
-    if (!text.trim()) {
+    if (!content.trim()) {
       setError('Note text cannot be empty');
       return;
     }
@@ -31,11 +36,11 @@ export default function NewNoteModal({ onClose, onNoteCreated, selectedFolder, e
       // Create a temporary note object
       const newNote = {
         id: `temp-${Date.now()}`,
-        name: noteName,
+        name: title,
         source: extractedText ? 'Image Upload' : 'Manual Entry',
         tags: tags.split(',').map(tag => tag.trim()),
         summary: summary,
-        text: text,
+        content: content,
         dateCreated: new Date().toISOString()
       };
 
@@ -43,12 +48,14 @@ export default function NewNoteModal({ onClose, onNoteCreated, selectedFolder, e
       onNoteCreated(newNote);
       
       // Then try to save to Firebase
-      await addNewNote(selectedFolder.id, noteName, extractedText ? 'Image Upload' : 'Manual Entry', tags.split(',').map(tag => tag.trim()), summary, text);
+      //await addNewNote(selectedFolder.id, title, extractedText ? 'Image Upload' : 'Manual Entry', tags.split(',').map(tag => tag.trim()), summary, text);
       
+      // TO-DO Add logic for returning contents of note
+
       // Reset form
-      setNoteName('');
+      setTitle('');
       setTags('');
-      setText('');
+      setContent('');
       onClose();
     } catch (err) {
       setError('Failed to create note. Please try again.');
@@ -57,6 +64,9 @@ export default function NewNoteModal({ onClose, onNoteCreated, selectedFolder, e
   };
 
   return (
+    <Modal
+    content={
+
     <div className="inset-0 bg-opacity-50 flex items-center justify-center z-50">
       <div className="h-full w-full flex flex-col justify-center items-center sm:h-auto  p-6 sm:rounded-lg shadow-xl overflow-y-auto">
         <h2 className="text-xl font-semibold mb-4 text-white">Create New Note</h2>
@@ -68,9 +78,9 @@ export default function NewNoteModal({ onClose, onNoteCreated, selectedFolder, e
             </label>
             <input
               type="text"
-              value={noteName}
+              value={title}
               onChange={(e) => {
-                setNoteName(e.target.value);
+                setTitle(e.target.value);
                 setError('');
               }}
               placeholder="Enter note name"
@@ -97,8 +107,8 @@ export default function NewNoteModal({ onClose, onNoteCreated, selectedFolder, e
               Actual Text Uploaded <span className="text-red-500">*</span>
             </label>
             <textarea
-              value={text}
-              onChange={(e) => setText(e.target.value)}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
               placeholder="Enter note text"
               rows="5"
               required
@@ -120,23 +130,18 @@ export default function NewNoteModal({ onClose, onNoteCreated, selectedFolder, e
 
           {error && <p className="text-red-500 text-sm">{error}</p>}
           
-          {/* <div className="flex justify-end gap-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-gray-300 hover:bg-gray-700 rounded-md"
-            >
-              Cancel
-            </button>
+          {<div className="flex justify-end gap-4">
             <button
               type="submit"
               className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               Create
             </button>
-          </div> */}
+          </div> }
         </form>
       </div>
     </div>
+
+    }/>
   );
 } 
