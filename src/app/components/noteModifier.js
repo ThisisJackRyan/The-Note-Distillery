@@ -62,7 +62,7 @@ export default function NewNoteModal({ onNoteCreated, initialContent='', initial
     <Modal
     content={
 
-    <div className="inset-0 bg-opacity-50 flex items-center justify-center">
+    <div className="inset-0 flex items-center justify-center">
       <div className="h-full w-full flex flex-col justify-center items-center sm:h-auto  p-6 sm:rounded-lg shadow-xl overflow-y-auto">
         <h2 className="text-xl font-semibold mb-4 text-white">Create New Note</h2>
         

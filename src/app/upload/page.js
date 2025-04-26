@@ -4,59 +4,158 @@
  */
 
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useReducer } from "react";
+import { useRouter } from "next/router";
 import { createPortal } from 'react-dom';
+import { addNewNote } from '@/firebase/firestoreFunctions';
 import ImageUpload from '../components/fileUploader'
 import Modal from '../components/modal'
 import FolderSelector from '../components/folderSelector';
 import FolderCreator from '../components/folderModifier';
 import NewNote from '../components/noteModifier';
-import { addNewNote } from '@/firebase/firestoreFunctions';
+
+const initialState = {
+    extractedContent: '',
+    aiSummary: '',
+    newNoteObj: null,
+    selectedFolder: null,
+    showCreateNote: false,
+    showFolderCreator: false,
+    showFolderSelector: false,
+    previousState: "initial_state"
+}
+
+function reducer(uploadState, action){
+    console.log("Upload Action: " + action.type)
+
+    switch(action.type){
+        case "content_uploaded":
+            return {
+                ...uploadState,
+                extractedContent: action.extractedContent ?? uploadState.extractedContent,
+                aiSummary: action.aiSummary ?? uploadState.aiSummary,
+                showCreateNote: true,
+                showFolderCreator: false,
+                showFolderSelector: false,
+                previousState: "initial_state"
+            }
+        
+        case "note_created":
+            return {
+                ...uploadState,
+                newNoteObj: action.newNoteObj ?? uploadState.newNoteObj,
+                showCreateNote: false,
+                showFolderCreator: false,
+                showFolderSelector: true,
+                previousState: "content_uploaded"
+            }
+
+        /**
+         * The previous state is not stored as a safeguard to prevent re-running of actions with side effects
+         */
+        case "existing_folder_selected":
+            return {
+                ...uploadState,
+                selectedFolder: action.selectedFolder ?? uploadState.selectedFolder,
+                showCreateNote: false,
+                showFolderCreator: false,
+                showFolderSelector: false,
+            }
+
+        case "new_folder_selected":
+            return {
+                ...uploadState,
+                showCreateNote: false,
+                showFolderCreator: true,
+                showFolderSelector: false,
+                previousState: "note_created"
+            }
+        
+        case "upload_cancelled":
+            return {
+                ...uploadState,
+                showCreateNote: false,
+                showFolderCreator: false,
+                showFolderSelector: false,
+                previousState: "initial_state"
+            }
+
+        /**
+         * Should only be used before any actions with side-effects are carried out, such as adding the new note to the db or creating a new folder
+         */
+        case "go_back":
+            return reducer(
+                uploadState,
+                { type: uploadState.previousState }
+            )
+    }
+}
 
 export default function ScannerPage() {
-    const [extractedContent, setExtractedContent] = useState('')
-    const [aiSummary, setAISummary] = useState('')
-    const [newNoteObject, setNewNoteObject] = useState(null)
-
-    const [showCreateNote, setShowCreateNote] = useState(false)
-    const [showFolderCreator, setShowFolderCreator] = useState(false)
-    const [showFolderSelector, setShowFolderSelector] = useState(false)
+    //const router = useRouter()
+    const [uploadState, dispatch] = useReducer(reducer, initialState)
 
     const handleContentUploaded = ((extractedContent, aiSummary) => {
-        setExtractedContent(extractedContent)
-        setAISummary(aiSummary)
-        setShowCreateNote(true)
+        dispatch({
+            type: "content_uploaded",
+            extractedContent: extractedContent,
+            aiSummary: aiSummary
+        })
     })
 
     const handleNoteCreated = ((newNote) => {
-        setNewNoteObject(newNote)
-        setShowCreateNote(false)
-        setShowFolderSelector(true)
+        dispatch({
+            type: "note_created",
+            newNoteObj: newNote
+        })
     })
 
-    const handleFolderSelected = ((folder) => {
-        setShowFolderSelector(false)
-        addNewNote(folder.id, newNoteObject.name, newNoteObject.source, newNoteObject.tags, newNoteObject.summary, newNoteObject.content)
-        router.push('/zone/');
+    const handleExistingFolderSelected = ((folder) => {
+        const action = {
+            type: "existing_folder_selected",
+            selectedFolder: folder
+        }
+        dispatch(action)
+
+        const nextState = reducer(uploadState, action);
+        finalizeNote(nextState);
     })
 
     const handleNewFolderSelected = (() => {
-        setShowFolderSelector(false)
-        setShowFolderCreator(true)
-    })
-
-    const handleFolderCreated = ((folder) => {
-        setShowFolderCreator(false)
-        addNewNote(folder.id, newNoteObject.name, newNoteObject.source, newNoteObject.tags, newNoteObject.summary, newNoteObject.content)
-        router.push('/zone/');
+        dispatch({
+            type: "new_folder_selected"
+        })
     })
 
     const handleClose = (() => {
-        console.log("Cancelling...")
-        setShowCreateNote(false)
-        setShowFolderSelector(false)
-        setShowFolderCreator(false)
+        dispatch({
+            type: "upload_cancelled"
+        })
     })
+
+    const handleGoBack = (() => {
+        dispatch({
+            type: "go_back",
+        })
+    })
+
+    function finalizeNote(state){
+        if (state.selectedFolder) {
+            console.log("Selected Folder Details:");
+            Object.entries(state.selectedFolder).forEach(([key, value]) => {
+                console.log(`${key}: ${value}`);
+            });
+        }
+        addNewNote(
+            state.selectedFolder.id, 
+            state.newNoteObj.name, 
+            state.newNoteObj.source, 
+            state.newNoteObj.tags, 
+            state.newNoteObj.summary, 
+            state.newNoteObj.content
+        )
+        //router.push('/zone/');
+    }
 
     return (
         <>
@@ -65,42 +164,44 @@ export default function ScannerPage() {
             onContentUploaded={handleContentUploaded}
         />
 
-        {showCreateNote && createPortal(
+        {uploadState.showCreateNote && createPortal(
             <Modal
                 content={
-                    //<div className="text-black">New Note Div</div>
                     <NewNote
                         onNoteCreated={handleNoteCreated}
-                        initialContent={extractedContent}
-                        initialSummary={aiSummary}
+                        initialContent={uploadState.extractedContent}
+                        initialSummary={uploadState.aiSummary}
                     />
                 }
                 onClose={handleClose}
+                onGoBack={handleGoBack}
             />,
             document.body
         )}
 
-        {showFolderSelector && createPortal(
+        {uploadState.showFolderSelector && createPortal(
             <Modal
                 content={
                     <FolderSelector
-                        folderSelected={handleFolderSelected}
+                        folderSelected={handleExistingFolderSelected}
                         newFolderSelected={handleNewFolderSelected}
                     />
                 }
                 onClose={handleClose}
+                onGoBack={handleGoBack}
             />,
             document.body
         )}
 
-        {showFolderCreator && createPortal(
+        {uploadState.showFolderCreator && createPortal(
             <Modal
                 content={
                     <FolderCreator
-                        folderCreated={handleFolderCreated}
+                        folderCreated={handleExistingFolderSelected}
                     />
                 }
                 onClose={handleClose}
+                onGoBack={handleGoBack}
             />,
             document.body
         )}
