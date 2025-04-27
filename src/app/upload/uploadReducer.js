@@ -1,7 +1,9 @@
+import noteFactory from "../scripts/noteFactory";
+
 export const initialState = {
     extractedContent: '',
     aiSummary: '',
-    newNoteObj: null,
+    newNoteObj: noteFactory(),
     selectedFolder: null,
     showCreateNote: false,
     showFolderCreator: false,
@@ -13,6 +15,11 @@ export default function reducer(uploadState, action){
     console.log("Upload Action: " + action.type)
 
     switch(action.type){
+        case "initial_state":
+            return {
+                ...initialState
+            }
+
         case "content_uploaded":
             return {
                 ...uploadState,
@@ -64,9 +71,6 @@ export default function reducer(uploadState, action){
                 previousState: "initial_state"
             }
 
-        default:
-            return uploadState
-
         /**
          * Should only be used before any actions with side-effects are carried out, such as adding the new note to the db or creating a new folder
          */
@@ -75,5 +79,8 @@ export default function reducer(uploadState, action){
                 uploadState,
                 { type: uploadState.previousState }
             )
+
+        default:
+            return uploadState
     }
 }

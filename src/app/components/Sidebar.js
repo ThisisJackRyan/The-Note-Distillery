@@ -261,7 +261,7 @@ export default function Sidebar({
         )}
       </div>
 
-      <NewFolderModal 
+      {/* <NewFolderModal 
         isOpen={isNewFolderModalOpen} 
         onClose={() => setIsNewFolderModalOpen(false)}
         onFolderCreated={handleNewFolder}
@@ -272,7 +272,7 @@ export default function Sidebar({
         onClose={() => setIsNewNoteModalOpen(false)}
         onNoteCreated={handleNewNote}
         selectedFolder={folders.find(f => f.id === selectedFolder)}
-      />
+      /> */}
 
       {/* Delete Confirmation Modal */}
       {deleteConfirmation.isOpen && (
