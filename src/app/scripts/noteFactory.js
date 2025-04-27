@@ -1,6 +1,6 @@
 const noteTemplate = {
   id: '',
-  title: '',
+  name: '',
   source: '',
   tags: '', 
   summary: '',

@@ -7,11 +7,21 @@
 
 import { useState } from 'react';
 import { validateNote } from "../scripts/noteFactory"
+import { addNewNote } from '@/firebase/firestoreFunctions';
 
-export default function NoteModifier({ onNoteModified, initialNoteObj, createMode=true}) {
+/**
+ * If the selected folder field is supplied, then the component will handle pushing the note creation or edit to the database;
+ * otherwise, the parent component will have to handle the update in the onNoteModified handler
+ * 
+ * If the createMode prop is set to false, then the modal will run in edit mode
+ * 
+ * @param {*} param0 
+ * @returns 
+ */
+export default function NoteModifier({ onNoteModified, initialNoteObj, createMode=true, selectedFolder=null}) {
   validateNote(initialNoteObj)
 
-  const [note, setNote] = useState({...initialNoteObj})
+  const [finalNote, setFinalNote] = useState(null)
   const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
@@ -19,42 +29,65 @@ export default function NoteModifier({ onNoteModified, initialNoteObj, createMod
   
     // Gather values from the form fields
     const formData = new FormData(e.target);
-    const updatedNote = {
-      title: formData.get("title").trim(),
+    const finalNote = {
+      ...initialNoteObj,
+      name: formData.get("name").trim(),
       summary: formData.get("summary").trim(),
       content: formData.get("content").trim(),
       tags: formData.get("tags").trim(),
-    };
+    }
   
     // Validate inputs
-    if (!updatedNote.title) {
+    if (!finalNote.name) {
       setError("Note name cannot be empty");
       return;
     }
   
-    if (!updatedNote.content) {
+    if (!finalNote.content) {
       setError("Note text cannot be empty");
       return;
     }
-  
-    // Add additional properties if in create mode
-    if (createMode) {
-      updatedNote.id = `temp-${Date.now()}`;
-      updatedNote.source = "Image Upload";
-      updatedNote.dateCreated = new Date().toISOString();
-    }
+
+    if(createMode) handleCreateNote(finalNote)
+    else handleEditNote(finalNote)
   
     // Call the parent callback
     onNoteModified(updatedNote);
-  
-    try {
-      // Reset form
-      setNote({});
-    } catch (err) {
-      setError("Failed to create note. Please try again.");
-      console.error("Error creating note:", err);
-    }
   };
+
+  // Handles the actual note creation action after the new note's info has been submitted
+  const handleCreateNote = async (finalNote) => {
+    finalNote.id = `temp-${Date.now()}`;
+    finalNote.source = "Image Upload";
+    finalNote.dateCreated = new Date().toISOString();
+
+    if(selectedFolder){
+      addNewNote(
+        selectedFolder.id, 
+        finalNote.name, 
+        finalNote.source, 
+        finalNote.tags, 
+        finalNote.summary, 
+        finalNote.content
+      )
+    }
+  }
+
+  // Handles the actual edit action after the updated note info has been submitted
+  const handleEditNote = async(finalNote) => {
+    if(selectedFolder){
+      addNewNote(
+        selectedFolder.id, 
+        finalNote.id, 
+        {
+          name: finalNote.name,
+          text: finalNote.text,
+          tags: finalNote.tags,
+          dateModified: finalNote.dateModified
+        }
+      )
+    }
+  }
 
   return (
     <div className="w-150 h-175 inset-0 flex items-center justify-center">
@@ -70,8 +103,8 @@ export default function NoteModifier({ onNoteModified, initialNoteObj, createMod
             </label>
             <input
               type="text"
-              name="title" // Use the `name` attribute to identify the input
-              defaultValue={initialNoteObj.title}
+              name="name" // Use the `name` attribute to identify the input
+              defaultValue={initialNoteObj.name}
               required
               className="w-full px-3 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 text-white"
             />

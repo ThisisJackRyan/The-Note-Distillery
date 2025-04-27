@@ -65,15 +65,9 @@ export default function ScannerPage() {
     })
 
     function finalizeNote(state){
-        if (state.selectedFolder) {
-            console.log("Selected Folder Details:");
-            Object.entries(state.selectedFolder).forEach(([key, value]) => {
-                console.log(`${key}: ${value}`);
-            });
-        }
         addNewNote(
             state.selectedFolder.id, 
-            state.newNoteObj.title, 
+            state.newNoteObj.name, 
             state.newNoteObj.source, 
             state.newNoteObj.tags, 
             state.newNoteObj.summary, 
@@ -98,6 +92,8 @@ export default function ScannerPage() {
                     <NoteModifier
                         onNoteModified={handleNoteCreated}
                         initialNoteObj={uploadState.newNoteObj}
+                        createMode={true}
+                        selectedFolder={null}
                     />
                 }
                 onClose={handleClose}
