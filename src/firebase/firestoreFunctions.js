@@ -196,7 +196,7 @@ const updateNoteName = async (folderId, noteId, newName) => {
         await updateDoc(doc(db, "users", userId, "folders", folderId, "notes", noteId), {
             name: newName
         });
-        console.log("Note name updated");
+        console.log("Note name updated");n
     } catch (e) {
         console.error("Error updating note name: ", e);
         throw e;

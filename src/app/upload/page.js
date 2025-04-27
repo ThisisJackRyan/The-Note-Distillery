@@ -7,7 +7,7 @@
 import { useRouter } from "next/router";
 import reducer from "./uploadReducer"
 import { initialState } from "./uploadReducer"
-import { useReducer } from "react";
+import { useReducer, useEffect } from "react";
 import { createPortal } from 'react-dom';
 import { addNewNote } from '@/firebase/firestoreFunctions';
 import ImageUpload from '../components/fileUploader'
@@ -17,8 +17,13 @@ import FolderModifier from '../components/folderModifier';
 import NoteModifier from '../components/noteModifier';
 
 export default function ScannerPage() {
-    //const router = useRouter()
     const [uploadState, dispatch] = useReducer(reducer, initialState)
+
+    useEffect(() => {
+        dispatch({
+            type: "initial_state"
+        })
+    }, [])
 
     const handleContentUploaded = ((extractedContent, aiSummary) => {
         dispatch({
@@ -73,9 +78,6 @@ export default function ScannerPage() {
             state.newNoteObj.summary, 
             state.newNoteObj.content
         )
-        dispatch({
-            type: "initial_state"
-        })
         //router.push('/zone/');
     }
 
@@ -84,6 +86,7 @@ export default function ScannerPage() {
         
         <ImageUpload
             onContentUploaded={handleContentUploaded}
+            enabled={!(uploadState.processing)}
         />
 
         {uploadState.showCreateNote && createPortal(
@@ -105,12 +108,13 @@ export default function ScannerPage() {
             <Modal
                 content={
                     <FolderSelector
-                        folderSelected={handleExistingFolderSelected}
-                        newFolderSelected={handleNewFolderSelected}
+                        onFolderSelected={handleExistingFolderSelected}
+                        onNewFolderSelected={handleNewFolderSelected}
                     />
                 }
                 onClose={handleClose}
                 onGoBack={handleGoBack}
+                headerText={"Attach Note To Folder"}
             />,
             document.body
         )}
@@ -119,7 +123,7 @@ export default function ScannerPage() {
             <Modal
                 content={
                     <FolderModifier
-                        folderCreated={handleExistingFolderSelected}
+                        onFolderModified={handleExistingFolderSelected}
                     />
                 }
                 onClose={handleClose}

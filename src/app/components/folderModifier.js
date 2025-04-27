@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { makeNewFolder } from '@/firebase/firestoreFunctions';
 
-export default function NewFolderModal({ folderCreated }) {
+export default function NewFolderModal({ onFolderModified }) {
   const [folderName, setFolderName] = useState('');
   const [error, setError] = useState('');
 
@@ -27,7 +27,7 @@ export default function NewFolderModal({ folderCreated }) {
       }
       
       // Pass both the name and ID to the parent
-      folderCreated(folder);
+      onFolderModified(folder);
       
       setFolderName('');
     } catch (err) {

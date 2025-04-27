@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { getAllFolders,  } from '../../firebase/firestoreFunctions'
 
-export default function FolderSelector({folderSelected, newFolderSelected}) {
+export default function FolderSelector({onFolderSelected, onNewFolderSelected}) {
     const [folders, setFolders] = useState([]);
     const [selectedFolder, setSelectedFolder] = useState(null);
 
@@ -45,13 +45,13 @@ export default function FolderSelector({folderSelected, newFolderSelected}) {
 
                     <div className="flex justify-end gap-4">
                         <button 
-                            onClick={newFolderSelected}
+                            onClick={onNewFolderSelected}
                             className="px-4 py-2 text-gray-300 hover:bg-gray-700 rounded-md"
                         >
                             Create New Folder
                         </button>
                         <button 
-                            onClick={() => folderSelected(selectedFolder)}
+                            onClick={() => onFolderSelected(selectedFolder)}
                             disabled={!selectedFolder}
                             className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         >

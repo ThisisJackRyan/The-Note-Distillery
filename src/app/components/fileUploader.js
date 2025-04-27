@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext'
 import { useRef, useState } from "react";
 import { sampleText, sampleSummary } from '../scripts/sampleText'
 
-export default function imageUpload({onContentUploaded}, ){
+export default function imageUpload({onContentUploaded, enabled}, ){
     const [isProcessing, setIsProcessing] = useState(false);
     const [error, setError] = useState(false);
     const [success, setSuccess] = useState(false);
@@ -16,7 +16,11 @@ export default function imageUpload({onContentUploaded}, ){
 
     const handleUploadClick = () => {
         if (fileInputRef.current) {
-            fileInputRef.current.click();
+            if(enabled) fileInputRef.current.click();
+            else {
+                setError(true)
+                setStateMsg("Upload is currently disabled")
+            }
         }
     }
 

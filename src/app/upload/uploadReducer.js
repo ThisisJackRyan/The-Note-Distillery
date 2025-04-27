@@ -8,7 +8,8 @@ export const initialState = {
     showCreateNote: false,
     showFolderCreator: false,
     showFolderSelector: false,
-    previousState: "initial_state"
+    previousState: "initial_state",
+    processing: false
 }
 
 export default function reducer(uploadState, action){
@@ -21,19 +22,31 @@ export default function reducer(uploadState, action){
             }
 
         case "content_uploaded":
+            // The ?? jargon is used so that the note's fields will still be filled properly in the case of a go-back.
+            // In that case, the values of temp note obj are set to the existing values of newNoteObj.
+            const tempNoteObj = {
+                ...uploadState.newNoteObj,
+                content: action.extractedContent ?? uploadState.newNoteObj.content,
+                summary: action.aiSummary ?? uploadState.newNoteObj.summary,
+            }
+
             return {
                 ...uploadState,
-                extractedContent: action.extractedContent ?? uploadState.extractedContent,
-                aiSummary: action.aiSummary ?? uploadState.aiSummary,
+                newNoteObj: {
+                    ...tempNoteObj
+                },
                 showCreateNote: true,
                 showFolderCreator: false,
                 showFolderSelector: false,
-                previousState: "initial_state"
+                processing: true,
+                previousState: "initial_state",
+                
             }
         
         case "note_created":
             return {
                 ...uploadState,
+                // The ?? jargon here is used to the same effect as above
                 newNoteObj: action.newNoteObj ?? uploadState.newNoteObj,
                 showCreateNote: false,
                 showFolderCreator: false,
@@ -51,6 +64,7 @@ export default function reducer(uploadState, action){
                 showCreateNote: false,
                 showFolderCreator: false,
                 showFolderSelector: false,
+                processing: false
             }
 
         case "new_folder_selected":
@@ -68,7 +82,8 @@ export default function reducer(uploadState, action){
                 showCreateNote: false,
                 showFolderCreator: false,
                 showFolderSelector: false,
-                previousState: "initial_state"
+                processing: false,
+                previousState: "initial_state",
             }
 
         /**

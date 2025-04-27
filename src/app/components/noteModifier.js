@@ -1,8 +1,3 @@
-/**
- * Serves as the interface for editing notes, as well as creating new notes
- * - If create mode is set to false, edit mode will be used
- */
-
 'use client';
 
 import { useState } from 'react';
@@ -52,10 +47,10 @@ export default function NoteModifier({ onNoteModified, initialNoteObj, createMod
     else handleEditNote(finalNote)
   
     // Call the parent callback
-    onNoteModified(updatedNote);
+    onNoteModified(finalNote);
   };
 
-  // Handles the actual note creation action after the new note's info has been submitted
+  // Handles the actual note creation action after the new note's info has been submitted, and the interface is in creation mode
   const handleCreateNote = async (finalNote) => {
     finalNote.id = `temp-${Date.now()}`;
     finalNote.source = "Image Upload";
@@ -73,7 +68,7 @@ export default function NoteModifier({ onNoteModified, initialNoteObj, createMod
     }
   }
 
-  // Handles the actual edit action after the updated note info has been submitted
+  // Handles the actual edit action after the updated note info has been submitted, and the interface is in edit mode
   const handleEditNote = async(finalNote) => {
     if(selectedFolder){
       addNewNote(
