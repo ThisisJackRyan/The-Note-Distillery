@@ -24,21 +24,23 @@ export default function FolderSelector({folderSelected, newFolderSelected}) {
                         <label className="block text-sm font-medium text-gray-300 mb-1">
                             Select Folder <span className="text-red-500">*</span>
                         </label>
-                        <select 
-                            value={selectedFolder?.id || ''} 
-                            onChange={(e) => {
-                                const folder = folders.find(f => f.id === e.target.value);
-                                setSelectedFolder(folder)
-                            }}
-                            className="w-full px-3 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 text-white"
-                        >
-                            <option value="">Select a folder</option>
-                            {folders.map((folder) => (
-                                <option key={folder.id} value={folder.id}>
-                                    {folder.name}
-                                </option>
-                            ))}
-                        </select>
+                        <div className="max-h-40 overflow-y-scroll">
+                            <select 
+                                value={selectedFolder?.id || ''} 
+                                onChange={(e) => {
+                                    const folder = folders.find(f => f.id === e.target.value);
+                                    setSelectedFolder(folder)
+                                }}
+                                className="w-full px-3 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 text-white"
+                            >
+                                <option value="">Select a folder</option>
+                                {folders.map((folder) => (
+                                    <option key={folder.id} value={folder.id}>
+                                        {folder.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
 
                     <div className="flex justify-end gap-4">

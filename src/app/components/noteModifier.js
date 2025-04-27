@@ -5,9 +5,6 @@
 'use client';
 
 import { useState } from 'react';
-import { addNewNote } from '@/firebase/firestoreFunctions';
-import Modal from './modal'
-import imageUpload from './fileUploader';
 
 export default function NewNoteModal({ onNoteCreated, initialContent='', initialSummary=''}) {
   const [title, setTitle] = useState('');
@@ -59,10 +56,7 @@ export default function NewNoteModal({ onNoteCreated, initialContent='', initial
   };
 
   return (
-    <Modal
-    content={
-
-    <div className="inset-0 flex items-center justify-center">
+    <div className="w-150 h-175 inset-0 flex items-center justify-center">
       <div className="h-full w-full flex flex-col justify-center items-center sm:h-auto  p-6 sm:rounded-lg shadow-xl overflow-y-auto">
         <h2 className="text-xl font-semibold mb-4 text-white">Create New Note</h2>
         
@@ -136,7 +130,5 @@ export default function NewNoteModal({ onNoteCreated, initialContent='', initial
         </form>
       </div>
     </div>
-
-    }/>
   );
 } 

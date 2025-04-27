@@ -8,12 +8,13 @@ import { sampleText, sampleSummary } from '../scripts/sampleText'
 
 export default function imageUpload({onContentUploaded}, ){
     const [isProcessing, setIsProcessing] = useState(false);
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
+    const [error, setError] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const [stateMsg, setStateMsg] = useState('')
     const fileInputRef = useRef(null);
     const { user } = useAuth();
 
-    const handleClick = () => {
+    const handleUploadClick = () => {
         if (fileInputRef.current) {
             fileInputRef.current.click();
         }
@@ -29,16 +30,19 @@ export default function imageUpload({onContentUploaded}, ){
     };
 
     const handleFileUpload = async (event) => {
+        console.log("Handling file upload")
+
         const file = event.target.files[0];
         if (!file) {
-            setError('No file selected');
+            setError(true);
+            setStateMsg('No file selected')
             return;
         }
 
         try {
             setIsProcessing(true);
-            setError('');
-            setSuccess('');
+            setError(false);
+            setSuccess(false);
 
             const base64Data = await fileToBase64(file);
             
@@ -59,13 +63,16 @@ export default function imageUpload({onContentUploaded}, ){
             
             // If user is logged in, offer to save as note
             if (user) {
-                setSuccess('Text extracted successfully! You can save it as a note.');
+                setSuccess(true)
+                setStateMsg('Text extracted successfully! You can save it as a note.');
             } else {
-                setSuccess('Text extracted successfully! Please log in to save as a note.');
+                setSuccess(true)
+                setStateMsg('Text extracted successfully! Please log in to save as a note.');
             }
         } catch (err) {
             console.error(err);
-            setError('Error processing image: ' + (err.message || 'Unknown error'));
+            setError(true)
+            setStateMsg('Error processing image: ' + (err.message || 'Unknown error'));
         } finally {
             setIsProcessing(false);
         }
@@ -78,7 +85,7 @@ export default function imageUpload({onContentUploaded}, ){
             </div>
                 
             <div className="flex items-center justify-center border-2 text-4xl w-xs h-24 md:w-3xl md:h-96 border-dashed border-gray-500 rounded-lg p-4 mt-8 cursor-pointer hover:border-blue-500 transition-colors"
-                onClick={handleClick}
+                onClick={handleUploadClick}
             >
                 <FontAwesomeIcon icon={faCloudArrowUp} />
             </div>
@@ -87,7 +94,10 @@ export default function imageUpload({onContentUploaded}, ){
                 type="file"
                 ref={fileInputRef}
                 className="hidden"
-                onChange={handleFileUpload}
+                onChange={(event) => {
+                    handleFileUpload(event);
+                    event.target.value = ''; // Clear the input after handling the file
+                }}
                 accept=".jpg,.jpeg,.png,.pdf"
             />
             
@@ -99,13 +109,13 @@ export default function imageUpload({onContentUploaded}, ){
             
             {error && (
                 <div className="mt-4 text-red-400">
-                    {error}
+                    {stateMsg}
                 </div>
             )}
             
             {success && (
                 <div className="mt-4 text-green-400">
-                    {success}
+                    {stateMsg}
                 </div>
             )}
         </div>

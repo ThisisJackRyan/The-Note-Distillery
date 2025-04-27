@@ -99,7 +99,6 @@ export default function ScannerPage() {
                     />
                 }
                 onClose={handleClose}
-                onGoBack={handleGoBack}
             />,
             document.body
         )}
