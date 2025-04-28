@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { validateNote } from "../scripts/noteFactory"
+import noteFactory from "../scripts/noteFactory"
 import { addNewNote } from '@/firebase/firestoreFunctions';
 
 /**

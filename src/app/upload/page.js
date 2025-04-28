@@ -10,7 +10,7 @@ import { initialState } from "./uploadReducer"
 import { useReducer, useEffect } from "react";
 import { createPortal } from 'react-dom';
 import { addNewNote } from '@/firebase/firestoreFunctions';
-import ImageUpload from '../components/fileUploader'
+import ImageUpload from './fileUploader'
 import Modal from '../components/modal'
 import FolderSelector from '../components/folderSelector';
 import FolderModifier from '../components/folderModifier';
@@ -88,6 +88,15 @@ export default function ScannerPage() {
             onContentUploaded={handleContentUploaded}
             enabled={!(uploadState.processing)}
         />
+
+        <div className="text-center">
+            <button 
+                className="px-5 py-2 text-lg bg-blue-500 text-white rounded shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                onClick={() => handleContentUploaded('', '')}
+            >
+                Create Blank Note
+            </button>
+        </div>
 
         {uploadState.showCreateNote && createPortal(
             <Modal

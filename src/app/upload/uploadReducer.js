@@ -8,8 +8,8 @@ export const initialState = {
     showCreateNote: false,
     showFolderCreator: false,
     showFolderSelector: false,
+    processing: false,
     previousState: "initial_state",
-    processing: false
 }
 
 export default function reducer(uploadState, action){
