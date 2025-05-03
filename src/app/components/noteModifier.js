@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { validateNote } from "../scripts/noteFactory"
 import noteFactory from "../scripts/noteFactory"
+import { handleAISummary } from '../scripts/prompts';
 import { addNewNote } from '@/firebase/firestoreFunctions';
+import { sampleSummary } from '../scripts/sampleText'
 
 /**
  * If the selected folder field is supplied, then the component will handle pushing the note creation or edit to the database;
@@ -17,8 +19,18 @@ import { addNewNote } from '@/firebase/firestoreFunctions';
 export default function NoteModifier({ onNoteModified, initialNoteObj, createMode=true, selectedFolder=null}) {
   validateNote(initialNoteObj)
 
-  const [finalNote, setFinalNote] = useState(null)
   const [error, setError] = useState('');
+  const [summaryButtonEnabled, setSummaryButtonEnabled] = useState(
+    initialNoteObj.content && initialNoteObj.content.trim() !== ''
+  );
+  
+  const contentFieldRef = useRef(null);
+  const summaryFieldRef = useRef(null);
+
+  const handleContentChanged = (e) => {
+    const hasContent = e.target.value.trim() !== '';
+    setSummaryButtonEnabled(hasContent);
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -49,6 +61,21 @@ export default function NoteModifier({ onNoteModified, initialNoteObj, createMod
   
     // Call the parent callback
     onNoteModified(finalNote);
+  };
+
+  // Generate AI summary from content
+  const handleAISummary = async () => {
+    if (!contentFieldRef.current?.value) return;
+    
+    // Here you would normally call an API to generate the summary
+    // For now, we'll just use a placeholder
+    const content = contentFieldRef.current.value;
+    const aiSummary = sampleSummary;//await handleAISummary(content)
+    
+    // Update the summary field with the generated summary
+    if (summaryFieldRef.current) {
+      summaryFieldRef.current.value = aiSummary;
+    }
   };
 
   // Handles the actual note creation action after the new note's info has been submitted, and the interface is in creation mode
@@ -99,7 +126,7 @@ export default function NoteModifier({ onNoteModified, initialNoteObj, createMod
             </label>
             <input
               type="text"
-              name="name" // Use the `name` attribute to identify the input
+              name="name"
               defaultValue={initialNoteObj.name}
               required
               className="w-full px-3 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 text-white"
@@ -111,7 +138,8 @@ export default function NoteModifier({ onNoteModified, initialNoteObj, createMod
               Summary
             </label>
             <textarea
-              name="summary" // Use the `name` attribute to identify the input
+              name="summary"
+              ref={summaryFieldRef}
               defaultValue={initialNoteObj.summary}
               rows="5"
               className="w-full px-3 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 text-white"
@@ -123,8 +151,10 @@ export default function NoteModifier({ onNoteModified, initialNoteObj, createMod
               Note Content <span className="text-red-500">*</span>
             </label>
             <textarea
-              name="content" // Use the `name` attribute to identify the input
+              name="content"
+              ref={contentFieldRef}
               defaultValue={initialNoteObj.content}
+              onChange={handleContentChanged}
               rows="5"
               required
               className="w-full px-3 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 text-white"
@@ -137,7 +167,7 @@ export default function NoteModifier({ onNoteModified, initialNoteObj, createMod
             </label>
             <input
               type="text"
-              name="tags" // Use the `name` attribute to identify the input
+              name="tags"
               defaultValue={initialNoteObj.tags}
               placeholder="Enter tags (optional)"
               className="w-full px-3 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 text-white"
@@ -147,6 +177,18 @@ export default function NoteModifier({ onNoteModified, initialNoteObj, createMod
           {error && <p className="text-red-500 text-sm">{error}</p>}
 
           <div className="flex justify-end gap-4">
+            <button
+              type="button"
+              disabled={!summaryButtonEnabled}
+              onClick={handleAISummary}
+              className={`px-4 py-2 rounded-md ${
+                summaryButtonEnabled 
+                  ? "bg-purple-500 text-white hover:bg-purple-600" 
+                  : "bg-gray-500 text-gray-300 cursor-not-allowed"
+              } focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2`}
+            >
+              Generate AI Summary
+            </button>
             <button
               type="submit"
               className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
@@ -158,4 +200,4 @@ export default function NoteModifier({ onNoteModified, initialNoteObj, createMod
       </div>
     </div>
   );
-} 
+}

@@ -25,11 +25,10 @@ export default function ScannerPage() {
         })
     }, [])
 
-    const handleContentUploaded = ((extractedContent, aiSummary) => {
+    const handleContentUploaded = ((extractedContent) => {
         dispatch({
             type: "content_uploaded",
-            extractedContent: extractedContent,
-            aiSummary: aiSummary
+            extractedContent: extractedContent
         })
     })
 
@@ -123,7 +122,6 @@ export default function ScannerPage() {
                 }
                 onClose={handleClose}
                 onGoBack={handleGoBack}
-                headerText={"Attach Note To Folder"}
             />,
             document.body
         )}

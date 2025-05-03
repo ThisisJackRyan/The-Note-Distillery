@@ -1,10 +1,9 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons'
 import { detectText, cleanParsedText } from '../scripts/imgProcessing'
-import { generateAISummary } from '../scripts/prompts'
 import { useAuth } from '../context/AuthContext'
 import { useRef, useState } from "react";
-import { sampleText, sampleSummary } from '../scripts/sampleText'
+import { sampleText } from '../scripts/sampleText'
 
 export default function imageUpload({onContentUploaded, enabled}, ){
     const [isProcessing, setIsProcessing] = useState(false);
@@ -52,17 +51,13 @@ export default function imageUpload({onContentUploaded, enabled}, ){
             
             const cleanedText = sampleText
 
-            const summary = sampleSummary
-
             // actual code below
             // const rawText = await detectText(base64Data);
             
             // const cleanedText = await cleanParsedText(rawText);
-
-            // const summary = await generateAISummary(cleanedText);
             
             if (cleanedText) {
-                onContentUploaded(cleanedText, summary)
+                onContentUploaded(cleanedText)
             }
             
             // If user is logged in, offer to save as note

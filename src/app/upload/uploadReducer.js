@@ -26,8 +26,7 @@ export default function reducer(uploadState, action){
             // In that case, the values of temp note obj are set to the existing values of newNoteObj.
             const tempNoteObj = {
                 ...uploadState.newNoteObj,
-                content: action.extractedContent ?? uploadState.newNoteObj.content,
-                summary: action.aiSummary ?? uploadState.newNoteObj.summary,
+                content: action.extractedContent ?? uploadState.newNoteObj.content
             }
 
             return {
