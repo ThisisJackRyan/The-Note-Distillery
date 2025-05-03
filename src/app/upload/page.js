@@ -12,6 +12,7 @@ import { createPortal } from 'react-dom';
 import { addNewNote } from '@/firebase/firestoreFunctions';
 import ImageUpload from './fileUploader'
 import Modal from '../components/modal'
+import ContentPreviewer from './contentPreviewer'
 import FolderSelector from '../components/folderSelector';
 import FolderModifier from '../components/folderModifier';
 import NoteModifier from '../components/noteModifier';
@@ -29,6 +30,13 @@ export default function ScannerPage() {
         dispatch({
             type: "content_uploaded",
             extractedContent: extractedContent
+        })
+    })
+
+    const handleContentPreviewed = ((previewedContent) => {
+        dispatch({
+            type: "content_uploaded",
+            previewedContent: previewedContent
         })
     })
 
@@ -96,6 +104,19 @@ export default function ScannerPage() {
                 Create Blank Note
             </button>
         </div>
+
+        {uploadState.showContentPreviewer && createPortal(
+            <Modal 
+                content={
+                    <ContentPreviewer
+                        extractedContent={uploadState.extractedContent}
+                        onContentSubmitted={handleContentPreviewed}
+                    />
+                }
+                onClose={handleClose}
+                {...(uploadState.goBackEnabled && { onGoBack: handleGoBack })}
+            />
+        )}
 
         {uploadState.showCreateNote && createPortal(
             <Modal

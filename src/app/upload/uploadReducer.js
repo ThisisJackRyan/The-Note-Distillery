@@ -5,6 +5,7 @@ export const initialState = {
     aiSummary: '',
     newNoteObj: noteFactory(),
     selectedFolder: null,
+    showContentPreviewer: false,
     showCreateNote: false,
     showFolderCreator: false,
     showFolderSelector: false,
@@ -120,8 +121,6 @@ export default function reducer(uploadState, action){
     }
 
     toReturn.goBackEnabled = toReturn.stateHistory.length >= 2;
-
-    console.log("State History:", toReturn.stateHistory.join(" -> "));
 
     return toReturn;
 }
