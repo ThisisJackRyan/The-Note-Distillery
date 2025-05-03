@@ -108,6 +108,7 @@ export default function ScannerPage() {
                     />
                 }
                 onClose={handleClose}
+                {...(uploadState.goBackEnabled && { onGoBack: handleGoBack })}
             />,
             document.body
         )}
@@ -121,7 +122,7 @@ export default function ScannerPage() {
                     />
                 }
                 onClose={handleClose}
-                onGoBack={handleGoBack}
+                {...(uploadState.goBackEnabled && { onGoBack: handleGoBack })}
             />,
             document.body
         )}
@@ -134,7 +135,7 @@ export default function ScannerPage() {
                     />
                 }
                 onClose={handleClose}
-                onGoBack={handleGoBack}
+                {...(uploadState.goBackEnabled && { onGoBack: handleGoBack })}
             />,
             document.body
         )}

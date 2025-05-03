@@ -9,17 +9,21 @@ export const initialState = {
     showFolderCreator: false,
     showFolderSelector: false,
     processing: false,
-    previousState: "initial_state",
+    stateHistory: [], // Add state history array
+    goBackEnabled: false
 }
 
 export default function reducer(uploadState, action){
     console.log("Upload Action: " + action.type)
+    
+    let toReturn = uploadState; // Initialize with current state
 
     switch(action.type){
         case "initial_state":
-            return {
+            toReturn = {
                 ...initialState
-            }
+            };
+            break;
 
         case "content_uploaded":
             // The ?? jargon is used so that the note's fields will still be filled properly in the case of a go-back.
@@ -29,7 +33,7 @@ export default function reducer(uploadState, action){
                 content: action.extractedContent ?? uploadState.newNoteObj.content
             }
 
-            return {
+            toReturn = {
                 ...uploadState,
                 newNoteObj: {
                     ...tempNoteObj
@@ -38,63 +42,86 @@ export default function reducer(uploadState, action){
                 showFolderCreator: false,
                 showFolderSelector: false,
                 processing: true,
-                previousState: "initial_state",
-                
-            }
+                stateHistory: action.fromGoBack ? [...uploadState.stateHistory] : [...uploadState.stateHistory, action.type],
+            };
+            break;
         
         case "note_created":
-            return {
+            toReturn = {
                 ...uploadState,
                 // The ?? jargon here is used to the same effect as above
                 newNoteObj: action.newNoteObj ?? uploadState.newNoteObj,
                 showCreateNote: false,
                 showFolderCreator: false,
                 showFolderSelector: true,
-                previousState: "content_uploaded"
-            }
+                stateHistory: action.fromGoBack ? [...uploadState.stateHistory] : [...uploadState.stateHistory, action.type]
+            };
+            break;
 
-        /**
-         * The previous state is not stored as a safeguard to prevent re-running of actions with side effects
-         */
         case "existing_folder_selected":
-            return {
+            toReturn = {
                 ...uploadState,
                 selectedFolder: action.selectedFolder ?? uploadState.selectedFolder,
                 showCreateNote: false,
                 showFolderCreator: false,
                 showFolderSelector: false,
-                processing: false
-            }
+                processing: false,
+                stateHistory: action.fromGoBack ? [...uploadState.stateHistory] : [...uploadState.stateHistory, action.type]
+            };
+            break;
 
         case "new_folder_selected":
-            return {
+            toReturn = {
                 ...uploadState,
                 showCreateNote: false,
                 showFolderCreator: true,
                 showFolderSelector: false,
-                previousState: "note_created"
-            }
+                stateHistory: action.fromGoBack ? [...uploadState.stateHistory] : [...uploadState.stateHistory, action.type]
+            };
+            break;
         
         case "upload_cancelled":
-            return {
+            toReturn = {
                 ...uploadState,
                 showCreateNote: false,
                 showFolderCreator: false,
                 showFolderSelector: false,
                 processing: false,
-                previousState: "initial_state",
-            }
+                stateHistory: action.fromGoBack ? [...uploadState.stateHistory] : [...uploadState.stateHistory, action.type]
+            };
+            break;
 
-        /**
-         * Should only be used before any actions with side-effects are carried out, such as adding the new note to the db or creating a new folder
-         */
         case "go_back":
-            return reducer(
-                uploadState,
-                { type: uploadState.previousState }
-            )
+            // Need at least 2 items in history to go back properly
+            if (uploadState.stateHistory.length < 2) {
+                // No need to change toReturn, it's already initialized to uploadState
+                break;
+            }
+            
+            // Get the second-to-last state from history (the one we want to go back to)
+            const targetState = uploadState.stateHistory[uploadState.stateHistory.length - 2];
+            
+            // Remove the last state from history (current state)
+            const newHistory = uploadState.stateHistory.slice(0, -1);
+            
+            // Go back to the previous state
+            toReturn = reducer(
+                {
+                    ...uploadState,
+                    stateHistory: newHistory  // Update history before recursing
+                },
+                { type: targetState, fromGoBack: true }
+            );
+            break;
 
         default:
-            return uploadState
+            // toReturn is already set to uploadState, no need to do anything
+            break;
     }
+
+    toReturn.goBackEnabled = toReturn.stateHistory.length >= 2;
+
+    console.log("State History:", toReturn.stateHistory.join(" -> "));
+
+    return toReturn;
 }
