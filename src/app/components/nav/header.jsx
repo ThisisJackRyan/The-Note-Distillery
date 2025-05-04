@@ -1,15 +1,14 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useState } from 'react';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
-import { getAuth, signOut } from 'firebase/auth';
-import { useAuthUser } from '@/firebase/firebaseFunctions';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { app } from '@/firebase/firebaseConfig';
-import { useRouter } from 'next/navigation';
-import MobileHeader from './mobileHeader';
-
+import Link from "next/link";
+import React, { useState } from "react";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { getAuth, signOut } from "firebase/auth";
+import { useAuthUser } from "@/firebase/firebaseFunctions";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { app } from "@/firebase/firebaseConfig";
+import { useRouter } from "next/navigation";
+import MobileHeader from "./mobileHeader";
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -21,9 +20,9 @@ export default function Header() {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      router.push('/');
+      router.push("/");
     } catch (error) {
-      console.error('Error signing out:', error);
+      console.error("Error signing out:", error);
     }
   };
 
@@ -88,12 +87,20 @@ export default function Header() {
             </div>
           </div>
           <div className="md:hidden">
-            <FontAwesomeIcon icon={faBars} className="h-6 w-6 text-2xl"  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}/>
+            <FontAwesomeIcon
+              icon={faBars}
+              className="h-6 w-6 text-2xl"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            />
           </div>
         </div>
 
-        {isMobileMenuOpen && <MobileHeader setIsMobileMenuOpen={setIsMobileMenuOpen} handleLogout={handleLogout}/>}
-        
+        {isMobileMenuOpen && (
+          <MobileHeader
+            setIsMobileMenuOpen={setIsMobileMenuOpen}
+            handleLogout={handleLogout}
+          />
+        )}
       </nav>
     </header>
   );

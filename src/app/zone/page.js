@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Sidebar from '../components/Sidebar';
-import NoteContent from '../components/NoteContent';
-import { useAuth } from '../context/AuthContext';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Sidebar from "../components/Sidebar";
+import NoteContent from "../components/NoteContent";
+import { useAuth } from "../context/AuthContext";
 
 export default function Zone() {
   const [selectedFolder, setSelectedFolder] = useState(null);
@@ -17,8 +17,8 @@ export default function Zone() {
   // Redirect to login if not authenticated
   useEffect(() => {
     if (!loading && !user) {
-      console.log('User not authenticated, redirecting to login');
-      router.push('/login');
+      console.log("User not authenticated, redirecting to login");
+      router.push("/login");
     }
   }, [user, loading, router]);
 
@@ -96,14 +96,16 @@ export default function Zone() {
             />
           </div>
 
-          <hr className='text-gray-700 block md:hidden' />
+          <hr className="text-gray-700 block md:hidden" />
 
           {/* Content area */}
-          <div className={`flex-1 bg-gray-800 rounded-lg shadow-md p-6 ${isSidebarCollapsed ? 'md:ml-0' : 'md:ml-6'}`}>
+          <div
+            className={`flex-1 bg-gray-800 rounded-lg shadow-md p-6 ${isSidebarCollapsed ? "md:ml-0" : "md:ml-6"}`}
+          >
             <NoteContent note={noteContent} />
           </div>
         </div>
       </main>
     </div>
   );
-} 
+}
