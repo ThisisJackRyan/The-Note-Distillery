@@ -48,7 +48,7 @@ export default function reducer(uploadState, action){
             // In that case, the values of temp note obj are set to the existing values of newNoteObj. Otherwise, the values are set to the new vals passed in the action.
             toReturn = {
                 ...uploadState,
-                extractedContent: action.extractedContent ?? uploadState.extractedContent,
+                extractedContent: action.extractedContent ?? uploadState.previewedContent,
                 showContentPreviewer: true,
                 showCreateNote: false,
                 showFolderCreator: false,
@@ -81,6 +81,7 @@ export default function reducer(uploadState, action){
 
             toReturn = {
                 ...uploadState,
+                previewedContent: action.previewedContent ?? uploadState.newNoteObj.content,
                 newNoteObj: {
                     ...tempNoteObj
                 },

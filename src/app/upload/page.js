@@ -116,7 +116,7 @@ export default function ScannerPage() {
                 content={
                     <ContentPreviewer
                         extractedContent={uploadState.extractedContent}
-                        onContentSubmitted={handleContentPreviewed}
+                        onContentPreviewed={handleContentPreviewed}
                     />
                 }
                 onClose={handleClose}

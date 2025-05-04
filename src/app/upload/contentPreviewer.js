@@ -16,9 +16,7 @@ import { sampleSummary } from '../scripts/sampleText'
  * @param {*} param0 
  * @returns 
  */
-export default function NoteModifier({ extractedContent, onContentSubmitted }) {
-  validateNote(initialNoteObj)
-
+export default function NoteModifier({ extractedContent, onContentPreviewed }) {
   const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
@@ -32,14 +30,14 @@ export default function NoteModifier({ extractedContent, onContentSubmitted }) {
     }
 
     setError('');
-    onContentSubmitted(contentInput);
+    onContentPreviewed(contentInput);
   };
 
   return (
     <div className="w-150 h-175 inset-0 flex items-center justify-center">
       <div className="h-full w-full flex flex-col justify-center items-center sm:h-auto  p-6 sm:rounded-lg shadow-xl overflow-y-auto">
         <h2 className="text-xl font-semibold mb-4 text-white">
-          {createMode ? "Create New Note" : "Edit Note"}
+          Preview Note content
         </h2>
         
         <form onSubmit={handleSubmit} className="space-y-4 w-3/4">
@@ -47,12 +45,11 @@ export default function NoteModifier({ extractedContent, onContentSubmitted }) {
             <label className="block text-sm font-medium text-gray-300 mb-1">
               Extracted Content <span className="text-red-500">*</span>
             </label>
-            <input
-              type="text"
+            <textarea
               name="content"
               defaultValue={extractedContent}
               required
-              className="w-full px-3 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 text-white"
+              className="w-full h-96 max-h-[60vh] overflow-y-auto px-3 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 text-white text-left whitespace-pre-wrap resize-none"
             />
           </div>
 
