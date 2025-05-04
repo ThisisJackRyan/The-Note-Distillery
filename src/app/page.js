@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <div className="h-full bg-gray-900">
         <div className="text-center text-white mb-8">
-          <h1 className="text-5xl font-bold sm:text-6xl md:text-7xl mt-20 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.9)] transition-all duration-300 ease-in-out rounded-full">
+          <h1 className="text-5xl font-bold sm:text-6xl md:text-7xl hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.9)] transition-all duration-300 ease-in-out rounded-full">
             Welcome to the Note Distillery
           </h1>
         </div>
