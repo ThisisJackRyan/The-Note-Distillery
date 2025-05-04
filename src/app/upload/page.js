@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCloudArrowUp } from '@fortawesome/free-solid-svg-icons'
 import { useRef, useState } from "react";
 import { detectText, cleanParsedText, generateSummary } from '../scripts/gemini'
-import { useAuth } from '../context/AuthContext'
 import AttachToFolder from '../components/attachToFolder';
 
 export default function ScannerPage() {
@@ -11,9 +10,7 @@ const [isProcessing, setIsProcessing] = useState(false);
     const [extractedText, setExtractedText] = useState('');
     const [summarizedText, setSummarizedText] = useState('');
     const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
     const fileInputRef = useRef(null);
-    const { user } = useAuth();
     const [showModal, setShowModal] = useState(false);
 
     // Convert File to base64
@@ -36,7 +33,6 @@ const [isProcessing, setIsProcessing] = useState(false);
         try {
             setIsProcessing(true);
             setError('');
-            setSuccess('');
             
             // Convert file to base64 on the client side
             const base64Data = await fileToBase64(file);
@@ -54,17 +50,6 @@ const [isProcessing, setIsProcessing] = useState(false);
                 setExtractedText(cleanedText);
                 setSummarizedText(summary);
             }
-            // Display the extracted text
-            
-            
-
-            
-            // If user is logged in, offer to save as note
-            if (user) {
-                setSuccess('Text extracted successfully! You can save it as a note.');
-            } else {
-                setSuccess('Text extracted successfully! Please log in to save as a note.');
-            }
         } catch (err) {
             console.error(err);
             setError('Error processing image: ' + (err.message || 'Unknown error'));
@@ -72,37 +57,6 @@ const [isProcessing, setIsProcessing] = useState(false);
             setIsProcessing(false);
         }
     };
-
-    // const handleSaveAsNote = async () => {
-    //     if (!user) {
-    //         setError('You must be logged in to save notes');
-    //         return;
-    //     }
-
-    //     if (!extractedText) {
-    //         setError('No text to save');
-    //         return;
-    //     }
-
-    //     try {
-    //         setIsProcessing(true);
-    //         setError('');
-            
-    //         // Generate a title from the first line or use a default
-    //         const title = extractedText.split('\n')[0].substring(0, 50) || 'Extracted Note';
-            
-    //         // Save the note
-    //         // await saveNoteAsText(user.uid, extractedText, title);
-            
-    //         setSuccess('Note saved successfully!');
-    //         setExtractedText(''); // Clear the extracted text after saving
-    //     } catch (err) {
-    //         console.error(err);
-    //         setError('Error saving note: ' + (err.message || 'Unknown error'));
-    //     } finally {
-    //         setIsProcessing(false);
-    //     }
-    // };
 
     const handleClick = () => {
         if (fileInputRef.current) {
@@ -116,7 +70,7 @@ const [isProcessing, setIsProcessing] = useState(false);
                 Upload Image Files:
             </div>
                
-            <div className="flex items-center justify-center border-2 text-4xl w-xs h-24 md:w-3xl md:h-96 border-dashed border-gray-500 rounded-lg p-4 mt-8 cursor-pointer hover:border-blue-500 transition-colors"
+            <div className=" flex items-center justify-center border-2 text-4xl w-xs h-24 md:w-3xl md:h-96 border-dashed border-gray-500 rounded-lg p-4 mt-8 mb-4 cursor-pointer hover:border-blue-500 transition-colors"
                 onClick={handleClick}
             >
                 <FontAwesomeIcon icon={faCloudArrowUp} />
@@ -130,47 +84,20 @@ const [isProcessing, setIsProcessing] = useState(false);
                 accept=".jpg,.jpeg,.png,.pdf"
             />
             
-            {isProcessing && (
-                <div className="mt-4 text-blue-400">
-                    Processing image... Please wait.
-                </div>
-            )}
+            <div className="flex items-center justify-center h-6">
+                {isProcessing && (
+                    <span className="loader"></span>
+                )}
+            </div>
             
             {error && (
                 <div className="mt-4 text-red-400">
                     {error}
                 </div>
             )}
-            
-            {success && (
-                <div className="mt-4 text-green-400">
-                    {success}
-                </div>
-            )}
-            
             {
                 showModal && <AttachToFolder extractedText={extractedText} summarizedText={summarizedText} />
             }
-            
-
-            {/* {extractedText && (
-                <div className="mt-6 w-full max-w-3xl">
-                    <h3 className="text-xl font-semibold mb-2">Extracted Text:</h3>
-                    <div className="bg-gray-900 p-4 rounded-lg max-h-96 overflow-y-auto whitespace-pre-wrap">
-                        {extractedText}
-                    </div>
-                    
-                    {user && (
-                        <button 
-                            onClick={handleSaveAsNote}
-                            className="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                            disabled={isProcessing}
-                        >
-                            Save as Note
-                        </button>
-                    )}
-                </div>
-            )} */}
         </div>
     );
 }

@@ -23,18 +23,19 @@ export default function LoginPage() {
       await signInWithEmailAndPassword(auth, email, password);
       router.push('/');
     } catch (error) {
-      setError(error.message);
+      // remove "Firebase: " from the error message
+      setError(error.message.replace(/^Firebase:\s*/, ''));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="h-full flex items-center justify-center bg-gray-900">
-      <div className="max-w-xs w-full sm:max-w-sm md:max-w-md space-y-8">
+    <div className="h-full flex items-center justify-center">
+      <div className="max-w-xs w-full sm:max-w-md space-y-8 p-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
-            Sign in to your account
+            Login
           </h2>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>

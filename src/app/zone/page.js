@@ -72,7 +72,7 @@ export default function Zone() {
   }
 
   return (
-    <div className="h-full bg-gray-900 mt-12">
+    <div className="h-full bg-gray-900">
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-white sm:text-5xl md:text-6xl">
