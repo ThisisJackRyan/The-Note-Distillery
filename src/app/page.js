@@ -19,7 +19,7 @@ export default function Home() {
             <img
               src="/pexels-cristian-rojas-7260636.jpg"
               alt="Note Distillery"
-              className="w-full h-auto max-w-md sm:w-auto"
+              className="w-full h-auto rounded-lg max-w-md sm:w-auto"
             />
           </div>
           <div className="md:w-1/2 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 text-center md:text-center">
