@@ -33,9 +33,15 @@ export default function ScannerPage() {
         })
     })
 
+    const handleBlankNoteSelected = (() => {
+        dispatch({
+            type: "blank_note_selected"
+        })
+    })
+
     const handleContentPreviewed = ((previewedContent) => {
         dispatch({
-            type: "content_uploaded",
+            type: "content_previewed",
             previewedContent: previewedContent
         })
     })
@@ -99,7 +105,7 @@ export default function ScannerPage() {
         <div className="text-center">
             <button 
                 className="px-5 py-2 text-lg bg-blue-500 text-white rounded shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                onClick={() => handleContentUploaded('', '')}
+                onClick={() => handleBlankNoteSelected()}
             >
                 Create Blank Note
             </button>
@@ -115,7 +121,8 @@ export default function ScannerPage() {
                 }
                 onClose={handleClose}
                 {...(uploadState.goBackEnabled && { onGoBack: handleGoBack })}
-            />
+            />,
+            document.body
         )}
 
         {uploadState.showCreateNote && createPortal(
