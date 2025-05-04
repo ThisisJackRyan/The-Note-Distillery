@@ -1,5 +1,5 @@
 'use client';
-import React from 'react'
+import React, {useEffect} from 'react'
 import { useRouter } from 'next/navigation';
 import { useAuthUser } from '@/firebase/firebaseFunctions';
 
@@ -7,11 +7,16 @@ const AuthCheck = ({ children }) => {
     const {user, loading} = useAuthUser();
     const router = useRouter();
 
-    if (loading) return null;
+    useEffect(() => {
+        if (!loading && !user) {
+            router.push('/login');
+        }
+    }, [loading, user, router]);
 
-    if (!user){
-        router.push('/login');
-        return null;
+    if (loading) return null;
+    
+    if (!user) {
+        return null;  // Don't render children, but also don't navigate here
     }
     
     return <>{children}</>;
