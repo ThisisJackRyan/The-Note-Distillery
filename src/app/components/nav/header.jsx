@@ -43,7 +43,7 @@ export default function Header() {
           <div className="hidden md:block">
             <div className="ml-10 flex items-center space-x-4">
               <Link
-                href={user ? "/upload" : "/login"}
+                href="/upload"
                 className=" text-gray-300 hover:text-white px-3 py-2 text-sm font-medium"
               >
                 Upload
