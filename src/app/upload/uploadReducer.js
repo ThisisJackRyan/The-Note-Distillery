@@ -10,7 +10,8 @@ export const initialState = {
     showFolderCreator: false,
     showFolderSelector: false,
     processing: false,
-    stateHistory: [], // Add state history array
+    actionHistory: [], // Add state history array
+    stateHistory: [],
     goBackEnabled: false
 }
 
@@ -54,7 +55,7 @@ export default function reducer(uploadState, action){
                 showFolderCreator: false,
                 showFolderSelector: false,
                 processing: true,
-                stateHistory: action.fromGoBack ? [...uploadState.stateHistory] : [...uploadState.stateHistory, action.type],
+                actionHistory: action.fromGoBack ? [...uploadState.actionHistory] : [...uploadState.actionHistory, action.type],
             };
             break;
 
@@ -69,7 +70,7 @@ export default function reducer(uploadState, action){
                 showFolderCreator: false,
                 showFolderSelector: false,
                 processing: true,
-                stateHistory: action.fromGoBack ? [...uploadState.stateHistory] : [...uploadState.stateHistory, action.type],
+                actionHistory: action.fromGoBack ? [...uploadState.actionHistory] : [...uploadState.actionHistory, action.type],
             };
             break;
 
@@ -90,7 +91,7 @@ export default function reducer(uploadState, action){
                 showFolderCreator: false,
                 showFolderSelector: false,
                 processing: true,
-                stateHistory: action.fromGoBack ? [...uploadState.stateHistory] : [...uploadState.stateHistory, action.type],
+                actionHistory: action.fromGoBack ? [...uploadState.actionHistory] : [...uploadState.actionHistory, action.type],
             };
             break;
         
@@ -103,7 +104,7 @@ export default function reducer(uploadState, action){
                 showCreateNote: false,
                 showFolderCreator: false,
                 showFolderSelector: true,
-                stateHistory: action.fromGoBack ? [...uploadState.stateHistory] : [...uploadState.stateHistory, action.type]
+                actionHistory: action.fromGoBack ? [...uploadState.actionHistory] : [...uploadState.actionHistory, action.type]
             };
             break;
 
@@ -116,7 +117,7 @@ export default function reducer(uploadState, action){
                 showFolderCreator: false,
                 showFolderSelector: false,
                 processing: false,
-                stateHistory: action.fromGoBack ? [...uploadState.stateHistory] : [...uploadState.stateHistory, action.type]
+                actionHistory: action.fromGoBack ? [...uploadState.actionHistory] : [...uploadState.actionHistory, action.type]
             };
             break;
 
@@ -127,7 +128,7 @@ export default function reducer(uploadState, action){
                 showCreateNote: false,
                 showFolderCreator: true,
                 showFolderSelector: false,
-                stateHistory: action.fromGoBack ? [...uploadState.stateHistory] : [...uploadState.stateHistory, action.type]
+                actionHistory: action.fromGoBack ? [...uploadState.actionHistory] : [...uploadState.actionHistory, action.type]
             };
             break;
         
@@ -139,25 +140,25 @@ export default function reducer(uploadState, action){
                 showFolderCreator: false,
                 showFolderSelector: false,
                 processing: false,
-                stateHistory: action.fromGoBack ? [...uploadState.stateHistory] : [...uploadState.stateHistory, action.type]
+                actionHistory: action.fromGoBack ? [...uploadState.actionHistory] : [...uploadState.actionHistory, action.type]
             };
             break;
 
         case "go_back":
             // Need at least 2 items in history to go back properly
-            if (uploadState.stateHistory.length < 2) {
+            if (uploadState.actionHistory.length < 2) {
                 break;
             }
             
-            const targetState = uploadState.stateHistory[uploadState.stateHistory.length - 2];
+            const targetState = uploadState.actionHistory[uploadState.actionHistory.length - 2];
             
-            const newHistory = uploadState.stateHistory.slice(0, -1);
+            const newHistory = uploadState.actionHistory.slice(0, -1);
             
             // Go back to the previous state
             toReturn = reducer(
                 {
                     ...uploadState,
-                    stateHistory: newHistory 
+                    actionHistory: newHistory 
                 },
                 { type: targetState, fromGoBack: true }
             );
@@ -167,7 +168,7 @@ export default function reducer(uploadState, action){
             break;
     }
 
-    toReturn.goBackEnabled = toReturn.stateHistory.length >= 2;
+    toReturn.goBackEnabled = toReturn.actionHistory.length >= 2;
 
     return toReturn;
 }

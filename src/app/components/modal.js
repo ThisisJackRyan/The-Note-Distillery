@@ -1,4 +1,4 @@
-export default function Modal({ content, onClose, onGoBack=null, headerText='' }) {
+export default function Modal({ children, onClose, onGoBack=null, headerText='' }) {
     // const handleClose = (() => {
     //     console.log("Closing")
     // })
@@ -20,7 +20,7 @@ export default function Modal({ content, onClose, onGoBack=null, headerText='' }
                 <div 
                     className="p-2"
                 >
-                    {content}
+                    {children}
                 </div>
 
                 {onGoBack && (

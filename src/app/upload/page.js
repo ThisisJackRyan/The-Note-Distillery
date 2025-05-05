@@ -112,59 +112,55 @@ export default function ScannerPage() {
         </div>
 
         {uploadState.showContentPreviewer && createPortal(
-            <Modal 
-                content={
-                    <ContentPreviewer
-                        extractedContent={uploadState.extractedContent}
-                        onContentPreviewed={handleContentPreviewed}
-                    />
-                }
+            <Modal
                 onClose={handleClose}
-                {...(uploadState.goBackEnabled && { onGoBack: handleGoBack })}
-            />,
+                onGoBack={uploadState.goBackEnabled ? handleGoBack : null}
+            >
+                <ContentPreviewer
+                    extractedContent={uploadState.extractedContent}
+                    onContentPreviewed={handleContentPreviewed}
+                />
+            </Modal>,
             document.body
         )}
 
         {uploadState.showCreateNote && createPortal(
             <Modal
-                content={
-                    <NoteModifier
-                        onNoteModified={handleNoteCreated}
-                        initialNoteObj={uploadState.newNoteObj}
-                        createMode={true}
-                        selectedFolder={null}
-                    />
-                }
                 onClose={handleClose}
-                {...(uploadState.goBackEnabled && { onGoBack: handleGoBack })}
-            />,
+                onGoBack={uploadState.goBackEnabled ? handleGoBack : null}
+            >
+                <NoteModifier
+                    onNoteModified={handleNoteCreated}
+                    initialNoteObj={uploadState.newNoteObj}
+                    createMode={true}
+                    selectedFolder={null}
+                />
+            </Modal>,
             document.body
         )}
 
         {uploadState.showFolderSelector && createPortal(
             <Modal
-                content={
-                    <FolderSelector
-                        onFolderSelected={handleExistingFolderSelected}
-                        onNewFolderSelected={handleNewFolderSelected}
-                    />
-                }
                 onClose={handleClose}
-                {...(uploadState.goBackEnabled && { onGoBack: handleGoBack })}
-            />,
+                onGoBack={uploadState.goBackEnabled ? handleGoBack : null}
+            >
+                <FolderSelector
+                    onFolderSelected={handleExistingFolderSelected}
+                    onNewFolderSelected={handleNewFolderSelected}
+                />
+            </Modal>,
             document.body
         )}
 
         {uploadState.showFolderCreator && createPortal(
             <Modal
-                content={
-                    <FolderModifier
-                        onFolderModified={handleExistingFolderSelected}
-                    />
-                }
                 onClose={handleClose}
-                {...(uploadState.goBackEnabled && { onGoBack: handleGoBack })}
-            />,
+                onGoBack={uploadState.goBackEnabled ? handleGoBack : null}
+            >
+                <FolderModifier
+                    onFolderModified={handleExistingFolderSelected}
+                />
+            </Modal>,
             document.body
         )}
 
