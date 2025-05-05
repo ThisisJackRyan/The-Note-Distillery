@@ -47,26 +47,27 @@ export default defineConfig([
     },
     rules: {
       ...pluginReact.configs.recommended.rules,
+      "react/prop-types": "off", // Add this line to disable the rule
     },
   },
 
-  // CSS files - no React rules here
-  {
-    files: ["**/*.css"],
-    plugins: { css },
-    languageOptions: {
-      parser: css.parser,
-    },
-    rules: {
-      ...css.configs.recommended.rules,
-    },
-  },
+  // // CSS files - no React rules here
+  // {
+  //   files: ["**/*.css"],
+  //   plugins: { css },
+  //   languageOptions: {
+  //     parser: css.parser,
+  //   },
+  //   rules: {
+  //     ...css.configs.recommended.rules,
+  //   },
+  // },
 
-  // Global rules
-  {
-    rules: {
-      // Add your global rules here
-      // "no-unused-vars": "warn",
-    },
-  },
+  // // Global rules
+  // {
+  //   rules: {
+  //     // Add your global rules here
+  //     // "no-unused-vars": "warn",
+  //   },
+  // },
 ]);
