@@ -33,18 +33,19 @@ export default function SignUpPage() {
       await createUserInDatabase(auth.currentUser.uid, email);
       router.push('/');
     } catch (error) {
-      setError(error.message);
+      // remove "Firebase: " from the error message
+      setError(error.message.replace(/^Firebase:\s*/, ''));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-      <div className="h-full flex items-center justify-center bg-gray-900">
-        <div className="max-w-xs w-full sm:max-w-sm md:max-w-md  space-y-8 p-8">
+      <div className="h-full flex items-center justify-center">
+        <div className="max-w-sm w-full sm:max-w-md space-y-8 p-8">
           <div>
             <h2 className="text-center text-3xl font-extrabold text-white">
-              Create your account
+              Sign up
             </h2>
           </div>
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
