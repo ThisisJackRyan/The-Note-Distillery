@@ -6,9 +6,12 @@ import { faChevronRight, faChevronDown, faFolder, faFile, faFolderPlus, faPlus, 
 import { collection, getDocs, query } from 'firebase/firestore';
 import { db } from '../../firebase/firebaseConfig';
 import { useAuth } from '../context/AuthContext';
-import NewFolderModal from './newFolderModal';
-import NewNoteModal from './newNoteModal';
+import FolderModifier from './folderModifier';
+import NoteModifier from './noteModifier';
 import { deleteFolder, deleteNote } from '@/firebase/firestoreFunctions';
+import noteFactory from '../scripts/noteFactory';
+import { createPortal } from 'react-dom';
+import Modal from './modal';
 
 export default function Sidebar({ 
   isCollapsed, 
@@ -21,8 +24,8 @@ export default function Sidebar({
   const [folders, setFolders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isNewFolderModalOpen, setIsNewFolderModalOpen] = useState(false);
-  const [isNewNoteModalOpen, setIsNewNoteModalOpen] = useState(false);
+  const [showFolderModifier, setShowFolderModifier] = useState(false);
+  const [showNoteModifier, setShowNoteModifier] = useState(false);
   const [deleteConfirmation, setDeleteConfirmation] = useState({ isOpen: false, type: null, id: null, folderId: null });
   const { user } = useAuth();
 
@@ -112,7 +115,7 @@ export default function Sidebar({
   const handleAddNoteClick = (e) => {
     e.stopPropagation(); // Prevent folder selection
     if (selectedFolder) {
-      setIsNewNoteModalOpen(true);
+      setShowNoteModifier(true);
     }
   };
 
@@ -162,7 +165,7 @@ export default function Sidebar({
           <FontAwesomeIcon 
             icon={faFolderPlus} 
             className=' text-gray-400 hover:text-gray-200 cursor-pointer' 
-            onClick={() => setIsNewFolderModalOpen(true)} 
+            onClick={() => setShowFolderModifier(true)} 
           />
           <button 
             onClick={onToggleCollapse}
@@ -261,18 +264,32 @@ export default function Sidebar({
         )}
       </div>
 
-      <NewFolderModal 
-        isOpen={isNewFolderModalOpen} 
-        onClose={() => setIsNewFolderModalOpen(false)}
-        onFolderCreated={handleNewFolder}
-      />
+    {showNoteModifier && createPortal(
+      <Modal
+        content={
+          <NoteModifier
+            onNoteModified={handleNewNote}
+            initialNoteObj={noteFactory()}
+            createMode={true}
+            selectedFolder={folders.find(f => f.id === selectedFolder)}
+          />
+        }
+        onClose={setShowNoteModifier(false)}
+      />,
+      document.body
+    )}
 
-      <NewNoteModal 
-        isOpen={isNewNoteModalOpen} 
-        onClose={() => setIsNewNoteModalOpen(false)}
-        onNoteCreated={handleNewNote}
-        selectedFolder={folders.find(f => f.id === selectedFolder)}
-      />
+    {showFolderModifier && createPortal(
+      <Modal
+        content={
+          <FolderModifier
+            onFolderModified={handleNewFolder}
+          />
+        }
+        onClose={setShowFolderModifier(false)}
+      />,
+      document.body
+    )}
 
       {/* Delete Confirmation Modal */}
       {deleteConfirmation.isOpen && (
