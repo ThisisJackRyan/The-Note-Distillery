@@ -10,8 +10,7 @@ export const initialState = {
     showFolderCreator: false,
     showFolderSelector: false,
     processing: false,
-    actionHistory: [], // Add state history array
-    stateHistory: [],
+    actionHistory: [], 
     goBackEnabled: false
 }
 
@@ -131,18 +130,6 @@ export default function reducer(uploadState, action){
                 actionHistory: action.fromGoBack ? [...uploadState.actionHistory] : [...uploadState.actionHistory, action.type]
             };
             break;
-        
-        case "upload_cancelled":
-            toReturn = {
-                ...uploadState,
-                showContentPreviewer: false,
-                showCreateNote: false,
-                showFolderCreator: false,
-                showFolderSelector: false,
-                processing: false,
-                actionHistory: action.fromGoBack ? [...uploadState.actionHistory] : [...uploadState.actionHistory, action.type]
-            };
-            break;
 
         case "go_back":
             // Need at least 2 items in history to go back properly
@@ -169,6 +156,8 @@ export default function reducer(uploadState, action){
     }
 
     toReturn.goBackEnabled = toReturn.actionHistory.length >= 2;
+
+    console.log("Action History Stack:", toReturn.actionHistory.join(" -> "));
 
     return toReturn;
 }

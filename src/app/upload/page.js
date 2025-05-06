@@ -72,7 +72,7 @@ export default function ScannerPage() {
 
     const handleClose = (() => {
         dispatch({
-            type: "upload_cancelled"
+            type: "initial_state"
         })
     })
 
