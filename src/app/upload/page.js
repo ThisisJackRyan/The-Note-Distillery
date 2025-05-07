@@ -54,14 +54,11 @@ export default function ScannerPage() {
     })
 
     const handleExistingFolderSelected = ((folder) => {
-        const action = {
-            type: "existing_folder_selected",
-            selectedFolder: folder
-        }
-        dispatch(action)
+        finalizeNote(uploadState.newNoteObj, folder);
 
-        const nextState = reducer(uploadState, action);
-        finalizeNote(nextState);
+        dispatch({
+            type: "initial_state"
+        })
     })
 
     const handleNewFolderSelected = (() => {
@@ -82,14 +79,14 @@ export default function ScannerPage() {
         })
     })
 
-    function finalizeNote(state){
+    function finalizeNote(note, folder){
         addNewNote(
-            state.selectedFolder.id, 
-            state.newNoteObj.name, 
-            state.newNoteObj.source, 
-            state.newNoteObj.tags, 
-            state.newNoteObj.summary, 
-            state.newNoteObj.content
+            folder.id, 
+            note.name, 
+            note.source, 
+            note.tags, 
+            note.summary, 
+            note.content
         )
         //router.push('/zone/');
     }

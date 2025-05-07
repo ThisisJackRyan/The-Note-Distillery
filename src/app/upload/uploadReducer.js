@@ -4,7 +4,6 @@ export const initialState = {
     extractedContent: '',
     previewedContent: '',
     newNoteObj: null,
-    selectedFolder: null,
     showContentPreviewer: false,
     showCreateNote: false,
     showFolderCreator: false,
@@ -31,9 +30,7 @@ export const initialState = {
  * @param {*Contains the state used to mutate the existing state} action 
  * @returns The mutated state
  */
-export default function reducer(uploadState, action){
-    console.log("Upload Action: " + action.type)
-    
+export default function reducer(uploadState, action){    
     let toReturn = uploadState; // Initialize with current state
 
     switch(action.type){
@@ -107,19 +104,6 @@ export default function reducer(uploadState, action){
             };
             break;
 
-        case "existing_folder_selected":
-            toReturn = {
-                ...uploadState,
-                selectedFolder: action.selectedFolder ?? uploadState.selectedFolder,
-                showContentPreviewer: false,
-                showCreateNote: false,
-                showFolderCreator: false,
-                showFolderSelector: false,
-                processing: false,
-                actionHistory: action.fromGoBack ? [...uploadState.actionHistory] : [...uploadState.actionHistory, action.type]
-            };
-            break;
-
         case "new_folder_selected":
             toReturn = {
                 ...uploadState,
@@ -156,8 +140,6 @@ export default function reducer(uploadState, action){
     }
 
     toReturn.goBackEnabled = toReturn.actionHistory.length >= 2;
-
-    console.log("Action History Stack:", toReturn.actionHistory.join(" -> "));
 
     return toReturn;
 }
