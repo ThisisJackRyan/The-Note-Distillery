@@ -21,7 +21,7 @@ function cleanAndParseJSON(text) {
 
 export async function generateFlashcards(note) {
   const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite" });
-  
+
   const prompt = `Create 5 flashcards based on the following note content. For each flashcard, provide a question and answer format. The note content is:
   
   Title: ${note.name}

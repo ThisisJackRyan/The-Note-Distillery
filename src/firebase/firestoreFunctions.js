@@ -52,37 +52,40 @@ const createUserInDatabase = async (uid, email) => {
 };
 
 const addNewNote = async (folderId, noteName, source, tags, summary, text) => {
-    try {
-        const userId = getUserID();
-        if (!userId) return;
-        
-        if (!folderId) {
-            console.error("Folder ID not provided");
-            return;
-        }
+  try {
+    const userId = getUserID();
+    if (!userId) return;
 
-        console.log("Note details:", {
-            folderId: folderId,
-            name: noteName,
-            source: source,
-            tags: tags,
-            summary: summary,
-            text: text
-        });
-        
-        await addDoc(collection(db, "users", userId, "folders", folderId, "notes"), {
-            name: noteName,
-            dateCreated: new Date().toISOString(),
-            source: source,
-            tags: tags,
-            summary: summary,
-            text: text
-        });
-        console.log("Document written");
-    } catch (e) {
-        console.error("Error adding document: ", e);
+    if (!folderId) {
+      console.error("Folder ID not provided");
+      return;
     }
-}
+
+    console.log("Note details:", {
+      folderId: folderId,
+      name: noteName,
+      source: source,
+      tags: tags,
+      summary: summary,
+      text: text,
+    });
+
+    await addDoc(
+      collection(db, "users", userId, "folders", folderId, "notes"),
+      {
+        name: noteName,
+        dateCreated: new Date().toISOString(),
+        source: source,
+        tags: tags,
+        summary: summary,
+        text: text,
+      },
+    );
+    console.log("Document written");
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+};
 
 const deleteFolder = async (folderId) => {
   try {
@@ -177,20 +180,23 @@ const updateFolderName = async (folderId, newName) => {
 };
 
 const updateNoteName = async (folderId, noteId, newName) => {
-    try {
-        const userId = getUserID();
-        if (!userId) {
-            console.error("No user is signed in");
-            return;
-        }
-        await updateDoc(doc(db, "users", userId, "folders", folderId, "notes", noteId), {
-            name: newName
-        });
-        console.log("Note name updated");n
-    } catch (e) {
-        console.error("Error updating note name: ", e);
-        throw e;
+  try {
+    const userId = getUserID();
+    if (!userId) {
+      console.error("No user is signed in");
+      return;
     }
+    await updateDoc(
+      doc(db, "users", userId, "folders", folderId, "notes", noteId),
+      {
+        name: newName,
+      },
+    );
+    console.log("Note name updated");
+  } catch (e) {
+    console.error("Error updating note name: ", e);
+    throw e;
+  }
 };
 
 const updateNote = async (folderId, noteId, updatedNote) => {

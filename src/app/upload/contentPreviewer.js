@@ -1,23 +1,17 @@
-'use client';
+"use client";
 
-import { useState, useRef } from 'react';
-import { validateNote } from "../scripts/noteFactory"
-import noteFactory from "../scripts/noteFactory"
-import { handleAISummary } from '../scripts/prompts';
-import { addNewNote } from '@/firebase/firestoreFunctions';
-import { sampleSummary } from '../scripts/sampleText'
-
+import { useState } from "react";
 /**
  * If the selected folder field is supplied, then the component will handle pushing the note creation or edit to the database;
  * otherwise, the parent component will have to handle the update in the onNoteModified handler
- * 
+ *
  * If the createMode prop is set to false, then the modal will run in edit mode
- * 
- * @param {*} param0 
- * @returns 
+ *
+ * @param {*} param0
+ * @returns
  */
 export default function NoteModifier({ extractedContent, onContentPreviewed }) {
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,11 +19,11 @@ export default function NoteModifier({ extractedContent, onContentPreviewed }) {
     const contentInput = e.target.elements.content.value;
 
     if (!contentInput.trim()) {
-      setError('Content cannot be empty.');
+      setError("Content cannot be empty.");
       return;
     }
 
-    setError('');
+    setError("");
     onContentPreviewed(contentInput);
   };
 
@@ -39,7 +33,7 @@ export default function NoteModifier({ extractedContent, onContentPreviewed }) {
         <h2 className="text-xl font-semibold mb-4 text-white">
           Preview Note content
         </h2>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4 w-3/4">
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">

@@ -4,8 +4,8 @@ import { useState } from "react";
 import { makeNewFolder } from "@/firebase/firestoreFunctions";
 
 export default function NewFolderModal({ onFolderModified }) {
-  const [folderName, setFolderName] = useState('');
-  const [error, setError] = useState('');
+  const [folderName, setFolderName] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,13 +23,13 @@ export default function NewFolderModal({ onFolderModified }) {
 
       const folder = {
         id: folderId,
-        name: folderName
-      }
-      
+        name: folderName,
+      };
+
       // Pass both the name and ID to the parent
       onFolderModified(folder);
-      
-      setFolderName('');
+
+      setFolderName("");
     } catch (err) {
       setError("Failed to create folder. Please try again.");
       console.error("Error creating folder:", err);

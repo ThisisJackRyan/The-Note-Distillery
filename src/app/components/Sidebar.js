@@ -1,17 +1,25 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronRight, faChevronDown, faFolder, faFile, faFolderPlus, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { collection, getDocs, query } from 'firebase/firestore';
-import { db } from '../../firebase/firebaseConfig';
-import { useAuth } from '../context/AuthContext';
-import FolderModifier from './folderModifier';
-import NoteModifier from './noteModifier';
-import { deleteFolder, deleteNote } from '@/firebase/firestoreFunctions';
-import noteFactory from '../scripts/noteFactory';
-import { createPortal } from 'react-dom';
-import Modal from './modal';
+import { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChevronRight,
+  faChevronDown,
+  faFolder,
+  faFile,
+  faFolderPlus,
+  faPlus,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
+import { collection, getDocs, query } from "firebase/firestore";
+import { db } from "../../firebase/firebaseConfig";
+import { useAuth } from "../context/AuthContext";
+import FolderModifier from "./folderModifier";
+import NoteModifier from "./noteModifier";
+import { deleteFolder, deleteNote } from "@/firebase/firestoreFunctions";
+import noteFactory from "../scripts/noteFactory";
+import { createPortal } from "react-dom";
+import Modal from "./modal";
 
 export default function Sidebar({
   isCollapsed,
@@ -26,7 +34,12 @@ export default function Sidebar({
   const [error, setError] = useState(null);
   const [showFolderModifier, setShowFolderModifier] = useState(false);
   const [showNoteModifier, setShowNoteModifier] = useState(false);
-  const [deleteConfirmation, setDeleteConfirmation] = useState({ isOpen: false, type: null, id: null, folderId: null });
+  const [deleteConfirmation, setDeleteConfirmation] = useState({
+    isOpen: false,
+    type: null,
+    id: null,
+    folderId: null,
+  });
   const { user } = useAuth();
 
   // Fetch folders and notes from Firebase
@@ -175,12 +188,16 @@ export default function Sidebar({
       className={`${isCollapsed ? "w-16" : "w-full md:w-64 "} transition-all duration-300 bg-gray-800 rounded-lg shadow-md overflow-hidden`}
     >
       <div className="p-4 flex justify-between items-center border-b border-gray-700">
-        <h2 className={`font-semibold ${isCollapsed ? 'hidden' : 'block'} text-white`}>Folders</h2>
-        <div className='flex gap-4 items-center'>
-          <FontAwesomeIcon 
-            icon={faFolderPlus} 
-            className=' text-gray-400 hover:text-gray-200 cursor-pointer' 
-            onClick={() => setShowFolderModifier(true)} 
+        <h2
+          className={`font-semibold ${isCollapsed ? "hidden" : "block"} text-white`}
+        >
+          Folders
+        </h2>
+        <div className="flex gap-4 items-center">
+          <FontAwesomeIcon
+            icon={faFolderPlus}
+            className=" text-gray-400 hover:text-gray-200 cursor-pointer"
+            onClick={() => setShowFolderModifier(true)}
           />
           <button
             onClick={onToggleCollapse}
@@ -289,32 +306,30 @@ export default function Sidebar({
         )}
       </div>
 
-    {showNoteModifier && createPortal(
-      <Modal
-        content={
-          <NoteModifier
-            onNoteModified={handleNewNote}
-            initialNoteObj={noteFactory()}
-            createMode={true}
-            selectedFolder={folders.find(f => f.id === selectedFolder)}
-          />
-        }
-        onClose={setShowNoteModifier(false)}
-      />,
-      document.body
-    )}
+      {showNoteModifier &&
+        createPortal(
+          <Modal
+            content={
+              <NoteModifier
+                onNoteModified={handleNewNote}
+                initialNoteObj={noteFactory()}
+                createMode={true}
+                selectedFolder={folders.find((f) => f.id === selectedFolder)}
+              />
+            }
+            onClose={setShowNoteModifier(false)}
+          />,
+          document.body,
+        )}
 
-    {showFolderModifier && createPortal(
-      <Modal
-        content={
-          <FolderModifier
-            onFolderModified={handleNewFolder}
-          />
-        }
-        onClose={setShowFolderModifier(false)}
-      />,
-      document.body
-    )}
+      {showFolderModifier &&
+        createPortal(
+          <Modal
+            content={<FolderModifier onFolderModified={handleNewFolder} />}
+            onClose={setShowFolderModifier(false)}
+          />,
+          document.body,
+        )}
 
       {/* Delete Confirmation Modal */}
       {deleteConfirmation.isOpen && (

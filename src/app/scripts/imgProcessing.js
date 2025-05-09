@@ -1,4 +1,4 @@
-'use server'
+"use server";
 /**
  * Contains all the methods related to image processing
  * @author CEOFYEAST
@@ -88,7 +88,7 @@ export async function cleanParsedText(imgText) {
     console.log("Text cleaning successful");
     return cleanedText;
   } catch (error) {
-    console.error('Error during text cleaning:', error);
+    console.error("Error during text cleaning:", error);
     throw error;
   }
 }
