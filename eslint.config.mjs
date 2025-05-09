@@ -1,13 +1,16 @@
 import js from "@eslint/js";
 import globals from "globals";
 import pluginReact from "eslint-plugin-react";
-import css from "@eslint/css";
-import nextPlugin from "@next/eslint-plugin-next";
 import { FlatCompat } from "@eslint/eslintrc";
 import { defineConfig } from "eslint/config";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// Resolve the directory name from the imported file URL
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const compat = new FlatCompat({
-  baseDirectory: import.meta.dirname,
+  baseDirectory: __dirname, // Updated from import.meta.dirname
 });
 
 export default defineConfig([
@@ -50,24 +53,4 @@ export default defineConfig([
       "react/prop-types": "off", // Add this line to disable the rule
     },
   },
-
-  // // CSS files - no React rules here
-  // {
-  //   files: ["**/*.css"],
-  //   plugins: { css },
-  //   languageOptions: {
-  //     parser: css.parser,
-  //   },
-  //   rules: {
-  //     ...css.configs.recommended.rules,
-  //   },
-  // },
-
-  // // Global rules
-  // {
-  //   rules: {
-  //     // Add your global rules here
-  //     // "no-unused-vars": "warn",
-  //   },
-  // },
 ]);
