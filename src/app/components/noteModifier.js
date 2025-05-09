@@ -1,40 +1,43 @@
-'use client';
+"use client";
 
-import { useState, useRef } from 'react';
-import { validateNote } from "../scripts/noteFactory"
-import noteFactory from "../scripts/noteFactory"
-import { handleAISummary } from '../scripts/prompts';
-import { addNewNote } from '@/firebase/firestoreFunctions';
-import { sampleSummary } from '../scripts/sampleText'
+import { useState, useRef } from "react";
+import { validateNote } from "../scripts/noteFactory";
+import { addNewNote } from "@/firebase/firestoreFunctions";
+import { sampleSummary } from "../scripts/sampleText";
 
 /**
  * If the selected folder field is supplied, then the component will handle pushing the note creation or edit to the database;
  * otherwise, the parent component will have to handle the update in the onNoteModified handler
- * 
+ *
  * If the createMode prop is set to false, then the modal will run in edit mode
- * 
- * @param {*} param0 
- * @returns 
+ *
+ * @param {*} param0
+ * @returns
  */
-export default function NoteModifier({ onNoteModified, initialNoteObj, createMode=true, selectedFolder=null}) {
-  validateNote(initialNoteObj)
+export default function NoteModifier({
+  onNoteModified,
+  initialNoteObj,
+  createMode = true,
+  selectedFolder = null,
+}) {
+  validateNote(initialNoteObj);
 
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [summaryButtonEnabled, setSummaryButtonEnabled] = useState(
-    initialNoteObj.content && initialNoteObj.content.trim() !== ''
+    initialNoteObj.content && initialNoteObj.content.trim() !== "",
   );
-  
+
   const contentFieldRef = useRef(null);
   const summaryFieldRef = useRef(null);
 
   const handleContentChanged = (e) => {
-    const hasContent = e.target.value.trim() !== '';
+    const hasContent = e.target.value.trim() !== "";
     setSummaryButtonEnabled(hasContent);
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     // Gather values from the form fields
     const formData = new FormData(e.target);
     const finalNote = {
@@ -43,22 +46,22 @@ export default function NoteModifier({ onNoteModified, initialNoteObj, createMod
       summary: formData.get("summary").trim(),
       content: formData.get("content").trim(),
       tags: formData.get("tags").trim(),
-    }
-  
+    };
+
     // Validate inputs
     if (!finalNote.name) {
       setError("Note name cannot be empty");
       return;
     }
-  
+
     if (!finalNote.content) {
       setError("Note text cannot be empty");
       return;
     }
 
-    if(createMode) handleCreateNote(finalNote)
-    else handleEditNote(finalNote)
-  
+    if (createMode) handleCreateNote(finalNote);
+    else handleEditNote(finalNote);
+
     // Call the parent callback
     onNoteModified(finalNote);
   };
@@ -66,12 +69,12 @@ export default function NoteModifier({ onNoteModified, initialNoteObj, createMod
   // Generate AI summary from content
   const handleAISummary = async () => {
     if (!contentFieldRef.current?.value) return;
-    
+
     // Here you would normally call an API to generate the summary
     // For now, we'll just use a placeholder
-    const content = contentFieldRef.current.value;
-    const aiSummary = sampleSummary;//await handleAISummary(content)
-    
+    //const content = contentFieldRef.current.value;
+    const aiSummary = sampleSummary; //await handleAISummary(content)
+
     // Update the summary field with the generated summary
     if (summaryFieldRef.current) {
       summaryFieldRef.current.value = aiSummary;
@@ -84,33 +87,29 @@ export default function NoteModifier({ onNoteModified, initialNoteObj, createMod
     finalNote.source = "Image Upload";
     finalNote.dateCreated = new Date().toISOString();
 
-    if(selectedFolder){
+    if (selectedFolder) {
       addNewNote(
-        selectedFolder.id, 
-        finalNote.name, 
-        finalNote.source, 
-        finalNote.tags, 
-        finalNote.summary, 
-        finalNote.content
-      )
+        selectedFolder.id,
+        finalNote.name,
+        finalNote.source,
+        finalNote.tags,
+        finalNote.summary,
+        finalNote.content,
+      );
     }
-  }
+  };
 
   // Handles the actual edit action after the updated note info has been submitted, and the interface is in edit mode
-  const handleEditNote = async(finalNote) => {
-    if(selectedFolder){
-      addNewNote(
-        selectedFolder.id, 
-        finalNote.id, 
-        {
-          name: finalNote.name,
-          text: finalNote.text,
-          tags: finalNote.tags,
-          dateModified: finalNote.dateModified
-        }
-      )
+  const handleEditNote = async (finalNote) => {
+    if (selectedFolder) {
+      addNewNote(selectedFolder.id, finalNote.id, {
+        name: finalNote.name,
+        text: finalNote.text,
+        tags: finalNote.tags,
+        dateModified: finalNote.dateModified,
+      });
     }
-  }
+  };
 
   return (
     <div className="w-150 h-175 inset-0 flex items-center justify-center">
@@ -118,7 +117,7 @@ export default function NoteModifier({ onNoteModified, initialNoteObj, createMod
         <h2 className="text-xl font-semibold mb-4 text-white">
           {createMode ? "Create New Note" : "Edit Note"}
         </h2>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4 w-3/4">
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">
@@ -182,8 +181,8 @@ export default function NoteModifier({ onNoteModified, initialNoteObj, createMod
               disabled={!summaryButtonEnabled}
               onClick={handleAISummary}
               className={`px-4 py-2 rounded-md ${
-                summaryButtonEnabled 
-                  ? "bg-purple-500 text-white hover:bg-purple-600" 
+                summaryButtonEnabled
+                  ? "bg-purple-500 text-white hover:bg-purple-600"
                   : "bg-gray-500 text-gray-300 cursor-not-allowed"
               } focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2`}
             >

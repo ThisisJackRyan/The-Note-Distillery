@@ -1,7 +1,7 @@
-'use server'
+"use server";
 
-import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../../firebase/firebaseConfig';
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "../../firebase/firebaseConfig";
 
 /**
  * Saves the extracted text as a note in the user's folder
@@ -10,18 +10,18 @@ import { db } from '../../firebase/firebaseConfig';
  * @param {string} title - The title of the note (optional)
  * @returns {Promise<string>} - The ID of the created note
  */
-export async function saveNoteAsText(userId, text, title = 'Extracted Note') {
+export async function saveNoteAsText(userId, text, title = "Extracted Note") {
   try {
     if (!userId) {
-      throw new Error('User ID is required to save a note');
+      throw new Error("User ID is required to save a note");
     }
 
-    if (!text || text.trim() === '') {
-      throw new Error('Note content cannot be empty');
+    if (!text || text.trim() === "") {
+      throw new Error("Note content cannot be empty");
     }
 
     // Create a reference to the user's notes collection
-    const notesRef = collection(db, 'users', userId, 'notes');
+    const notesRef = collection(db, "users", userId, "notes");
 
     // Add the note to Firestore
     const docRef = await addDoc(notesRef, {
@@ -29,14 +29,14 @@ export async function saveNoteAsText(userId, text, title = 'Extracted Note') {
       content: text,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
-      type: 'text',
-      source: 'image-extraction'
+      type: "text",
+      source: "image-extraction",
     });
 
     console.log(`Note saved successfully with ID: ${docRef.id}`);
     return docRef.id;
   } catch (error) {
-    console.error('Error saving note:', error);
+    console.error("Error saving note:", error);
     throw error;
   }
-} 
+}

@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useState } from 'react';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
-import { getAuth, signOut } from 'firebase/auth';
-import { useAuthUser } from '@/firebase/firebaseFunctions';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { app } from '@/firebase/firebaseConfig';
-import { useRouter } from 'next/navigation';
-import MobileHeader from './mobileHeader';
-
+import Link from "next/link";
+import React, { useState } from "react";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { getAuth, signOut } from "firebase/auth";
+import { useAuthUser } from "@/firebase/firebaseFunctions";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Image from "next/image";
+import { app } from "@/firebase/firebaseConfig";
+import { useRouter } from "next/navigation";
+import MobileHeader from "./mobileHeader";
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -21,9 +21,9 @@ export default function Header() {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      router.push('/');
+      router.push("/");
     } catch (error) {
-      console.error('Error signing out:', error);
+      console.error("Error signing out:", error);
     }
   };
 
@@ -32,13 +32,13 @@ export default function Header() {
       <nav className="max-w-7xl mx-auto px-4 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <div className="flex items-center">
-            <Link href="/" className="text-xl font-bold text-white">
-              <img
-                src="/High-Resolution-Logo-White-on-Transparent-Background (1).svg" // Update the path to point to the public directory
-                alt="Logo"
-                className="h-28 w-28 mr-6 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.9)] transition-all duration-300 ease-in-out rounded-full"
-              />
-            </Link>
+            <Image
+              src="/High-Resolution-Logo-White-on-Transparent-Background (1).svg"
+              alt="Logo"
+              width={112} // Explicit width (28 * 4 = 112px, based on your h-28 class)
+              height={112} // Explicit height
+              className="mr-6 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.9)] transition-all duration-300 ease-in-out rounded-full"
+            />
           </div>
           <div className="hidden md:block">
             <div className="ml-10 flex items-center space-x-4">
@@ -88,12 +88,20 @@ export default function Header() {
             </div>
           </div>
           <div className="md:hidden">
-            <FontAwesomeIcon icon={faBars} className="h-6 w-6 text-2xl"  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}/>
+            <FontAwesomeIcon
+              icon={faBars}
+              className="h-6 w-6 text-2xl"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            />
           </div>
         </div>
 
-        {isMobileMenuOpen && <MobileHeader setIsMobileMenuOpen={setIsMobileMenuOpen} handleLogout={handleLogout}/>}
-        
+        {isMobileMenuOpen && (
+          <MobileHeader
+            setIsMobileMenuOpen={setIsMobileMenuOpen}
+            handleLogout={handleLogout}
+          />
+        )}
       </nav>
     </header>
   );
