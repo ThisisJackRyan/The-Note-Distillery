@@ -28,8 +28,6 @@ const ProfilePage = () => {
     return () => unsubscribe();
   }, [auth, router]);
 
-  const jack = "hello world";
-
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     setError("");
