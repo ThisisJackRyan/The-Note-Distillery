@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
 export default function QuestionForm({ note, onAskQuestion }) {
-  const [userQuestion, setUserQuestion] = useState('');
+  const [userQuestion, setUserQuestion] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [response, setResponse] = useState(null);
@@ -19,7 +19,7 @@ export default function QuestionForm({ note, onAskQuestion }) {
     try {
       const answer = await onAskQuestion(userQuestion);
       setResponse(answer);
-      setUserQuestion('');
+      setUserQuestion("");
     } catch (error) {
       setError("Failed to get answer. Please try again.");
       console.error("Error getting answer:", error);
@@ -56,11 +56,7 @@ export default function QuestionForm({ note, onAskQuestion }) {
         </div>
       )}
 
-      {error && (
-        <div className="text-red-400 mb-4">
-          {error}
-        </div>
-      )}
+      {error && <div className="text-red-400 mb-4">{error}</div>}
 
       {response && (
         <div className="mb-4 p-4 border rounded-lg  bg-gray-700">
@@ -70,4 +66,4 @@ export default function QuestionForm({ note, onAskQuestion }) {
       )}
     </div>
   );
-} 
+}

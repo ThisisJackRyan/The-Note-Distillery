@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { makeNewFolder } from '@/firebase/firestoreFunctions';
+import { useState } from "react";
+import { makeNewFolder } from "@/firebase/firestoreFunctions";
 
 export default function NewFolderModal({ onFolderModified }) {
-  const [folderName, setFolderName] = useState('');
-  const [error, setError] = useState('');
+  const [folderName, setFolderName] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!folderName.trim()) {
-      setError('Folder name cannot be empty');
+      setError("Folder name cannot be empty");
       return;
     }
 
@@ -18,28 +18,30 @@ export default function NewFolderModal({ onFolderModified }) {
       // First create the folder in Firebase
       const folderId = await makeNewFolder(folderName);
       if (!folderId) {
-        throw new Error('Failed to create folder');
+        throw new Error("Failed to create folder");
       }
 
       const folder = {
         id: folderId,
-        name: folderName
-      }
-      
+        name: folderName,
+      };
+
       // Pass both the name and ID to the parent
       onFolderModified(folder);
-      
-      setFolderName('');
+
+      setFolderName("");
     } catch (err) {
-      setError('Failed to create folder. Please try again.');
-      console.error('Error creating folder:', err);
+      setError("Failed to create folder. Please try again.");
+      console.error("Error creating folder:", err);
     }
   };
 
   return (
     <div className="inset-0 flex items-center justify-center">
       <div className="h-full w-full flex flex-col justify-center items-center sm:h-auto bg-gray-900 p-6 sm:rounded-lg shadow-xl sm:w-96">
-        <h2 className="text-xl font-semibold mb-4 text-white">Create New Folder</h2>
+        <h2 className="text-xl font-semibold mb-4 text-white">
+          Create New Folder
+        </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-300 mb-1">
@@ -50,7 +52,7 @@ export default function NewFolderModal({ onFolderModified }) {
               value={folderName}
               onChange={(e) => {
                 setFolderName(e.target.value);
-                setError('');
+                setError("");
               }}
               placeholder="Enter folder name"
               required
@@ -58,7 +60,7 @@ export default function NewFolderModal({ onFolderModified }) {
             />
             {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
           </div>
-          
+
           <div className="flex justify-end gap-4">
             <button
               type="submit"

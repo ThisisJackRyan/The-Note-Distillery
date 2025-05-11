@@ -1,32 +1,45 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronRight, faChevronDown, faFolder, faFile, faFolderPlus, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { collection, getDocs, query } from 'firebase/firestore';
-import { db } from '../../firebase/firebaseConfig';
-import { useAuth } from '../context/AuthContext';
-import FolderModifier from './folderModifier';
-import NoteModifier from './noteModifier';
-import { deleteFolder, deleteNote } from '@/firebase/firestoreFunctions';
-import noteFactory from '../scripts/noteFactory';
-import { createPortal } from 'react-dom';
-import Modal from './modal';
+import { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChevronRight,
+  faChevronDown,
+  faFolder,
+  faFile,
+  faFolderPlus,
+  faPlus,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
+import { collection, getDocs, query } from "firebase/firestore";
+import { db } from "../../firebase/firebaseConfig";
+import { useAuth } from "../context/AuthContext";
+import FolderModifier from "./folderModifier";
+import NoteModifier from "./noteModifier";
+import { deleteFolder, deleteNote } from "@/firebase/firestoreFunctions";
+import noteFactory from "../scripts/noteFactory";
+import { createPortal } from "react-dom";
+import Modal from "./modal";
 
-export default function Sidebar({ 
-  isCollapsed, 
-  onToggleCollapse, 
-  onFolderSelect, 
-  onNoteSelect, 
-  selectedFolder, 
-  selectedNote 
+export default function Sidebar({
+  isCollapsed,
+  onToggleCollapse,
+  onFolderSelect,
+  onNoteSelect,
+  selectedFolder,
+  selectedNote,
 }) {
   const [folders, setFolders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showFolderModifier, setShowFolderModifier] = useState(false);
   const [showNoteModifier, setShowNoteModifier] = useState(false);
-  const [deleteConfirmation, setDeleteConfirmation] = useState({ isOpen: false, type: null, id: null, folderId: null });
+  const [deleteConfirmation, setDeleteConfirmation] = useState({
+    isOpen: false,
+    type: null,
+    id: null,
+    folderId: null,
+  });
   const { user } = useAuth();
 
   // Fetch folders and notes from Firebase
@@ -34,38 +47,42 @@ export default function Sidebar({
     const fetchFolders = async () => {
       try {
         setLoading(true);
-        
+
         if (!user) {
           console.log("No user is signed in");
           setLoading(false);
           return;
         }
-        
+
         // Query folders for the current user
-        const foldersQuery = query(collection(db, "users", user.uid, "folders"));
+        const foldersQuery = query(
+          collection(db, "users", user.uid, "folders"),
+        );
         const foldersSnapshot = await getDocs(foldersQuery);
-        
+
         const foldersData = [];
-        
+
         for (const folderDoc of foldersSnapshot.docs) {
           const folder = {
             id: folderDoc.id,
             name: folderDoc.data().name,
-            notes: []
+            notes: [],
           };
-          
+
           // Fetch notes for this folder
-          const notesQuery = query(collection(db, "users", user.uid, "folders", folderDoc.id, "notes"));
+          const notesQuery = query(
+            collection(db, "users", user.uid, "folders", folderDoc.id, "notes"),
+          );
           const notesSnapshot = await getDocs(notesQuery);
-          
-          folder.notes = notesSnapshot.docs.map(noteDoc => ({
+
+          folder.notes = notesSnapshot.docs.map((noteDoc) => ({
             id: noteDoc.id,
-            ...noteDoc.data()
+            ...noteDoc.data(),
           }));
-          
+
           foldersData.push(folder);
         }
-        
+
         setFolders(foldersData);
         setLoading(false);
       } catch (error) {
@@ -74,7 +91,7 @@ export default function Sidebar({
         setLoading(false);
       }
     };
-    
+
     fetchFolders();
   }, [user]);
 
@@ -93,22 +110,22 @@ export default function Sidebar({
     const newFolder = {
       id: tempId,
       name: newFolderName,
-      notes: []
+      notes: [],
     };
-    setFolders(prevFolders => [...prevFolders, newFolder]);
+    setFolders((prevFolders) => [...prevFolders, newFolder]);
   };
 
   const handleNewNote = (newNote) => {
-    setFolders(prevFolders => 
-      prevFolders.map(folder => {
+    setFolders((prevFolders) =>
+      prevFolders.map((folder) => {
         if (folder.id === selectedFolder) {
           return {
             ...folder,
-            notes: [...folder.notes, newNote]
+            notes: [...folder.notes, newNote],
           };
         }
         return folder;
-      })
+      }),
     );
   };
 
@@ -121,34 +138,43 @@ export default function Sidebar({
 
   const handleDelete = async () => {
     try {
-      if (deleteConfirmation.type === 'folder') {
+      if (deleteConfirmation.type === "folder") {
         await deleteFolder(deleteConfirmation.id);
-        setFolders(prevFolders => prevFolders.filter(folder => folder.id !== deleteConfirmation.id));
+        setFolders((prevFolders) =>
+          prevFolders.filter((folder) => folder.id !== deleteConfirmation.id),
+        );
         if (selectedFolder === deleteConfirmation.id) {
           onFolderSelect(null);
           onNoteSelect(null); // Clear selected note when folder is deleted
         }
-      } else if (deleteConfirmation.type === 'note') {
+      } else if (deleteConfirmation.type === "note") {
         await deleteNote(deleteConfirmation.folderId, deleteConfirmation.id);
-        setFolders(prevFolders => 
-          prevFolders.map(folder => {
+        setFolders((prevFolders) =>
+          prevFolders.map((folder) => {
             if (folder.id === deleteConfirmation.folderId) {
               return {
                 ...folder,
-                notes: folder.notes.filter(note => note.id !== deleteConfirmation.id)
+                notes: folder.notes.filter(
+                  (note) => note.id !== deleteConfirmation.id,
+                ),
               };
             }
             return folder;
-          })
+          }),
         );
         if (selectedNote === deleteConfirmation.id) {
           onNoteSelect(null);
         }
       }
-      setDeleteConfirmation({ isOpen: false, type: null, id: null, folderId: null });
+      setDeleteConfirmation({
+        isOpen: false,
+        type: null,
+        id: null,
+        folderId: null,
+      });
     } catch (err) {
-      console.error('Error deleting:', err);
-      setError('Failed to delete. Please try again.');
+      console.error("Error deleting:", err);
+      setError("Failed to delete. Please try again.");
     }
   };
 
@@ -158,24 +184,30 @@ export default function Sidebar({
   };
 
   return (
-    <div className={`${isCollapsed ? 'w-16' : 'w-full md:w-64 '} transition-all duration-300 bg-gray-800 rounded-lg shadow-md overflow-hidden`}>
+    <div
+      className={`${isCollapsed ? "w-16" : "w-full md:w-64 "} transition-all duration-300 bg-gray-800 rounded-lg shadow-md overflow-hidden`}
+    >
       <div className="p-4 flex justify-between items-center border-b border-gray-700">
-        <h2 className={`font-semibold ${isCollapsed ? 'hidden' : 'block'} text-white`}>Folders</h2>
-        <div className='flex gap-4 items-center'>
-          <FontAwesomeIcon 
-            icon={faFolderPlus} 
-            className=' text-gray-400 hover:text-gray-200 cursor-pointer' 
-            onClick={() => setShowFolderModifier(true)} 
+        <h2
+          className={`font-semibold ${isCollapsed ? "hidden" : "block"} text-white`}
+        >
+          Folders
+        </h2>
+        <div className="flex gap-4 items-center">
+          <FontAwesomeIcon
+            icon={faFolderPlus}
+            className=" text-gray-400 hover:text-gray-200 cursor-pointer"
+            onClick={() => setShowFolderModifier(true)}
           />
-          <button 
+          <button
             onClick={onToggleCollapse}
             className=" text-gray-400 hover:text-gray-200"
           >
-            {isCollapsed ? '→' : '←'}
+            {isCollapsed ? "→" : "←"}
           </button>
         </div>
       </div>
-      
+
       <div className="p-2 overflow-y-auto max-h-[calc(100vh-300px)]">
         {loading ? (
           <div className="text-center py-4">
@@ -193,22 +225,26 @@ export default function Sidebar({
           <ul className="space-y-1">
             {folders.map((folder) => (
               <li key={folder.id}>
-                <div 
+                <div
                   className={`flex justify-between items-center p-2 rounded-md cursor-pointer ${
-                    selectedFolder === folder.id 
-                      ? 'bg-blue-900' 
-                      : 'hover:bg-gray-700'
+                    selectedFolder === folder.id
+                      ? "bg-blue-900"
+                      : "hover:bg-gray-700"
                   }`}
                   onClick={() => handleFolderClick(folder)}
                 >
-                  <div className='flex'>
-                    <FontAwesomeIcon 
-                      icon={selectedFolder === folder.id ? faChevronDown : faChevronRight} 
-                      className="mr-2 text-gray-400 w-4 h-4" 
+                  <div className="flex">
+                    <FontAwesomeIcon
+                      icon={
+                        selectedFolder === folder.id
+                          ? faChevronDown
+                          : faChevronRight
+                      }
+                      className="mr-2 text-gray-400 w-4 h-4"
                     />
-                    <FontAwesomeIcon 
-                      icon={faFolder} 
-                      className="mr-2 text-yellow-500 w-4 h-4" 
+                    <FontAwesomeIcon
+                      icon={faFolder}
+                      className="mr-2 text-yellow-500 w-4 h-4"
                     />
                     {!isCollapsed && (
                       <span className="truncate text-white">{folder.name}</span>
@@ -216,43 +252,49 @@ export default function Sidebar({
                   </div>
                   {selectedFolder === folder.id && (
                     <div className="flex items-center gap-2">
-                      <FontAwesomeIcon 
-                        icon={faPlus} 
+                      <FontAwesomeIcon
+                        icon={faPlus}
                         className="text-gray-400 w-4 h-4 cursor-pointer hover:text-gray-200"
                         onClick={handleAddNoteClick}
                       />
-                      <FontAwesomeIcon 
-                        icon={faTrash} 
+                      <FontAwesomeIcon
+                        icon={faTrash}
                         className="text-gray-400 w-4 h-4 cursor-pointer hover:text-red-400"
-                        onClick={(e) => handleDeleteClick(e, 'folder', folder.id)}
+                        onClick={(e) =>
+                          handleDeleteClick(e, "folder", folder.id)
+                        }
                       />
                     </div>
                   )}
                 </div>
-                
+
                 {selectedFolder === folder.id && !isCollapsed && (
                   <ul className="ml-6 mt-1 space-y-1">
                     {folder.notes.map((note) => (
-                      <li 
+                      <li
                         key={note.id}
                         className={`flex items-center justify-between p-2 rounded-md cursor-pointer ${
-                          selectedNote === note.id 
-                            ? 'bg-blue-900' 
-                            : 'hover:bg-gray-700'
+                          selectedNote === note.id
+                            ? "bg-blue-900"
+                            : "hover:bg-gray-700"
                         }`}
                         onClick={() => handleNoteClick(note)}
                       >
                         <div className="flex items-center">
-                          <FontAwesomeIcon 
-                            icon={faFile} 
-                            className="mr-2 text-blue-500 w-4 h-4" 
+                          <FontAwesomeIcon
+                            icon={faFile}
+                            className="mr-2 text-blue-500 w-4 h-4"
                           />
-                          <span className="truncate text-white">{note.name}</span>
+                          <span className="truncate text-white">
+                            {note.name}
+                          </span>
                         </div>
-                        <FontAwesomeIcon 
-                          icon={faTrash} 
+                        <FontAwesomeIcon
+                          icon={faTrash}
                           className="text-gray-400 w-4 h-4 cursor-pointer hover:text-red-400"
-                          onClick={(e) => handleDeleteClick(e, 'note', note.id, folder.id)}
+                          onClick={(e) =>
+                            handleDeleteClick(e, "note", note.id, folder.id)
+                          }
                         />
                       </li>
                     ))}
@@ -264,32 +306,30 @@ export default function Sidebar({
         )}
       </div>
 
-    {showNoteModifier && createPortal(
-      <Modal
-        content={
-          <NoteModifier
-            onNoteModified={handleNewNote}
-            initialNoteObj={noteFactory()}
-            createMode={true}
-            selectedFolder={folders.find(f => f.id === selectedFolder)}
-          />
-        }
-        onClose={setShowNoteModifier(false)}
-      />,
-      document.body
-    )}
+      {showNoteModifier &&
+        createPortal(
+          <Modal
+            content={
+              <NoteModifier
+                onNoteModified={handleNewNote}
+                initialNoteObj={noteFactory()}
+                createMode={true}
+                selectedFolder={folders.find((f) => f.id === selectedFolder)}
+              />
+            }
+            onClose={setShowNoteModifier(false)}
+          />,
+          document.body,
+        )}
 
-    {showFolderModifier && createPortal(
-      <Modal
-        content={
-          <FolderModifier
-            onFolderModified={handleNewFolder}
-          />
-        }
-        onClose={setShowFolderModifier(false)}
-      />,
-      document.body
-    )}
+      {showFolderModifier &&
+        createPortal(
+          <Modal
+            content={<FolderModifier onFolderModified={handleNewFolder} />}
+            onClose={setShowFolderModifier(false)}
+          />,
+          document.body,
+        )}
 
       {/* Delete Confirmation Modal */}
       {deleteConfirmation.isOpen && (
@@ -299,11 +339,19 @@ export default function Sidebar({
               Confirm Delete
             </h2>
             <p className="text-gray-300 mb-6">
-              Are you sure you want to delete this {deleteConfirmation.type}? This action cannot be undone.
+              Are you sure you want to delete this {deleteConfirmation.type}?
+              This action cannot be undone.
             </p>
             <div className="flex justify-end gap-4">
               <button
-                onClick={() => setDeleteConfirmation({ isOpen: false, type: null, id: null, folderId: null })}
+                onClick={() =>
+                  setDeleteConfirmation({
+                    isOpen: false,
+                    type: null,
+                    id: null,
+                    folderId: null,
+                  })
+                }
                 className="px-4 py-2 text-gray-300 hover:bg-gray-700 rounded-md"
               >
                 Cancel
@@ -320,4 +368,4 @@ export default function Sidebar({
       )}
     </div>
   );
-} 
+}
