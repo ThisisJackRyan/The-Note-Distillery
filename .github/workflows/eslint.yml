@@ -44,17 +44,28 @@ jobs:
           npm install eslint@8.10.0
           npm install @microsoft/eslint-formatter-sarif@3.1.0
 
+      - name: Debug directory contents
+        run: |
+          pwd
+          ls -la
+          echo "Current directory contents:"
+          find . -type f -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx"
+
       - name: Run ESLint
         env:
           SARIF_ESLINT_IGNORE_SUPPRESSED: "true"
-        run: npx eslint .
-          --config eslint.config.mjs
-          --ext .js,.jsx,.ts,.tsx
-          --format @microsoft/eslint-formatter-sarif
-          --output-file eslint-results.sarif
-        continue-on-error: true
+        run: |
+          npx eslint . \
+            --config eslint.config.mjs \
+            --ext .js,.jsx,.ts,.tsx \
+            --format @microsoft/eslint-formatter-sarif \
+            --output-file eslint-results.sarif || true
+          
+          echo "Checking if SARIF file was created:"
+          ls -la eslint-results.sarif || echo "SARIF file not found"
 
       - name: Upload analysis results to GitHub
+        if: success() && steps.eslint.outcome == 'success'
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: eslint-results.sarif
