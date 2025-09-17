@@ -7,6 +7,7 @@
 import reducer from "./uploadReducer";
 import { initialState } from "./uploadReducer";
 import { useReducer, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
 import { addNewNote } from "@/firebase/firestoreFunctions";
 import ImageUpload from "./fileUploader";
@@ -18,6 +19,7 @@ import NoteModifier from "../components/noteModifier";
 
 export default function ScannerPage() {
   const [uploadState, dispatch] = useReducer(reducer, initialState);
+  const router = useRouter();
 
   useEffect(() => {
     dispatch({
@@ -87,11 +89,11 @@ export default function ScannerPage() {
       note.summary,
       note.content,
     );
-    //router.push('/zone/');
+    router.push('/zone/');
   }
 
   return (
-    <>
+    < >
       <ImageUpload
         onContentUploaded={handleContentUploaded}
         enabled={!uploadState.processing}
@@ -141,6 +143,7 @@ export default function ScannerPage() {
           <Modal
             onClose={handleClose}
             onGoBack={uploadState.goBackEnabled ? handleGoBack : null}
+            childrenParentClass="w-fit mx-auto flex flex-col justify-center items-center"
           >
             <FolderSelector
               onFolderSelected={handleExistingFolderSelected}
@@ -155,8 +158,22 @@ export default function ScannerPage() {
           <Modal
             onClose={handleClose}
             onGoBack={uploadState.goBackEnabled ? handleGoBack : null}
+            childrenParentClass="w-full p-6"
+            footerRight={
+              <button
+                form="new-folder-form"
+                type="submit"
+                className="bg-blue-500 px-4 py-2 rounded-md cursor-pointer hover:bg-blue-600 text-white"
+              >
+                Create
+              </button>
+            }
           >
-            <FolderModifier onFolderModified={handleExistingFolderSelected} />
+            <FolderModifier
+              onFolderModified={handleExistingFolderSelected}
+              formId="new-folder-form"
+              hideSubmit={true}
+            />
           </Modal>,
           document.body,
         )}
