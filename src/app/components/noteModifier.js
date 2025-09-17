@@ -112,8 +112,7 @@ export default function NoteModifier({
   };
 
   return (
-    <div className="w-150 h-175 inset-0 flex items-center justify-center">
-      <div className="h-full w-full flex flex-col justify-center items-center sm:h-auto  p-6 sm:rounded-lg shadow-xl overflow-y-auto">
+      <div className="flex flex-col justify-center items-center sm:h-auto  p-6 sm:rounded-lg shadow-xl">
         <h2 className="text-xl font-semibold mb-4 text-white">
           {createMode ? "Create New Note" : "Edit Note"}
         </h2>
@@ -197,6 +196,5 @@ export default function NoteModifier({
           </div>
         </form>
       </div>
-    </div>
   );
 }
