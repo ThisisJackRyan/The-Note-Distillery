@@ -193,7 +193,9 @@ export default function Sidebar({
         >
           Folders
         </h2>
-        <div className={`flex gap-4 items-center ${isCollapsed ? 'w-full' : 'w-auto'} justify-between`}>
+        <div
+          className={`flex gap-4 items-center ${isCollapsed ? "w-full" : "w-auto"} justify-between`}
+        >
           <FontAwesomeIcon
             icon={faFolderPlus}
             className=" text-gray-400 hover:text-gray-200 cursor-pointer"
