@@ -39,8 +39,6 @@ export default function Modal({
             <div>{footerRight}</div>
           </div>
         )}
-
-        
       </div>
     </div>
   );

@@ -3,7 +3,11 @@
 import { useState } from "react";
 import { makeNewFolder } from "@/firebase/firestoreFunctions";
 
-export default function NewFolderModal({ onFolderModified, formId = "", hideSubmit = false }) {
+export default function NewFolderModal({
+  onFolderModified,
+  formId = "",
+  hideSubmit = false,
+}) {
   const [folderName, setFolderName] = useState("");
   const [error, setError] = useState("");
 

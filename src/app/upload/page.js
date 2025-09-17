@@ -89,11 +89,11 @@ export default function ScannerPage() {
       note.summary,
       note.content,
     );
-    router.push('/zone/');
+    router.push("/zone/");
   }
 
   return (
-    < >
+    <>
       <ImageUpload
         onContentUploaded={handleContentUploaded}
         enabled={!uploadState.processing}
