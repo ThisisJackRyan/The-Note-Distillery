@@ -3,11 +3,9 @@ import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../context/AuthContext";
 import { useRef, useState } from "react";
 
-
 export default function ImageUpload({ onContentUploaded, enabled }) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState(false);
-  const [success, setSuccess] = useState(false);
   const [stateMsg, setStateMsg] = useState("");
   const fileInputRef = useRef(null);
   const { user } = useAuth();
@@ -21,15 +19,6 @@ export default function ImageUpload({ onContentUploaded, enabled }) {
       }
     }
   };
-  // keep
-  // const fileToBase64 = (file) => {
-  //   return new Promise((resolve, reject) => {
-  //     const reader = new FileReader();
-  //     reader.readAsDataURL(file);
-  //     reader.onload = () => resolve(reader.result);
-  //     reader.onerror = (error) => reject(error);
-  //   });
-  // };
 
   const handleFileUpload = async (event) => {
     console.log("Handling file upload");
@@ -44,7 +33,6 @@ export default function ImageUpload({ onContentUploaded, enabled }) {
     try {
       setIsProcessing(true);
       setError(false);
-      setSuccess(false);
 
       const formData = new FormData();
       formData.append("file", file);
@@ -68,10 +56,8 @@ export default function ImageUpload({ onContentUploaded, enabled }) {
 
       // If user is logged in, offer to save as note
       if (user) {
-        setSuccess(true);
         setStateMsg("Text extracted successfully! You can save it as a note.");
       } else {
-        setSuccess(true);
         setStateMsg(
           "Text extracted successfully! Please log in to save as a note.",
         );
@@ -79,9 +65,7 @@ export default function ImageUpload({ onContentUploaded, enabled }) {
     } catch (err) {
       console.error(err);
       setError(true);
-      setStateMsg(
-        "Error processing this image, please try again later.",
-      );
+      setStateMsg("Error processing this image, please try again later.");
     } finally {
       setIsProcessing(false);
     }
@@ -111,8 +95,8 @@ export default function ImageUpload({ onContentUploaded, enabled }) {
 
       {isProcessing && (
         <div className="absolute inset-0 w-full h-full z-100 bg-black opacity-70 flex flex-col justify-center items-center">
-            <div className="loader"></div>
-            <p className="text-white">The text is being extracted, this may take a moment.</p>
+          <div className="loader"></div>
+          <p>The text is being extracted, this may take a moment.</p>
         </div>
       )}
 

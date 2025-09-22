@@ -71,7 +71,8 @@ export default function NoteModifier({
     const content = contentFieldRef.current.value;
     try {
       // Optimistic placeholder while loading
-      if (summaryFieldRef.current) summaryFieldRef.current.value = "Generating summary...";
+      if (summaryFieldRef.current)
+        summaryFieldRef.current.value = "Generating summary...";
 
       const res = await fetch("/api/generate-summary", {
         method: "POST",
@@ -80,14 +81,16 @@ export default function NoteModifier({
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || "Failed to generate summary");
-      const aiSummary = typeof data?.summary === "string" && data.summary.trim() !== ""
-        ? data.summary.trim()
-        : "";
+      const aiSummary =
+        typeof data?.summary === "string" && data.summary.trim() !== ""
+          ? data.summary.trim()
+          : "";
       if (summaryFieldRef.current) summaryFieldRef.current.value = aiSummary;
     } catch (err) {
       const message = err instanceof Error ? err.message : "Unexpected error";
       setError(message);
-      if (summaryFieldRef.current) summaryFieldRef.current.value = initialNoteObj.summary || "";
+      if (summaryFieldRef.current)
+        summaryFieldRef.current.value = initialNoteObj.summary || "";
     }
   };
 

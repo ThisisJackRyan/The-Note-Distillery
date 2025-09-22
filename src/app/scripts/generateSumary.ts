@@ -1,4 +1,4 @@
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI } from "@google/genai";
 
 type GenerateResponse = {
   candidates?: Array<{
@@ -10,21 +10,19 @@ type GenerateResponse = {
     };
   }>;
 };
-  
-export async function generateSummary(content: string) : Promise<string> {
+
+export async function generateSummary(content: string): Promise<string> {
   const basePrompt = "Generate a short summary from given content: ";
   const ai = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY,
   });
 
-  const model = 'gemini-1.5-flash';
+  const model = "gemini-1.5-flash";
 
   const contents = [
     {
-      role: 'user' as const,
-      parts: [
-        { text: basePrompt + content },
-      ],
+      role: "user" as const,
+      parts: [{ text: basePrompt + content }],
     },
   ];
 
@@ -35,10 +33,10 @@ export async function generateSummary(content: string) : Promise<string> {
 
   // Extract concatenated text parts
   const parts = response.candidates?.[0]?.content?.parts || [];
-  let text = '';
+  let text = "";
   for (const part of parts as Array<{ text?: string }>) {
-    if (typeof part?.text === 'string') text += part.text;
+    if (typeof part?.text === "string") text += part.text;
   }
-  if (!text.trim()) throw new Error('No summary returned from Gemini');
+  if (!text.trim()) throw new Error("No summary returned from Gemini");
   return text.trim();
 }

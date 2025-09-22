@@ -32,14 +32,14 @@ export default function Header() {
       <nav className="max-w-7xl mx-auto px-4 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <div className="flex items-center">
-          <Link href="/">
-            <Image
-              src="/High-Resolution-Logo-White-on-Transparent-Background (1).svg"
-              alt="Logo"
-              width={112} // Explicit width (28 * 4 = 112px, based on your h-28 class)
-              height={112} // Explicit height
-              className="mr-6 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.9)] transition-all duration-300 ease-in-out rounded-full"
-            />
+            <Link href="/">
+              <Image
+                src="/High-Resolution-Logo-White-on-Transparent-Background (1).svg"
+                alt="Logo"
+                width={112} // Explicit width (28 * 4 = 112px, based on your h-28 class)
+                height={112} // Explicit height
+                className="mr-6 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.9)] transition-all duration-300 ease-in-out rounded-full"
+              />
             </Link>
           </div>
           <div className="hidden md:block">
