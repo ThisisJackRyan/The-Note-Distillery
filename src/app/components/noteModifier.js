@@ -3,7 +3,6 @@
 import { useState, useRef } from "react";
 import { validateNote } from "../scripts/noteFactory";
 import { addNewNote } from "@/firebase/firestoreFunctions";
-import { sampleSummary } from "../scripts/sampleText";
 
 /**
  * If the selected folder field is supplied, then the component will handle pushing the note creation or edit to the database;
@@ -69,15 +68,29 @@ export default function NoteModifier({
   // Generate AI summary from content
   const handleAISummary = async () => {
     if (!contentFieldRef.current?.value) return;
+    const content = contentFieldRef.current.value;
+    try {
+      // Optimistic placeholder while loading
+      if (summaryFieldRef.current)
+        summaryFieldRef.current.value = "Generating summary...";
 
-    // Here you would normally call an API to generate the summary
-    // For now, we'll just use a placeholder
-    //const content = contentFieldRef.current.value;
-    const aiSummary = sampleSummary; //await handleAISummary(content)
-
-    // Update the summary field with the generated summary
-    if (summaryFieldRef.current) {
-      summaryFieldRef.current.value = aiSummary;
+      const res = await fetch("/api/generate-summary", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Failed to generate summary");
+      const aiSummary =
+        typeof data?.summary === "string" && data.summary.trim() !== ""
+          ? data.summary.trim()
+          : "";
+      if (summaryFieldRef.current) summaryFieldRef.current.value = aiSummary;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Unexpected error";
+      setError(message);
+      if (summaryFieldRef.current)
+        summaryFieldRef.current.value = initialNoteObj.summary || "";
     }
   };
 

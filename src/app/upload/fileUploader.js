@@ -2,12 +2,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../context/AuthContext";
 import { useRef, useState } from "react";
-import { sampleText } from "../scripts/sampleText";
 
 export default function ImageUpload({ onContentUploaded, enabled }) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState(false);
-  const [success, setSuccess] = useState(false);
   const [stateMsg, setStateMsg] = useState("");
   const fileInputRef = useRef(null);
   const { user } = useAuth();
@@ -21,15 +19,6 @@ export default function ImageUpload({ onContentUploaded, enabled }) {
       }
     }
   };
-  // keep
-  // const fileToBase64 = (file) => {
-  //   return new Promise((resolve, reject) => {
-  //     const reader = new FileReader();
-  //     reader.readAsDataURL(file);
-  //     reader.onload = () => resolve(reader.result);
-  //     reader.onerror = (error) => reject(error);
-  //   });
-  // };
 
   const handleFileUpload = async (event) => {
     console.log("Handling file upload");
@@ -44,28 +33,31 @@ export default function ImageUpload({ onContentUploaded, enabled }) {
     try {
       setIsProcessing(true);
       setError(false);
-      setSuccess(false);
 
-      //keep
-      // const base64Data = await fileToBase64(file);
+      const formData = new FormData();
+      formData.append("file", file);
 
-      const cleanedText = sampleText;
+      const res = await fetch("/api/img-processing", {
+        method: "POST",
+        body: formData,
+      });
 
-      // actual code below
-      // const rawText = await detectText(base64Data);
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data?.error || "Failed to process image");
+      }
 
-      // const cleanedText = await cleanParsedText(rawText);
-
-      if (cleanedText) {
-        onContentUploaded(cleanedText);
+      const extractedText = data?.text || "";
+      if (extractedText) {
+        onContentUploaded(extractedText);
+      } else {
+        throw new Error("No text returned from processing");
       }
 
       // If user is logged in, offer to save as note
       if (user) {
-        setSuccess(true);
         setStateMsg("Text extracted successfully! You can save it as a note.");
       } else {
-        setSuccess(true);
         setStateMsg(
           "Text extracted successfully! Please log in to save as a note.",
         );
@@ -73,9 +65,7 @@ export default function ImageUpload({ onContentUploaded, enabled }) {
     } catch (err) {
       console.error(err);
       setError(true);
-      setStateMsg(
-        "Error processing image: " + (err.message || "Unknown error"),
-      );
+      setStateMsg("Error processing this image, please try again later.");
     } finally {
       setIsProcessing(false);
     }
@@ -104,14 +94,13 @@ export default function ImageUpload({ onContentUploaded, enabled }) {
       />
 
       {isProcessing && (
-        <div className="mt-4 text-blue-400">
-          Processing image... Please wait.
+        <div className="absolute inset-0 w-full h-full z-100 bg-black opacity-70 flex flex-col justify-center items-center">
+          <div className="loader"></div>
+          <p>The text is being extracted, this may take a moment.</p>
         </div>
       )}
 
       {error && <div className="mt-4 text-red-400">{stateMsg}</div>}
-
-      {success && <div className="mt-4 text-green-400">{stateMsg}</div>}
     </div>
   );
 }

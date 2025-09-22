@@ -29,12 +29,15 @@ export default function NoteModifier({ extractedContent, onContentPreviewed }) {
 
   return (
     <div className=" inset-0 flex items-center justify-center">
-      <div className="h-full w-full flex flex-col justify-center items-center sm:h-auto px-6 pb-4 sm:rounded-lg overflow-y-auto">
+      <div className="h-full w-full flex flex-col justify-center items-center sm:h-auto px-2 pb-4 sm:rounded-lg overflow-y-auto">
         <h2 className="text-xl font-semibold mb-4 text-white">
           Preview Note content
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4 w-full md:w-3/4">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-4 w-full md:px-4 2xl:w-3/4"
+        >
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">
               Extracted Content <span className="text-red-500">*</span>
