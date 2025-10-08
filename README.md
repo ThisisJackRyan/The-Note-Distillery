@@ -2,7 +2,7 @@
 
 Check it out! https://notedistillery.com/
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Don't have time? Check out our demo we presented at the KU Hackathon https://www.youtube.com/watch?v=_RRqEybJj5s&lc=UgxRy0NHAUdZkwOHLhJ4AaABAg
 
 ## Getting Started
 
