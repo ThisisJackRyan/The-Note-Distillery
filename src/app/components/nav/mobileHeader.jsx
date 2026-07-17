@@ -4,7 +4,7 @@ import { useAuthUser } from "@/firebase/firebaseFunctions";
 import ClosingX from "../icons/closingX";
 
 const MobileHeader = ({ setIsMobileMenuOpen, handleLogout }) => {
-  const user = useAuthUser();
+  const { user } = useAuthUser();
 
   const handleClose = () => {
     setIsMobileMenuOpen(false);

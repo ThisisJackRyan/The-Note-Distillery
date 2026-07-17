@@ -16,7 +16,7 @@ export default function Header() {
 
   const router = useRouter();
   const auth = getAuth(app);
-  const user = useAuthUser();
+  const { user } = useAuthUser();
 
   const handleLogout = async () => {
     try {
