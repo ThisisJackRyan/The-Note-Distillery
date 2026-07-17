@@ -20,8 +20,9 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="bg-gray-900 h-full">
+    <html lang="en" className="bg-gray-900 h-full" suppressHydrationWarning>
       <body
+        suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-900 text-white h-full flex flex-col`}
       >
         <AuthProvider>
